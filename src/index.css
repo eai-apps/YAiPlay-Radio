@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root {
+  --accent: #6041d8;
+  --accent-hover: #4b2db8;
+  --accent-glow: rgba(96, 65, 216, 0.45);
+  --accent-subtle: rgba(96, 65, 216, 0.14);
+  --accent-border: rgba(96, 65, 216, 0.4);
+  --theme-gradient: linear-gradient(135deg, #6041d8 0%, #6041d8 48%, #1fcfeb 100%);
+}
+
+[data-theme="yaiplayradio-original"] {
+  --accent: #6041d8;
+  --accent-hover: #4b2db8;
+  --accent-glow: rgba(96, 65, 216, 0.45);
+  --accent-subtle: rgba(96, 65, 216, 0.14);
+  --accent-border: rgba(96, 65, 216, 0.4);
+  --theme-gradient: linear-gradient(135deg, #6041d8 0%, #6041d8 48%, #1fcfeb 100%);
+}
+
+[data-theme="cyber-red"] {
+  --accent: #f43f5e;
+  --accent-hover: #e11d48;
+  --accent-glow: rgba(244, 63, 94, 0.4);
+  --accent-subtle: rgba(244, 63, 94, 0.12);
+  --accent-border: rgba(244, 63, 94, 0.35);
+  --theme-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #fb7185 100%);
+}
+
+[data-theme="neon-purple"] {
+  --accent: #a855f7;
+  --accent-hover: #9333ea;
+  --accent-glow: rgba(168, 85, 247, 0.4);
+  --accent-subtle: rgba(168, 85, 247, 0.12);
+  --accent-border: rgba(168, 85, 247, 0.35);
+  --theme-gradient: linear-gradient(135deg, #a855f7 0%, #9333ea 50%, #c084fc 100%);
+}
+
+[data-theme="deep-ocean"] {
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+  --accent-glow: rgba(6, 182, 212, 0.4);
+  --accent-subtle: rgba(6, 182, 212, 0.12);
+  --accent-border: rgba(6, 182, 212, 0.35);
+  --theme-gradient: linear-gradient(135deg, #0284c7 0%, #06b6d4 50%, #38bdf8 100%);
+}
+
+[data-theme="gold-vip"] {
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+  --accent-glow: rgba(245, 158, 11, 0.4);
+  --accent-subtle: rgba(245, 158, 11, 0.12);
+  --accent-border: rgba(245, 158, 11, 0.35);
+  --theme-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #fbbf24 100%);
+}
+
+@layer base {
+  body {
+    background-color: #09090b;
+    color: #f4f4f5;
+    font-family: 'Manrope Variable', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Dynamic theme helper classes */
+.bg-theme-accent {
+  background: var(--theme-gradient) !important;
+}
+.bg-theme-accent-solid {
+  background-color: var(--accent) !important;
+}
+.bg-theme-accent:hover {
+  filter: brightness(1.1);
+}
+.text-theme-accent {
+  color: var(--accent) !important;
+}
+.border-theme-accent {
+  border-color: var(--accent) !important;
+}
+.border-theme-subtle {
+  border-color: var(--accent-border) !important;
+}
+.bg-theme-subtle {
+  background-color: var(--accent-subtle) !important;
+}
+.shadow-theme-glow {
+  box-shadow: 0 10px 25px -5px var(--accent-glow) !important;
+}
+.ring-theme-accent {
+  --tw-ring-color: var(--accent) !important;
+}
+
+/* Equalizer keyframe animations using theme accent */
+@keyframes eq-bounce-1 {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+@keyframes eq-bounce-2 {
+  0%, 100% { height: 14px; }
+  50% { height: 6px; }
+}
+
+@keyframes eq-bounce-3 {
+  0%, 100% { height: 6px; }
+  50% { height: 18px; }
+}
+
+@keyframes eq-bounce-4 {
+  0%, 100% { height: 12px; }
+  50% { height: 4px; }
+}
+
+.animate-eq-1 {
+  animation: eq-bounce-1 0.8s ease-in-out infinite;
+  background-color: var(--accent) !important;
+}
+.animate-eq-2 {
+  animation: eq-bounce-2 0.65s ease-in-out infinite;
+  background-color: var(--accent) !important;
+}
+.animate-eq-3 {
+  animation: eq-bounce-3 0.9s ease-in-out infinite;
+  background-color: var(--accent) !important;
+}
+.animate-eq-4 {
+  animation: eq-bounce-4 0.75s ease-in-out infinite;
+  background-color: var(--accent) !important;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Range slider styling */
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+/* Marquee running text animation for long station titles */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(-40%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee-scroll 16s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes matrix-ticker {
+  0% {
+    transform: translateX(30%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-matrix-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: matrix-ticker 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-matrix-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Отступы под «чёлку» и полоску «Домой» на iPhone */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* iPhone (приложение на экране «Домой»): шапка и полноэкранные окна начинаются под часами и батареей */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pt-safe-3 {
+  padding-top: calc(env(safe-area-inset-top) + 0.75rem);
+}
+
+/* «Лёгкий режим»: без анимаций, размытия и теней — для слабых телефонов и медленной сети */
+html.lite-mode *,
+html.lite-mode *::before,
+html.lite-mode *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+html.lite-mode [class*='blur-'] {
+  filter: none !important;
+}
+html.lite-mode .animate-matrix-ticker {
+  transform: none !important;
+}

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Политика конфиденциальности — YAi Radio</title>
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  :root { --bg:#09090b; --card:#141418; --text:#ececf1; --muted:#a1a1aa; --accent:#1fcfeb; --line:#27272a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:max(24px, env(safe-area-inset-top)) 16px 64px; }
+  header { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+  header img { width:48px; height:48px; border-radius:50%; }
+  h1 { font-size:26px; margin:0; } h2 { font-size:19px; margin:32px 0 8px; color:#fff; }
+  p, li { color:var(--text); } .muted { color:var(--muted); font-size:14px; }
+  a { color:var(--accent); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px; margin:12px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; } td, th { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  .lang { display:flex; gap:8px; margin:0 0 16px; } .lang a { padding:4px 10px; border:1px solid var(--line); border-radius:999px; text-decoration:none; }
+  pre { white-space:pre-wrap; font:inherit; margin:0; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="logo.png" alt="">
+    <div>
+      <h1>Политика конфиденциальности</h1>
+      <div class="muted">YAi Radio · сайт и мобильные приложения · обновлено 29.10.2026</div>
+    </div>
+  </header>
+  <div class="lang"><a href="#ru">Русский</a><a href="#en">English</a><a href="./">← На сайт</a></div>
+
+  <section id="ru">
+    <div class="card">
+      <b>Коротко:</b> нет рекламы, аналитики и cookie для слежки. Регистрация не нужна: избранное и настройки хранятся на вашем устройстве.
+      Только если вы сами создадите аккаунт для синхронизации, на нашем сервере хранятся логин, защищённый пароль и ваше избранное/плейлисты.
+    </div>
+
+    <h2>1. Кто отвечает за сервис</h2>
+    <div class="card"><pre id="legal-ru">Контакты владельца указаны ниже.</pre>
+      <p>Связь: <span class="contact"></span></p></div>
+
+    <h2>2. Какие данные хранятся на вашем устройстве</h2>
+    <p>В памяти браузера / приложения (localStorage) хранятся: избранные станции, история прослушивания, сохранённые треки,
+      выбранная тема, язык и вид списка. Эти данные не передаются нам и удаляются при очистке данных сайта или удалении приложения.
+      Перенос избранного по QR-коду или ссылке происходит напрямую между вашими устройствами: ссылка содержит только идентификаторы станций.</p>
+
+    <h2>3. Аккаунт для синхронизации (по желанию)</h2>
+    <p>Если вы нажмёте «Вход и синхронизация» и создадите аккаунт, на нашем сервере (Cloudflare Workers, хранилище KV) хранятся:
+      придуманный вами логин, пароль в виде необратимого хэша (PBKDF2 с солью) и данные для синхронизации — избранные станции,
+      плейлисты и сохранённые треки. Мы не запрашиваем e-mail, имя, телефон или другие данные. Цель — перенос избранного между
+      вашими устройствами. Удалить аккаунт и все его данные можно самому в любой момент: «Вход и синхронизация» → «Удалить аккаунт» (данные стираются с сервера сразу). Если не получается — напишите нам с указанием логина.</p>
+    <p>Для раздела «Моя страна» наш сервер определяет страну по IP-адресу (данные Cloudflare). Страна запоминается только на вашем
+      устройстве; IP-адреса мы не сохраняем, кроме кратковременных счётчиков защиты от подбора пароля (до 1 часа).</p>
+
+    <p>Если вы пишете нам через форму «Поддержка», сохраняются текст сообщения и то, что вы сами указали (имя, контакт для ответа).
+      Сообщение пересылается владельцу в Telegram и хранится на сервере не дольше 180 дней.</p>
+
+    <h2>4. Какие внешние сервисы участвуют</h2>
+    <p>Чтобы радио заиграло, ваше устройство напрямую обращается к сервисам ниже. Они, как любой сервер в интернете,
+      технически получают ваш IP-адрес. Мы не передаём им никаких других данных о вас.</p>
+    <table>
+      <tr><th>Сервис</th><th>Зачем</th></tr>
+      <tr><td>GitHub Pages (GitHub, Inc.)</td><td>Хостинг сайта</td></tr>
+      <tr><td>Radio Browser (radio-browser.info)</td><td>Открытый каталог радиостанций</td></tr>
+      <tr><td>Серверы радиостанций и телеканалов</td><td>Воспроизведение выбранного эфира</td></tr>
+      <tr><td>laut.fm, SomaFM, Radio Record</td><td>Поиск станций и название текущей песни</td></tr>
+      <tr><td>Apple iTunes Search API</td><td>Обложка песни (передаётся только название песни)</td></tr>
+      <tr><td>Google (сервис значков сайтов)</td><td>Значок станции, если у неё нет логотипа (передаётся только адрес сайта станции)</td></tr>
+      <tr><td>Open-Meteo</td><td>Погода в городе станции (передаётся только название города)</td></tr>
+      <tr><td>Cloudflare Workers (если включено)</td><td>Чтение названия песни из потока</td></tr>
+    </table>
+
+    <h2>5. Голосовой поиск и микрофон</h2>
+    <p>Микрофон используется только когда вы сами нажимаете кнопку голосового поиска. Распознавание речи выполняет ваш браузер
+      или операционная система (например, Google в Chrome, Apple в Safari). Мы не получаем и не храним записи.</p>
+
+    <h2>6. Контент третьих лиц</h2>
+    <p>YAi Radio — каталог открытых публичных трансляций. Мы не храним и не ретранслируем аудио и видео: эфир идёт напрямую
+      с серверов вещателей. Права на эфир принадлежат их владельцам. Если вы правообладатель и хотите убрать трансляцию из каталога,
+      напишите нам — мы удалим её в течение 72 часов.</p>
+
+    <h2>7. Дети</h2>
+    <p>Сервис не предназначен специально для детей младше 13 лет и не собирает их данные. Станции с пометками «18+» скрываются.</p>
+
+    <h2>8. Ваши права (GDPR)</h2>
+    <p>Данные на устройстве удаляются очисткой данных сайта или удалением приложения. Аккаунт синхронизации удаляется кнопкой «Удалить аккаунт» в приложении или по вашему запросу.
+      Вы вправе запросить доступ к ним, исправление или удаление.
+      По любым вопросам о данных пишите нам. Вы также вправе обратиться в надзорный орган по защите данных.</p>
+
+    <h2>9. Изменения</h2>
+    <p>Если политика изменится, мы обновим эту страницу и дату вверху.</p>
+  </section>
+
+  <section id="en" style="margin-top:56px">
+    <h1 style="font-size:22px">Privacy Policy (English)</h1>
+    <div class="card"><b>In short:</b> no ads, no analytics, no tracking cookies. No registration needed: favourites and settings are stored on your device.
+      Only if you create an optional sync account, our server stores your chosen login, a salted password hash (PBKDF2) and your favourites/playlists.
+      No e-mail or name is requested. You can delete the account and all its data yourself at any time: “Sign in & sync” → “Delete account” (removed from the server immediately), or contact us. Your country for “My country” is derived
+      from your IP by our server and stored only on your device; IP addresses are not stored except short-lived anti-brute-force counters (up to 1 hour). Support form messages (text plus the name/contact you enter) are forwarded to the owner via Telegram and kept up to 180 days.</div>
+    <p><b>Controller / contact:</b> <span class="contact"></span></p>
+    <pre id="legal-en" class="card"></pre>
+    <p><b>Third-party services</b> contacted directly by your device (they technically receive your IP address): GitHub Pages (hosting),
+      Radio Browser (station directory), radio/TV station servers (playback), laut.fm, SomaFM, Radio Record (station search and now-playing),
+      Apple iTunes Search API (artwork; only the song title is sent), Google favicon service (station icon when no logo; only the station website domain is sent), Open-Meteo (weather; only the city name is sent),
+      Cloudflare Workers (now-playing metadata, if enabled).</p>
+    <p><b>Microphone</b> is used only when you tap voice search; recognition is performed by your browser/OS. We receive no recordings.</p>
+    <p><b>Third-party content:</b> we only list publicly available streams and do not host or rebroadcast media. Rights holders may request
+      removal via the contact above; we act within 72 hours.</p>
+    <p><b>Children:</b> not directed to children under 13. <b>Your rights (GDPR):</b> on-device data is deleted by clearing site data or uninstalling the app;
+      sync-account data is deleted with the in-app “Delete account” button or on request. You may request access, correction or deletion. You may contact a data protection authority.</p>
+  </section>
+</main>
+<script>
+  fetch('./content.json', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (c) {
+      document.querySelectorAll('.contact').forEach(function (el) {
+        var add = function (href, text) {
+          if (el.childNodes.length) el.appendChild(document.createTextNode(' · '));
+          var a = document.createElement('a'); a.href = href; a.textContent = text; a.rel = 'noopener'; el.appendChild(a);
+        };
+        if (c.contactEmail && /^[^\s@]+@[^\s@]+$/.test(c.contactEmail)) add('mailto:' + c.contactEmail, c.contactEmail);
+        if (c.telegramUrl && /^https:\/\//.test(c.telegramUrl)) add(c.telegramUrl, 'Telegram');
+        if (!el.childNodes.length) el.textContent = '—';
+      });
+      var legal = c.legalContact || '';
+      document.getElementById('legal-ru').textContent = legal || 'Контактные данные владельца будут указаны здесь.';
+      document.getElementById('legal-en').textContent = legal;
+      if (!legal) document.getElementById('legal-en').style.display = 'none';
+    })
+    .catch(function () {});
+</script>
+</body>
+</html>

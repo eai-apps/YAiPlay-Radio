@@ -1,0 +1,45 @@
+{
+  "_comment": "Станции, которые сами запретили использовать свои потоки в сторонних приложениях. Их не показываем нигде (сайт, приложения, каталог). Источник для каждой — в поле reason.",
+  "blockedHosts": [
+    {
+      "host": "somafm.com",
+      "name": "SomaFM",
+      "reason": "https://somafm.com/contact/tos.html — «We can't grant permission for third-party SomaFM clients or applications, even noncommercial ones»"
+    },
+    {
+      "host": "bigrradio.com",
+      "name": "Big R Radio (сеть станций)",
+      "reason": "https://www.bigrradio.com/terms/ — «Please don't … put our streams in another app, site or player without our written permission»"
+    },
+    {
+      "host": "2000fm.net",
+      "name": "2000 FM (сеть Big R Radio)",
+      "reason": "2000fm.net/terms — тот же запрет, что у Big R Radio"
+    },
+    {
+      "host": "sleepradio.co.nz",
+      "name": "Sleep Radio",
+      "reason": "sleepradio.co.nz — «any … relaying or re-broadcasting of this station's audio feed via website, app … is strictly prohibited without express written permission»"
+    },
+    {
+      "host": "streamingsoundtracks.com",
+      "name": "StreamingSoundtracks.com",
+      "reason": "«You may not rebroadcast, rip, syndicate, or redistribute our audio streams without explicit written permission»"
+    },
+    {
+      "host": "sbs.com.au",
+      "name": "SBS (Австралия)",
+      "reason": "Условия SBS: нельзя «embedding, deep-linking or framing the Material without SBS’s consent»"
+    },
+    {
+      "host": "aljazeera.com",
+      "name": "Al Jazeera",
+      "reason": "Условия Al Jazeera запрещают позволять третьим лицам транслировать их материалы"
+    },
+    {
+      "host": "sexsoundradio.com",
+      "name": "Sex Sound Radio",
+      "reason": "«You may not record, redistribute or reuse any part of the stream without permission» (и 18+)"
+    }
+  ]
+}

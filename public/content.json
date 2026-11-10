@@ -1,0 +1,46 @@
+{
+  "appTitle": "YAi Radio",
+  "appSubtitle": "Радио со всего мира",
+  "customLogoUrl": "./logo.png",
+  "telegramUrl": "https://t.me/YAiPlayer",
+  "customLinks": [
+    {
+      "id": "1",
+      "title": "Telegram Канал",
+      "url": "https://t.me/YAiPlayer"
+    }
+  ],
+  "customWebcams": [],
+  "customStations": [],
+  "customTvChannels": [],
+  "featuredStation": {
+    "stationuuid": "ce3e9d01-3614-45f2-ae25-93f944005eaa",
+    "name": "0R - 90s || 90s Pop, 90s Hits, Eurodance, Hip Hop, R&B, Grunge, Alternative, Techno, Trance, Dance, Chill, Boyband, Girlband, Pop Rock, Nostalgic",
+    "url": "https://0nlineradio.radioho.st/0r-90s?ref=radio-browser26",
+    "url_resolved": "https://0nlineradio.radioho.st/0r-90s?ref=radio-browser26",
+    "favicon": "https://i.ibb.co/S4y9mSR9/90s.png",
+    "tags": "1990s,1990s hits,1990s pop music,90's,90er,90er hitmix,90s,dance,eurodance,oldies,pop,top hits",
+    "country": "Germany",
+    "countrycode": "DE",
+    "bitrate": 192,
+    "codec": "MP3",
+    "homepage": "https://plus.rm.fm/"
+  },
+  "contactEmail": "",
+  "apiUrl": "",
+  "hiddenSections": [],
+  "hiddenCountries": {
+    "radio": [],
+    "tv": [
+      "RU",
+      "UA"
+    ],
+    "webcams": []
+  },
+  "defaultViewMode": "grid",
+  "legalContact": "",
+  "heroTitle": "YAi Radio",
+  "heroSubtitle": "Радио со всего мира",
+  "versionChangelog": "",
+  "dmcaPolicy": "YAi Radio — интернет-тюнер и каталог публичных радиопотоков. Приложение не хранит и не ретранслирует аудио: потоки воспроизводятся напрямую с серверов вещателей. Настройки хранятся только на вашем устройстве."
+}

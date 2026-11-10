@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e0924" />
+    <title>YAi Radio — радио со всего мира</title>
+    <meta name="description" content="YAi Radio — тысячи бесплатных радиостанций со всего мира: жанры, страны, подборки по настроению, избранное и таймер сна." />
+    <meta property="og:title" content="YAi Radio — радио со всего мира" />
+    <meta property="og:description" content="Тысячи бесплатных радиостанций со всего мира по жанрам и странам." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://yaiplay-radio.pages.dev/promo/yaiplay-radio-banner.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Установка как приложение (Android / iPhone / iPad / ПК) -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="YAi Radio" />
+    <!-- Тёмный фон сразу, ещё до загрузки стилей: никаких белых вспышек -->
+    <style>html,body{background:#0e0924;color:#f5f3ff}#boot-fallback{display:none}</style>
+    <script>
+      // Страховка от «белого экрана» (iPhone/Safari выгружает вкладку из памяти, а при возврате загрузка может зависнуть).
+      // Если через 10 с интерфейс так и не появился — показываем кнопку и один раз перезагружаем сами.
+      (function () {
+        var KEY = 'yaiplayradio_boot_reload';
+        function empty() { var r = document.getElementById('root'); return !r || !r.firstChild; }
+        function rescue() {
+          if (!empty()) return;
+          var last = +sessionStorage.getItem(KEY) || 0;
+          if (Date.now() - last > 60000) { sessionStorage.setItem(KEY, String(Date.now())); location.reload(); return; }
+          var f = document.getElementById('boot-fallback'); if (f) f.style.display = 'flex';
+        }
+        setTimeout(rescue, 10000);
+        // Возврат на страницу из кэша браузера (bfcache) с пустым экраном
+        addEventListener('pageshow', function (e) { if (e.persisted && empty()) location.reload(); });
+        // Не загрузился кусок сайта после обновления (старая версия в памяти) — перезагружаем один раз
+        addEventListener('vite:preloadError', function (e) {
+          var last = +sessionStorage.getItem(KEY) || 0;
+          if (Date.now() - last > 60000) { e.preventDefault(); sessionStorage.setItem(KEY, String(Date.now())); location.reload(); }
+        });
+      })();
+    </script>
+  </head>
+  <body class="bg-[#0e0924] text-neutral-100 font-['Manrope_Variable',sans-serif] antialiased select-none selection:bg-rose-500/30 selection:text-white overflow-x-hidden min-h-screen">
+    <div id="root"></div>
+    <div id="boot-fallback" style="position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:system-ui,sans-serif;text-align:center;padding:24px">
+      <div style="font-size:18px;font-weight:700">YAi Radio загружается дольше обычного</div>
+      <div style="font-size:14px;color:#a1a1aa">Проверьте интернет и нажмите кнопку</div>
+      <button onclick="location.reload()" style="padding:12px 22px;border:0;border-radius:14px;background:#1fcfeb;color:#0e0924;font-weight:800;font-size:15px">Перезагрузить</button>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

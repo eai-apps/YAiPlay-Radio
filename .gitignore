@@ -1,0 +1,13 @@
+node_modules/
+build/
+dist/
+dist-lite/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+logo1.png
+
+# Android (Capacitor) — папка генерируется при сборке
+/android

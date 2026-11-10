@@ -1,0 +1,426 @@
+{
+  "nameVariants": {
+    "kino": [
+      "Виктор Цой",
+      "Цой",
+      "Группа Кино",
+      "Kino Tsoi"
+    ],
+    "sektor-gaza": [
+      "Сектор Газа",
+      "Sektor Gaza"
+    ],
+    "korol-i-shut": [
+      "Король и Шут",
+      "Korol i Shut"
+    ],
+    "aria": [
+      "Ария"
+    ],
+    "nautilus": [
+      "Наутилус",
+      "Nautilus Pompilius"
+    ],
+    "ddt": [
+      "ДДТ"
+    ],
+    "bi-2": [
+      "Би-2",
+      "Би 2"
+    ],
+    "splin": [
+      "Сплин"
+    ],
+    "ruki-vverh": [
+      "Руки Вверх",
+      "Ruki Vverh"
+    ],
+    "laskoviy-may": [
+      "Ласковый Май",
+      "Laskovyi Mai"
+    ],
+    "mikhail-krug": [
+      "Михаил Круг"
+    ],
+    "vysotsky": [
+      "Высоцкий",
+      "Vysotsky"
+    ],
+    "zemfira": [
+      "Земфира",
+      "Zemfira"
+    ],
+    "basta": [
+      "Баста"
+    ],
+    "miyagi": [
+      "Miyagi",
+      "Мияги"
+    ],
+    "queen": [
+      "Queen"
+    ],
+    "metallica": [
+      "Metallica"
+    ],
+    "linkin-park": [
+      "Linkin Park"
+    ],
+    "rammstein": [
+      "Rammstein"
+    ],
+    "depeche-mode": [
+      "Depeche Mode"
+    ],
+    "the-prodigy": [
+      "Prodigy"
+    ],
+    "scooter": [
+      "Scooter"
+    ],
+    "modern-talking": [
+      "Modern Talking"
+    ],
+    "abba": [
+      "ABBA"
+    ],
+    "michael-jackson": [
+      "Michael Jackson"
+    ],
+    "eminem": [
+      "Eminem"
+    ],
+    "daft-punk": [
+      "Daft Punk"
+    ],
+    "pink-floyd": [
+      "Pink Floyd"
+    ],
+    "acdc": [
+      "AC/DC",
+      "ACDC"
+    ],
+    "nirvana": [
+      "Nirvana"
+    ],
+    "the-beatles": [
+      "Beatles"
+    ],
+    "hans-zimmer": [
+      "Hans Zimmer",
+      "Zimmer"
+    ]
+  },
+  "ostTags": {
+    "soundtrack": [
+      "soundtrack",
+      "soundtracks",
+      "film music"
+    ],
+    "game": [
+      "video game music",
+      "game music",
+      "vgm"
+    ],
+    "anime": [
+      "anime",
+      "j-pop",
+      "jpop"
+    ],
+    "series": [
+      "soundtrack",
+      "tv series",
+      "movie"
+    ],
+    "synthwave": [
+      "synthwave",
+      "epic",
+      "cinematic"
+    ],
+    "filmscore": [
+      "film score",
+      "score",
+      "soundtracks"
+    ],
+    "musical": [
+      "musical",
+      "broadway",
+      "musicals"
+    ],
+    "cartoons": [
+      "disney",
+      "cartoon",
+      "kids music"
+    ],
+    "chiptune": [
+      "chiptune",
+      "8bit",
+      "8-bit"
+    ],
+    "bollywood": [
+      "bollywood",
+      "filmi"
+    ]
+  },
+  "series": [
+    "Exclusively",
+    "101.ru",
+    "Radio Maximum",
+    "Best of Rock FM",
+    "Best Of Rock.FM"
+  ],
+  "artists": [
+    {
+      "id": "kino",
+      "name": "Кино (Виктор Цой)",
+      "category": "cis",
+      "tag": "kino"
+    },
+    {
+      "id": "sektor-gaza",
+      "name": "Сектор Газа",
+      "category": "cis",
+      "tag": "sektor gaza"
+    },
+    {
+      "id": "korol-i-shut",
+      "name": "Король и Шут",
+      "category": "cis",
+      "tag": "korol i shut"
+    },
+    {
+      "id": "aria",
+      "name": "Ария",
+      "category": "cis",
+      "tag": "aria"
+    },
+    {
+      "id": "nautilus",
+      "name": "Наутилус Помпилиус",
+      "category": "cis",
+      "tag": "nautilus"
+    },
+    {
+      "id": "ddt",
+      "name": "ДДТ",
+      "category": "cis",
+      "tag": "ddt"
+    },
+    {
+      "id": "bi-2",
+      "name": "Би-2",
+      "category": "cis",
+      "tag": "bi-2"
+    },
+    {
+      "id": "splin",
+      "name": "Сплин",
+      "category": "cis",
+      "tag": "splin"
+    },
+    {
+      "id": "ruki-vverh",
+      "name": "Руки Вверх!",
+      "category": "cis",
+      "tag": "ruki vverh"
+    },
+    {
+      "id": "laskoviy-may",
+      "name": "Ласковый Май",
+      "category": "cis",
+      "tag": "laskoviy may"
+    },
+    {
+      "id": "mikhail-krug",
+      "name": "Михаил Круг",
+      "category": "cis",
+      "tag": "krug"
+    },
+    {
+      "id": "vysotsky",
+      "name": "Владимир Высоцкий",
+      "category": "cis",
+      "tag": "vysotsky"
+    },
+    {
+      "id": "zemfira",
+      "name": "Земфира",
+      "category": "cis",
+      "tag": "zemfira"
+    },
+    {
+      "id": "basta",
+      "name": "Баста",
+      "category": "cis",
+      "tag": "basta"
+    },
+    {
+      "id": "miyagi",
+      "name": "Miyagi & Andy Panda",
+      "category": "cis",
+      "tag": "miyagi"
+    },
+    {
+      "id": "queen",
+      "name": "Queen",
+      "category": "world",
+      "tag": "queen"
+    },
+    {
+      "id": "metallica",
+      "name": "Metallica",
+      "category": "world",
+      "tag": "metallica"
+    },
+    {
+      "id": "linkin-park",
+      "name": "Linkin Park",
+      "category": "world",
+      "tag": "linkin park"
+    },
+    {
+      "id": "rammstein",
+      "name": "Rammstein",
+      "category": "world",
+      "tag": "rammstein"
+    },
+    {
+      "id": "depeche-mode",
+      "name": "Depeche Mode",
+      "category": "world",
+      "tag": "depeche mode"
+    },
+    {
+      "id": "the-prodigy",
+      "name": "The Prodigy",
+      "category": "world",
+      "tag": "the prodigy"
+    },
+    {
+      "id": "scooter",
+      "name": "Scooter",
+      "category": "world",
+      "tag": "scooter"
+    },
+    {
+      "id": "modern-talking",
+      "name": "Modern Talking",
+      "category": "world",
+      "tag": "modern talking"
+    },
+    {
+      "id": "abba",
+      "name": "ABBA",
+      "category": "world",
+      "tag": "abba"
+    },
+    {
+      "id": "michael-jackson",
+      "name": "Michael Jackson",
+      "category": "world",
+      "tag": "michael jackson"
+    },
+    {
+      "id": "eminem",
+      "name": "Eminem",
+      "category": "world",
+      "tag": "eminem"
+    },
+    {
+      "id": "daft-punk",
+      "name": "Daft Punk",
+      "category": "world",
+      "tag": "daft punk"
+    },
+    {
+      "id": "pink-floyd",
+      "name": "Pink Floyd",
+      "category": "world",
+      "tag": "pink floyd"
+    },
+    {
+      "id": "acdc",
+      "name": "AC/DC",
+      "category": "world",
+      "tag": "acdc"
+    },
+    {
+      "id": "nirvana",
+      "name": "Nirvana",
+      "category": "world",
+      "tag": "nirvana"
+    },
+    {
+      "id": "the-beatles",
+      "name": "The Beatles",
+      "category": "world",
+      "tag": "beatles"
+    },
+    {
+      "id": "hans-zimmer",
+      "name": "Hans Zimmer",
+      "category": "world",
+      "tag": "hans zimmer"
+    },
+    {
+      "id": "ost-cinema",
+      "name": "Кино и Голливуд OST",
+      "category": "ost",
+      "tag": "soundtrack"
+    },
+    {
+      "id": "ost-gaming",
+      "name": "Видеоигры (Gaming OST)",
+      "category": "ost",
+      "tag": "game"
+    },
+    {
+      "id": "ost-anime",
+      "name": "Аниме & J-Rock OST",
+      "category": "ost",
+      "tag": "anime"
+    },
+    {
+      "id": "ost-series",
+      "name": "Сериалы & ТВ-Шоу OST",
+      "category": "ost",
+      "tag": "series"
+    },
+    {
+      "id": "ost-cyberpunk",
+      "name": "Киберпанк & Эпическая Музыка",
+      "category": "ost",
+      "tag": "synthwave"
+    },
+    {
+      "id": "ost-classic-film",
+      "name": "Классика киномузыки",
+      "category": "ost",
+      "tag": "filmscore"
+    },
+    {
+      "id": "ost-musicals",
+      "name": "Мюзиклы & Бродвей",
+      "category": "ost",
+      "tag": "musical"
+    },
+    {
+      "id": "ost-cartoons",
+      "name": "Мультфильмы & Дисней",
+      "category": "ost",
+      "tag": "cartoons"
+    },
+    {
+      "id": "ost-chiptune",
+      "name": "8-бит & Chiptune",
+      "category": "ost",
+      "tag": "chiptune"
+    },
+    {
+      "id": "ost-bollywood",
+      "name": "Болливуд",
+      "category": "ost",
+      "tag": "bollywood"
+    }
+  ]
+}
