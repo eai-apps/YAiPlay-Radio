@@ -1,5 +1,5 @@
 /**
- * YAi Radio — мини-сервер «yaiplay-radio-api» (Cloudflare Workers, бесплатный тариф).
+ * YAiPlay Radio — мини-сервер «yaiplay-radio-api» (Cloudflare Workers, бесплатный тариф).
  *
  * Что умеет:
  *   GET  /meta?url=…          название песни из радиопотока (ICY StreamTitle) — честный RDS
@@ -146,7 +146,7 @@ async function handleSupport(request, env, ip, json, ctx) {
   const id = `${Date.now()}-${randomHex(4)}`;
   await env.DB.put('msg:' + id, JSON.stringify(msg), { expirationTtl: 180 * DAY });
   if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
-    const tg = `📩 YAi Radio — ${msg.topic || 'сообщение'}\n\n${msg.text}\n\n👤 ${msg.name || '—'}  ✉️ ${msg.contact || '—'}`;
+    const tg = `📩 YAiPlay Radio — ${msg.topic || 'сообщение'}\n\n${msg.text}\n\n👤 ${msg.name || '—'}  ✉️ ${msg.contact || '—'}`;
     ctx.waitUntil(
       fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
@@ -221,7 +221,7 @@ function sharePage(url) {
   const h = String(q.get('h') || '');
   const hash = /^#(station|st|pl)=[A-Za-z0-9_-]{1,8000}$/.test(h) ? h : '';
   const esc = (t) => String(t || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  const title = String(q.get('n') || 'YAi Radio').slice(0, 120);
+  const title = String(q.get('n') || 'YAiPlay Radio').slice(0, 120);
   const desc = String(q.get('d') || 'Радио со всего мира — бесплатно, без регистрации').slice(0, 240);
   const img0 = String(q.get('i') || '');
   const big = !/^https:\/\//.test(img0);
@@ -229,12 +229,12 @@ function sharePage(url) {
   const target = SITE_URL + hash;
   const html = `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
-<meta property="og:type" content="website"><meta property="og:site_name" content="YAi Radio">
+<meta property="og:type" content="website"><meta property="og:site_name" content="YAiPlay Radio">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}">
 <meta property="og:image" content="${esc(img)}"><meta property="og:url" content="${esc(url.href)}">
 <meta name="twitter:card" content="${big ? 'summary_large_image' : 'summary'}">
 <style>body{margin:0;background:#09090b;color:#fff;font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px;box-sizing:border-box}a{display:inline-block;margin-top:18px;padding:14px 24px;border-radius:16px;background:#6041d8;color:#09090b;font-weight:800;text-decoration:none}img{width:96px;height:96px;border-radius:20px;object-fit:cover}</style>
-</head><body><div><img src="${esc(img)}" alt=""><h2>${esc(title)}</h2><p style="color:#a1a1aa">${esc(desc)}</p><a href="${esc(target)}">▶ Слушать в YAi Radio</a></div>
+</head><body><div><img src="${esc(img)}" alt=""><h2>${esc(title)}</h2><p style="color:#a1a1aa">${esc(desc)}</p><a href="${esc(target)}">▶ Слушать в YAiPlay Radio</a></div>
 <script>location.replace(${JSON.stringify(target)})</script></body></html>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=86400' } });
 }

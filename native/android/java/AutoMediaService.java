@@ -99,7 +99,7 @@ public class AutoMediaService extends MediaBrowserServiceCompat {
             }
             if (items.isEmpty()) {
                 MediaDescriptionCompat d = new MediaDescriptionCompat.Builder().setMediaId("empty")
-                    .setTitle("Откройте YAi Radio на телефоне").setSubtitle("и добавьте станции в избранное ♥").build();
+                    .setTitle("Откройте YAiPlay Radio на телефоне").setSubtitle("и добавьте станции в избранное ♥").build();
                 items.add(new MediaBrowserCompat.MediaItem(d, MediaBrowserCompat.MediaItem.FLAG_BROWSABLE));
             }
         } else {
@@ -230,7 +230,7 @@ public class AutoMediaService extends MediaBrowserServiceCompat {
         session.setMetadata(new MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, s.optString("id", ""))
             .putString(MediaMetadataCompat.METADATA_KEY_TITLE, s.optString("name", "Радио"))
-            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "YAi Radio")
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "YAiPlay Radio")
             .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, s.optString("subtitle", ""))
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, -1)
             .build());
@@ -271,11 +271,11 @@ public class AutoMediaService extends MediaBrowserServiceCompat {
         }
         int fl = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
         PendingIntent toggle = PendingIntent.getService(this, 7332, new Intent(this, AutoMediaService.class).setAction("toggle"), fl);
-        String title = index >= 0 && index < queue.size() ? queue.get(index).optString("name", "YAi Radio") : "YAi Radio";
+        String title = index >= 0 && index < queue.size() ? queue.get(index).optString("name", "YAiPlay Radio") : "YAiPlay Radio";
         Notification n = new NotificationCompat.Builder(this, CH)
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentTitle(title)
-            .setContentText("YAi Radio")
+            .setContentText("YAiPlay Radio")
             .setOngoing(playing)
             .setContentIntent(session.getController().getSessionActivity())
             .addAction(playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play, playing ? "Пауза" : "Играть", toggle)

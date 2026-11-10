@@ -46,7 +46,7 @@ const USER_FIELDS = ['isPro', 'activeTheme', 'language'] as const;
 export const APP_VERSION = 'v0.9.0';
 
 export const DEFAULT_SETTINGS: YAiSettings = {
-  appTitle: 'YAi Radio',
+  appTitle: 'YAiPlay Radio',
   appSubtitle: 'Радио со всего мира',
   customLogoUrl: './logo.png',
   telegramUrl: 'https://t.me/YAiPlayer',
@@ -62,11 +62,11 @@ export const DEFAULT_SETTINGS: YAiSettings = {
   isPro: false,
   activeTheme: 'YAi-original',
   language: 'ru',
-  heroTitle: 'YAi Radio',
+  heroTitle: 'YAiPlay Radio',
   appVersion: APP_VERSION,
   versionChangelog: '',
   dmcaPolicy:
-    'YAi Radio — программный интернет-тюнер и каталог публичных радиопотоков и открытых веб-камер. Приложение не хранит, не ретранслирует и не изменяет аудио- и видеоматериалы: все потоки воспроизводятся напрямую с серверов вещателей, каталог станций — открытая база Radio Browser.\n\nВаши настройки (избранное, тема, язык) хранятся только на вашем устройстве.\n\nЕсли вы правообладатель или представитель вещателя и хотите изменить или удалить поток, напишите нам через официальный Telegram-канал.',
+    'YAiPlay Radio — программный интернет-тюнер и каталог публичных радиопотоков и открытых веб-камер. Приложение не хранит, не ретранслирует и не изменяет аудио- и видеоматериалы: все потоки воспроизводятся напрямую с серверов вещателей, каталог станций — открытая база Radio Browser.\n\nВаши настройки (избранное, тема, язык) хранятся только на вашем устройстве.\n\nЕсли вы правообладатель или представитель вещателя и хотите изменить или удалить поток, напишите нам через официальный Telegram-канал.',
 };
 
 function pick<T extends object>(obj: any, keys: readonly string[]): Partial<T> {

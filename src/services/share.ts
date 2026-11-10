@@ -60,7 +60,7 @@ export function unpack(p: Packed): { id: string; station?: Station } {
 // ---------- ссылки ----------
 export function stationLink(st: Station): string {
   const site = isGlobalId(st.stationuuid) ? `${PUBLIC_SITE}#station=${st.stationuuid}` : `${PUBLIC_SITE}#st=${toB64(JSON.stringify(pack(st)))}`;
-  return withPreview(site, `🎧 ${st.name} — слушать в YAi Radio`, describeStation(st), st.favicon || '');
+  return withPreview(site, `🎧 ${st.name} — слушать в YAiPlay Radio`, describeStation(st), st.favicon || '');
 }
 
 export interface SharedPlaylist {
@@ -74,7 +74,7 @@ export function playlistLink(name: string, stations: Station[], by?: string): st
   const data: SharedPlaylist = { name: name.slice(0, 60), items: stations.slice(0, PLAYLIST_LIMIT).map(pack) };
   if (by) data.by = by.slice(0, 30);
   const names = stations.slice(0, 4).map((s) => s.name).join(', ');
-  return withPreview(`${PUBLIC_SITE}#pl=${toB64(JSON.stringify(data))}`, `🎶 Плейлист «${data.name}» — ${stations.length} станций`, `${names}${stations.length > 4 ? '…' : ''} — слушай и сохрани себе в YAi Radio`);
+  return withPreview(`${PUBLIC_SITE}#pl=${toB64(JSON.stringify(data))}`, `🎶 Плейлист «${data.name}» — ${stations.length} станций`, `${names}${stations.length > 4 ? '…' : ''} — слушай и сохрани себе в YAiPlay Radio`);
 }
 
 export function parseSharedPlaylist(code: string): SharedPlaylist | null {
@@ -145,7 +145,7 @@ export function describeStation(st: Station): string {
 
 export function stationShareText(st: Station, variant = 0): string {
   const hook = HOOKS[((variant % HOOKS.length) + HOOKS.length) % HOOKS.length];
-  return `${hook}\n«${st.name}»\n${describeStation(st)}\n\nСлушай бесплатно в YAi Radio 👇`;
+  return `${hook}\n«${st.name}»\n${describeStation(st)}\n\nСлушай бесплатно в YAiPlay Radio 👇`;
 }
 
 export function playlistShareText(name: string, count: number, variant = 0): string {
@@ -154,7 +154,7 @@ export function playlistShareText(name: string, count: number, variant = 0): str
     `💚 Делюсь своим плейлистом «${name}» (${count} станций)`,
     `🔥 Мой плейлист «${name}» — ${count} станций, которые я слушаю сам(а)`,
   ];
-  return `${hooks[((variant % hooks.length) + hooks.length) % hooks.length]}\nОткрой, слушай и сохрани себе в YAi Radio 👇`;
+  return `${hooks[((variant % hooks.length) + hooks.length) % hooks.length]}\nОткрой, слушай и сохрани себе в YAiPlay Radio 👇`;
 }
 
 // ---------- отправка ----------
@@ -187,7 +187,7 @@ export const canSystemShare = () => hasNative() || typeof navigator.share === 'f
  * Важно для iPhone: вызывать прямо в обработчике нажатия, без ожиданий до navigator.share —
  * иначе Safari молча откажет.
  */
-export function shareTo(target: ShareTarget, text: string, url: string, title = 'YAi Radio'): Promise<boolean> | boolean {
+export function shareTo(target: ShareTarget, text: string, url: string, title = 'YAiPlay Radio'): Promise<boolean> | boolean {
   const full = `${text}\n${url}`;
   const open = (u: string) => {
     // В Android-приложении новое окно не открывается — переходим по ссылке, приложение само откроет Telegram/WhatsApp

@@ -224,7 +224,7 @@ export interface YAiSettings {
   partners?: PartnerLink[]; // блок «Рекомендуем / Партнёры»
   adminLock?: string; // отпечаток пароля админки (если сервер не настроен)
   contactEmail?: string; // e-mail для связи (политика конфиденциальности, магазины)
-  legalContact?: string; // Impressum / контактные данные владельца // «Станция YAi Radio» — назначается в админке
+  legalContact?: string; // Impressum / контактные данные владельца // «Станция YAiPlay Radio» — назначается в админке
   isPro: boolean;
   activeTheme: ThemeId;
   language: Language;

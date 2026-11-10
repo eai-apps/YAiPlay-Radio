@@ -86,7 +86,7 @@ public class YAiNativePlugin extends Plugin {
     private String stash(Intent i) {
         if (i == null) return null;
         android.net.Uri data = i.getData();
-        if (data != null && "YAi".equals(data.getScheme())) {
+        if (data != null && "yaiplayradio".equals(data.getScheme())) {
             String h = data.getQueryParameter("h");
             i.setData(null);
             if (h != null && !h.isEmpty()) {
@@ -123,7 +123,7 @@ public class YAiNativePlugin extends Plugin {
     public void updateNowPlaying(PluginCall call) {
         Boolean playing = call.getBoolean("playing", false);
         prefs(getContext()).edit()
-            .putString("np_title", call.getString("title", "YAi Radio"))
+            .putString("np_title", call.getString("title", "YAiPlay Radio"))
             .putString("np_subtitle", call.getString("subtitle", ""))
             .putBoolean("np_playing", playing != null && playing)
             .apply();
@@ -159,7 +159,7 @@ public class YAiNativePlugin extends Plugin {
     public void share(PluginCall call) {
         Intent send = new Intent(Intent.ACTION_SEND);
         send.setType("text/plain");
-        send.putExtra(Intent.EXTRA_SUBJECT, call.getString("title", "YAi Radio"));
+        send.putExtra(Intent.EXTRA_SUBJECT, call.getString("title", "YAiPlay Radio"));
         send.putExtra(Intent.EXTRA_TEXT, call.getString("text", ""));
         Intent chooser = Intent.createChooser(send, "Поделиться");
         chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

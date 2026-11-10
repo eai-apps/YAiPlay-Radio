@@ -3,7 +3,7 @@ import pathlib, re, shutil
 root = pathlib.Path(__file__).resolve().parent.parent
 src = root / 'native/android'
 app = root / 'android/app'
-pkg = app / 'src/main/java/com/YAi/radio'
+pkg = app / 'src/main/java/com/yaiplay/radio'
 pkg.mkdir(parents=True, exist_ok=True)
 for f in (src / 'java').glob('*.java'):
     shutil.copy(f, pkg / f.name)
@@ -23,7 +23,7 @@ if 'SCHEDULE_EXACT_ALARM' not in s:
     s = s.replace('<application', '<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />\n    <application', 1)
 block = '''
         <!-- Виджет на рабочий стол -->
-        <receiver android:name=".NowPlayingWidget" android:exported="true" android:label="YAi Radio">
+        <receiver android:name=".NowPlayingWidget" android:exported="true" android:label="YAiPlay Radio">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -65,13 +65,13 @@ if 'YAiPlaybackService' not in s:
         </service>
     </application>''', 1)
 # Ссылки yaiplayradio://open — «Открыть в приложении» из браузера
-if 'android:scheme="YAi"' not in s:
+if 'android:scheme="yaiplayradio"' not in s:
     s = re.sub(r'(<activity[^>]*MainActivity[\s\S]*?</intent-filter>)', r'''\1
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="YAi" android:host="open" />
+                <data android:scheme="yaiplayradio" android:host="open" />
             </intent-filter>''', s, count=1)
 # Нативный плеер может играть и http-станции (их много), WebView по-прежнему только https
 if 'usesCleartextTraffic' not in s:

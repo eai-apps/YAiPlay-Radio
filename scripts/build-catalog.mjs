@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * YAi Radio — ежедневная автопроверка каталога.
+ * YAiPlay Radio — ежедневная автопроверка каталога.
  *
  * Запускается роботом GitHub (см. .github/workflows/catalog.yml) раз в сутки
  * или вручную из админки. Результат — файл public/catalog.json, который читает сайт:

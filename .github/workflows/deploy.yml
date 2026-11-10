@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
       - name: Номер сборки (последнее изменение кода, без ежедневного каталога)
         run: echo "BUILD_ID=$(git log -1 --format=%h --abbrev=7 -- src index.html vite.config.ts package-lock.json public/sw.js public/icons public/logo.png public/manifest.webmanifest public/privacy.html)" >> $GITHUB_ENV

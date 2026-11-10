@@ -17,12 +17,12 @@ test('only fixed public data files can be fetched; no forwarding auth/cookies/qu
     assert.equal(opts.headers.Authorization, undefined);
     assert.equal(opts.headers.Cookie, undefined);
     assert.equal(opts.headers['Cache-Control'], 'no-cache');
-    return Response.json({ apiUrl: 'https://yaiplay-radio-api.<account-subdomain>.workers.dev', appTitle: 'YAi Radio' });
+    return Response.json({ apiUrl: 'https://yaiplay-radio-api.yai-media-player.workers.dev', appTitle: 'YAiPlay Radio' });
   }, async () => {
     const response = await worker.fetch(new Request(`${ORIGIN}/data/content.json?token=do-not-forward`, { headers: { Authorization: 'test', Cookie: 'test' } }), env);
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('cache-control'), 'no-store');
-    assert.equal((await response.json()).apiUrl, 'https://yaiplay-radio-api.<account-subdomain>.workers.dev');
+    assert.equal((await response.json()).apiUrl, 'https://yaiplay-radio-api.yai-media-player.workers.dev');
   });
   assert.equal((await worker.fetch(new Request(`${ORIGIN}/data/secrets.json`), env)).status, 404);
   assert.equal((await worker.fetch(new Request(`${ORIGIN}/data/https://example.com`), env)).status, 404);
@@ -30,7 +30,7 @@ test('only fixed public data files can be fetched; no forwarding auth/cookies/qu
 
 test('same account API, bearer and body pass through; private responses never cached', async () => {
   await mockFetch(async (url, opts) => {
-    assert.equal(url, 'https://yaiplay-radio-api.<account-subdomain>.workers.dev/sync/data');
+    assert.equal(url, 'https://yaiplay-radio-api.yai-media-player.workers.dev/sync/data');
     assert.equal(opts.headers.get('Origin'), 'https://yaiplay-radio.pages.dev');
     assert.equal(opts.headers.get('Authorization'), 'Bearer test-value');
     assert.equal(opts.headers.get('Cookie'), null);

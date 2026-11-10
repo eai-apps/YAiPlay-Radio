@@ -1,6 +1,6 @@
 // Deployed ONLY to the Pages branch alias 2g. No secrets or KV bindings here.
 const SITE = 'https://yaiplay-radio.pages.dev';
-const API = 'https://yaiplay-radio-api.<account-subdomain>.workers.dev';
+const API = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
 const DATA = new Set(['content.json', 'catalog.json', 'geo.json', 'releases.json', 'app/version.json']);
 const API_PATH = /^\/(?:health|meta|geo|probe|webcams|support|sync\/(?:register|login|data|account)|admin\/(?:check|login|publish|messages(?:\/[^/]+)?))\/?$/;
 const METHODS = new Set(['GET', 'HEAD', 'POST', 'PUT', 'DELETE']);

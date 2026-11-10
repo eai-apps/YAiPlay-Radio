@@ -492,7 +492,7 @@ function RadioApp() {
             />
             <div className="min-w-0">
               <span className="text-sm font-extrabold tracking-tight text-white block truncate">
-                {settings.appTitle || 'YAi Radio'}
+                {settings.appTitle || 'YAiPlay Radio'}
               </span>
               <span className="text-[10px] font-medium text-violet-400 block truncate font-mono">
                 {settings.appSubtitle}
@@ -738,7 +738,7 @@ function RadioApp() {
                       </div>
 
                       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-                        {settings.heroTitle || 'YAi Radio'}
+                        {settings.heroTitle || 'YAiPlay Radio'}
                       </h1>
                       <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-xl leading-relaxed">
                         {settings.heroSubtitle ||

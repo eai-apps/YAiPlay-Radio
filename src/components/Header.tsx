@@ -245,7 +245,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="animate-matrix-ticker font-mono text-[11px] text-cyan-400 font-medium tracking-wide">
               {currentStation
                 ? `♫ ${currentStation.name.toUpperCase()} » ${(currentTrackTitle || liveFallbackLabel(currentStation)).toUpperCase()} •`
-                : `♫ YAi Radio ${appVersion} • РАДИО СО ВСЕГО МИРА • ЖАНРЫ, СТРАНЫ И НАСТРОЕНИЯ • БЕЗ РЕКЛАМЫ •`}
+                : `♫ YAiPlay Radio ${appVersion} • РАДИО СО ВСЕГО МИРА • ЖАНРЫ, СТРАНЫ И НАСТРОЕНИЯ • БЕЗ РЕКЛАМЫ •`}
             </div>
           </div>
 

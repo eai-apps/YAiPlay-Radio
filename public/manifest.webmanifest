@@ -1,7 +1,7 @@
 {
   "id": "/YAiPlay-Radio/",
-  "name": "YAi Radio",
-  "short_name": "YAi Radio",
+  "name": "YAiPlay Radio",
+  "short_name": "YAiPlay Radio",
   "description": "Бесплатное интернет-радио со всего мира",
   "lang": "ru",
   "start_url": "./",

@@ -37,7 +37,7 @@ public class NowPlayingWidget extends AppWidgetProvider {
         boolean playing = p.getBoolean("np_playing", false);
         boolean alive = YAiNativePlugin.instance != null;
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_now_playing);
-        v.setTextViewText(R.id.w_title, p.getString("np_title", "YAi Radio"));
+        v.setTextViewText(R.id.w_title, p.getString("np_title", "YAiPlay Radio"));
         String sub = p.getString("np_subtitle", "");
         v.setTextViewText(R.id.w_sub, playing ? "● В эфире" + (sub.isEmpty() ? "" : " · " + sub) : (sub.isEmpty() ? "Нажмите ▶, чтобы слушать" : sub));
         v.setImageViewResource(R.id.w_btn, playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);

@@ -1,6 +1,6 @@
 {
   "appId": "com.yaiplay.radio",
-  "appName": "YAi Radio",
+  "appName": "YAiPlay Radio",
   "webDir": "dist",
   "android": {
     "allowMixedContent": false

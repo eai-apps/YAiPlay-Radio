@@ -114,7 +114,7 @@ export const BottomPlayer: React.FC<BottomPlayerProps> = ({
               {currentStation ? (
                 <StationLogo key={currentStation.stationuuid} favicon={currentStation.favicon} homepage={currentStation.homepage} name={currentStation.name || 'Радио'} />
               ) : (
-                <StationFallbackIcon name="YAi Radio" className="w-full h-full p-2" />
+                <StationFallbackIcon name="YAiPlay Radio" className="w-full h-full p-2" />
               )}
 
               {isPlaying && (

@@ -1,4 +1,4 @@
-# YAi Radio · 2G
+# YAiPlay Radio · 2G
 
 Дополнительная лёгкая мобильная оболочка: **https://2g.yaiplay-radio.pages.dev/**.
 Основные адреса, исходники `src/`, APK, OTA и `worker/index.js` не меняются.

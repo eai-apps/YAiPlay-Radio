@@ -151,7 +151,7 @@ export const ShareSheet: React.FC = () => {
         {qr && (
           <div className="mt-4 flex flex-col items-center gap-2">
             <canvas ref={canvas} className="rounded-2xl bg-white p-2" />
-            <p className="text-xs text-zinc-400 text-center">Наведите камеру другого телефона — откроется YAi Radio{subject.kind === 'station' ? ' с этой станцией' : ' с этим плейлистом'}</p>
+            <p className="text-xs text-zinc-400 text-center">Наведите камеру другого телефона — откроется YAiPlay Radio{subject.kind === 'station' ? ' с этой станцией' : ' с этим плейлистом'}</p>
           </div>
         )}
         <p className="mt-4 text-[11px] text-zinc-500 text-center break-all">{url.length > 90 ? url.slice(0, 90) + '…' : url}</p>

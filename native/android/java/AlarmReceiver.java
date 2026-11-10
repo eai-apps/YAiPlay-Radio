@@ -16,7 +16,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             if (a.optBoolean("enabled", false)) {
                 Intent s = new Intent(c, AlarmService.class)
                     .putExtra("url", a.optString("url", ""))
-                    .putExtra("name", a.optString("name", "YAi Radio"))
+                    .putExtra("name", a.optString("name", "YAiPlay Radio"))
                     .putExtra("fade", a.optInt("fadeSec", 20));
                 try {
                     ContextCompat.startForegroundService(c, s);

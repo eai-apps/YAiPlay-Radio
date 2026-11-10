@@ -296,7 +296,7 @@ export const FullScreenPlayer: React.FC<FullScreenPlayerProps> = ({ isFavorite, 
               <span className="text-[9px] font-bold tracking-widest text-zinc-400 uppercase">Сейчас играет</span>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <YAiLogo size="xs" className="w-4 h-4" isSpinning={isPlaying} />
-                <span className="text-xs text-theme-accent font-bold">YAi Radio</span>
+                <span className="text-xs text-theme-accent font-bold">YAiPlay Radio</span>
               </div>
             </div>
             <button

@@ -64,7 +64,7 @@ export const InfoTelegramView: React.FC<InfoTelegramViewProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl sm:text-2xl font-extrabold text-white">
-                  {settings.appTitle || 'YAi Radio'} Community
+                  {settings.appTitle || 'YAiPlay Radio'} Community
                 </h1>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   {settings.appVersion || 'v0.8.1'}
@@ -171,11 +171,11 @@ export const InfoTelegramView: React.FC<InfoTelegramViewProps> = ({
       <div className="p-6 rounded-3xl bg-zinc-900/50 border border-zinc-800/80">
         <h2 className="text-base font-bold text-white flex items-center gap-2 mb-3">
           <Globe className="w-5 h-5 text-theme-accent" />
-          <span>О глобальной базе YAi Radio & Live Cams</span>
+          <span>О глобальной базе YAiPlay Radio & Live Cams</span>
         </h2>
         <div className="space-y-2 text-xs sm:text-sm text-zinc-300 leading-relaxed">
           <p>
-            YAi Radio агрегирует <strong>десятки тысяч живых радиостанций</strong> со всех уголков мира. Каталог синхронизируется через отказоустойчивую сеть серверов Radio Browser (зеркала в Германии, Австрии и Нидерландах) с автоматическим переключением при сбоях.
+            YAiPlay Radio агрегирует <strong>десятки тысяч живых радиостанций</strong> со всех уголков мира. Каталог синхронизируется через отказоустойчивую сеть серверов Radio Browser (зеркала в Германии, Австрии и Нидерландах) с автоматическим переключением при сбоях.
           </p>
           <p>
             Раздел «Веб-камеры мира» объединяет круглосуточные трансляции крупнейших городов Земли, курортов, горных пиков и МКС для одновременного просмотра и прослушивания музыки.
@@ -192,7 +192,7 @@ export const InfoTelegramView: React.FC<InfoTelegramViewProps> = ({
 
         <div className="text-xs text-zinc-300 leading-relaxed whitespace-pre-line bg-zinc-950/70 p-4 rounded-2xl border border-zinc-800/80 font-sans">
           {settings.dmcaPolicy ||
-            'YAi Radio является свободным программным интернет-тюнером и агрегатором публичных радиовещательных потоков и открытых веб-камер. Приложение не хранит, не ретранслирует и не изменяет аудио- и видеоматериалы на своих серверах. Все аудиопотоки воспроизводятся напрямую из открытой базы Radio Browser API.\n\nВсе персональные настройки (избранные станции, кастомный логотип, темы) сохраняются исключительно в локальном хранилище вашего браузера (localStorage).\n\nЕсли вы являетесь правообладателем или представителем вещателя и хотите обновить метаданные или удалить поток из каталога, направьте официальный запрос разработчикам YAi Radio через наш официальный Telegram-канал.'}
+            'YAiPlay Radio является свободным программным интернет-тюнером и агрегатором публичных радиовещательных потоков и открытых веб-камер. Приложение не хранит, не ретранслирует и не изменяет аудио- и видеоматериалы на своих серверах. Все аудиопотоки воспроизводятся напрямую из открытой базы Radio Browser API.\n\nВсе персональные настройки (избранные станции, кастомный логотип, темы) сохраняются исключительно в локальном хранилище вашего браузера (localStorage).\n\nЕсли вы являетесь правообладателем или представителем вещателя и хотите обновить метаданные или удалить поток из каталога, направьте официальный запрос разработчикам YAiPlay Radio через наш официальный Telegram-канал.'}
         </div>
       </div>
     </div>

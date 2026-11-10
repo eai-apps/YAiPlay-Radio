@@ -1,5 +1,5 @@
 {
-  "appTitle": "YAi Radio",
+  "appTitle": "YAiPlay Radio",
   "appSubtitle": "Радио со всего мира",
   "customLogoUrl": "./logo.png",
   "telegramUrl": "",
@@ -33,8 +33,8 @@
   },
   "defaultViewMode": "grid",
   "legalContact": "",
-  "heroTitle": "YAi Radio",
+  "heroTitle": "YAiPlay Radio",
   "heroSubtitle": "Радио со всего мира",
   "versionChangelog": "",
-  "dmcaPolicy": "YAi Radio — интернет-тюнер и каталог публичных радиопотоков. Приложение не хранит и не ретранслирует аудио: потоки воспроизводятся напрямую с серверов вещателей. Настройки хранятся только на вашем устройстве."
+  "dmcaPolicy": "YAiPlay Radio — интернет-тюнер и каталог публичных радиопотоков. Приложение не хранит и не ретранслирует аудио: потоки воспроизводятся напрямую с серверов вещателей. Настройки хранятся только на вашем устройстве."
 }
