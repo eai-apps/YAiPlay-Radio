@@ -86,7 +86,7 @@ public class YAiNativePlugin extends Plugin {
     private String stash(Intent i) {
         if (i == null) return null;
         android.net.Uri data = i.getData();
-        if (data != null && "YAi".equals(data.getScheme())) {
+        if (data != null && "yaiplayradio".equals(data.getScheme())) {
             String h = data.getQueryParameter("h");
             i.setData(null);
             if (h != null && !h.isEmpty()) {
