@@ -8,9 +8,9 @@ import { setAllowedStreamHosts } from '../constants/streamPolicy';
 import { setDefaultViewMode } from '../hooks/useViewMode';
 
 /** Личные настройки посетителя (тема, язык) — хранятся только на его устройстве. */
-export const SETTINGS_KEY = 'yaiplayradio_user_prefs_v3';
+export const SETTINGS_KEY = 'YAi_user_prefs_v3';
 /** Черновик владельца: правки из Админ-панели до публикации content.json. */
-export const ADMIN_DRAFT_KEY = 'yaiplayradio_admin_draft_v1';
+export const ADMIN_DRAFT_KEY = 'YAi_admin_draft_v1';
 
 /** Поля контента сайта. Источник — файл public/content.json (одинаков для всех посетителей). */
 export const SITE_FIELDS = [
@@ -49,16 +49,18 @@ export const DEFAULT_SETTINGS: YAiSettings = {
   appTitle: 'YAi Radio',
   appSubtitle: 'Радио со всего мира',
   customLogoUrl: './logo.png',
-  telegramUrl: '',
+  telegramUrl: 'https://t.me/YAiPlayer',
   customLinks: [
-          ],
+    { id: '1', title: 'Telegram Канал', url: 'https://t.me/YAiPlayer' },
+    { id: '2', title: 'Чат / Поддержка', url: 'https://t.me/YAi_support' },
+  ],
   customWebcams: [],
   customStations: [],
   customTvChannels: [],
   hiddenSections: [],
   hiddenCountries: { radio: [], tv: ['RU'], webcams: [] },
   isPro: false,
-  activeTheme: 'yaiplayradio-original',
+  activeTheme: 'YAi-original',
   language: 'ru',
   heroTitle: 'YAi Radio',
   appVersion: APP_VERSION,
@@ -220,7 +222,7 @@ export const YAiSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   // Тема
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', settings.activeTheme || 'yaiplayradio-original');
+    document.documentElement.setAttribute('data-theme', settings.activeTheme || 'YAi-original');
   }, [settings.activeTheme]);
 
   // Сохраняем только личные настройки

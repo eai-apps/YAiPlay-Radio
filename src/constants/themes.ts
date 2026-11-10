@@ -2,7 +2,7 @@ import { ThemeOption } from '../types/radio';
 
 export const THEMES: ThemeOption[] = [
   {
-    id: 'yaiplayradio-original',
+    id: 'YAi-original',
     name: 'YAi Original (Cyan-Lime)',
     hex: '#6041d8',
     hoverHex: '#4b2db8',

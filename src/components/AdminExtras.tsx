@@ -13,7 +13,7 @@ async function pbkdf2(password: string, salt: string): Promise<string> {
   const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(salt), iterations: 150000 }, key, 256);
   return btoa(String.fromCharCode(...new Uint8Array(bits)));
 }
-const LOCAL_UNLOCK = 'yaiplayradio_admin_unlocked';
+const LOCAL_UNLOCK = 'YAi_admin_unlocked';
 
 /** Экран входа в админку */
 export const AdminLogin: React.FC<{
@@ -139,12 +139,12 @@ export const AdminServerTab: React.FC<{ apiUrl: string; onSave: (url: string) =>
     <div className="p-5 sm:p-6 space-y-4">
       <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800 text-xs text-zinc-300 leading-relaxed">
         <b className="text-white flex items-center gap-2 mb-1">
-          <Server className="w-4 h-4 text-cyan-400" /> Мини-сервер yaiplayradio-api (Cloudflare, бесплатно)
+          <Server className="w-4 h-4 text-cyan-400" /> Мини-сервер yaiplay-radio-api (Cloudflare, бесплатно)
         </b>
         Нужен для: пароля админки на сервере, сообщений техподдержки, входа и синхронизации избранного, названий песен (RDS),
         определения страны, публикации одной кнопкой. Инструкция по размещению — в репозитории: <span className="font-mono">worker/README.md</span>.
       </div>
-      <input className={input} value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://yaiplayradio-api.<логин>.workers.dev" />
+      <input className={input} value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://yaiplay-radio-api.<логин>.workers.dev" />
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={check} disabled={!url.trim() || busy} className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold flex items-center gap-2 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />} Проверить
@@ -159,62 +159,6 @@ export const AdminServerTab: React.FC<{ apiUrl: string; onSave: (url: string) =>
         </p>
       )}
       <p className="text-[11px] text-zinc-500">После сохранения опубликуйте изменения — адрес сервера начнут использовать все посетители.</p>
-      {apiUrl && <VkConnect />}
-    </div>
-  );
-};
-
-/** Подключение ВКонтакте для постов с картинками: вход администратора через VK ID, ключи остаются на сервере */
-const VkConnect: React.FC = () => {
-  const [st, setSt] = useState<any>(null);
-  const [err, setErr] = useState<string | null>(null);
-  const load = async () => {
-    setErr(null);
-    try {
-      setSt(await api('/admin/vk/status', { token: adminToken.get() }));
-    } catch (e: any) {
-      setErr(e?.message || 'Ошибка');
-    }
-  };
-  useEffect(() => {
-    load();
-  }, []);
-  const start = async () => {
-    setErr(null);
-    try {
-      const r = await api<{ url?: string; error?: string }>('/admin/vk/start', { body: {}, token: adminToken.get() });
-      if (r.url) window.open(r.url, '_blank');
-      else setErr(r.error || 'Ошибка');
-    } catch (e: any) {
-      setErr(e?.message || 'Ошибка');
-    }
-  };
-  return (
-    <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-3">
-      <b className="text-white text-sm block">ВКонтакте — посты с картинками</b>
-      <p className="text-xs text-zinc-400 leading-relaxed">
-        Вы входите через VK ID как администратор группы. Ключи хранятся только на сервере и обновляются автоматически; раз в полгода
-        может понадобиться нажать кнопку снова.
-      </p>
-      {st && (
-        <div className="text-xs space-y-1">
-          <div className={st.connected ? 'text-violet-300' : 'text-amber-300'}>
-            {st.connected ? `✅ Подключено${st.scope ? ` · права: ${st.scope}` : ''}${st.at ? ` · ${new Date(st.at * 1000).toLocaleString('ru')}` : ''}` : '⚪ Не подключено'}
-          </div>
-          {!st.configured && <div className="text-amber-300">На сервере нет VK_CLIENT_ID — см. worker/README.md, раздел «ВКонтакте».</div>}
-          {!st.bridge && <div className="text-amber-300">На сервере нет VK_BRIDGE_KEY.</div>}
-          {st.error && <div className="text-cyan-300">Последняя ошибка: {st.error}</div>}
-        </div>
-      )}
-      {err && <p className="text-xs text-cyan-300">{err}</p>}
-      <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={start} disabled={!st?.configured} className="px-4 py-2.5 rounded-xl bg-[#0077ff] hover:bg-[#1a85ff] text-white text-xs font-bold disabled:opacity-50">
-          {st?.connected ? 'Переподключить ВКонтакте' : 'Подключить ВКонтакте'}
-        </button>
-        <button type="button" onClick={load} className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold flex items-center gap-2">
-          <RefreshCw className="w-4 h-4" /> Обновить статус
-        </button>
-      </div>
     </div>
   );
 };

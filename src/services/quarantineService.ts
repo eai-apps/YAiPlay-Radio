@@ -4,7 +4,7 @@
  * local quarantine for 6 hours with automatic recovery.
  */
 
-const QUARANTINE_KEY = 'yaiplayradio_quarantine_v1';
+const QUARANTINE_KEY = 'YAi_quarantine_v1';
 export const QUARANTINE_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 export interface QuarantineRecord {

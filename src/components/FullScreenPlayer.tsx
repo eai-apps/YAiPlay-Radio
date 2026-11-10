@@ -104,8 +104,8 @@ export const FullScreenPlayer: React.FC<FullScreenPlayerProps> = ({ isFavorite, 
   const [vizOn, setVizOn] = useState(() => loadSound().viz);
   useEffect(() => {
     const upd = () => setVizOn(loadSound().viz);
-    window.addEventListener('yaiplayradio_sound_changed', upd);
-    return () => window.removeEventListener('yaiplayradio_sound_changed', upd);
+    window.addEventListener('YAi_sound_changed', upd);
+    return () => window.removeEventListener('YAi_sound_changed', upd);
   }, []);
   const [weather, setWeather] = useState<CityWeather | null>(null);
   const [artwork, setArtwork] = useState<string | null>(null);

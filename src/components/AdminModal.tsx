@@ -97,7 +97,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       ? settings.customLinks
       : [
           { id: '1', title: 'Telegram Канал', url: 'https://t.me/YAiPlayer' },
-                  ]
+          { id: '2', title: 'Чат / Поддержка', url: 'https://t.me/YAi_support' },
+        ]
   );
   const [newLinkTitle, setNewLinkTitle] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
@@ -216,7 +217,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     if (logoPreview) {
       const link = document.createElement('a');
       link.href = logoPreview;
-      link.download = 'YAiPlay-Radio-logo.png';
+      link.download = 'yaiplay-radio-logo.png';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -379,7 +380,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   // Stream link scanner
   const runStreamScanner = async () => {
     // Gather stations to test: custom stations first, plus stations from favorites
-    const favsStr = localStorage.getItem('yaiplayradio_favorites_v2');
+    const favsStr = localStorage.getItem('YAi_favorites_v2');
     const favs: Station[] = favsStr ? JSON.parse(favsStr) : [];
     const stationsToTest = [...customStations, ...favs].slice(0, 30);
 
@@ -481,8 +482,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               onClick={() => {
                 adminToken.set(null);
                 try {
-                  localStorage.removeItem('yaiplayradio_owner_mode');
-                  sessionStorage.removeItem('yaiplayradio_admin_unlocked');
+                  localStorage.removeItem('YAi_owner_mode');
+                  sessionStorage.removeItem('YAi_admin_unlocked');
                 } catch {}
                 window.location.href = window.location.pathname;
               }}
@@ -906,7 +907,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         <span>Социальные сети и полезные ссылки (Раздел «Информация» на сайте)</span>
                       </label>
                       <p className="text-[11px] text-zinc-400 mt-0.5">
-                        Добавляйте произвольное количество ссылок (Telegram, VK, Поддержка, Чат). Они сразу появятся в меню «Информация».
+                        Добавляйте произвольное количество ссылок (Telegram, Поддержка, Чат). Они сразу появятся в меню «Информация».
                       </p>
                     </div>
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-zinc-800 text-cyan-300 shrink-0">
@@ -920,7 +921,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       type="text"
                       value={newLinkTitle}
                       onChange={(e) => setNewLinkTitle(e.target.value)}
-                      placeholder="Название (напр. Telegram, VK, Чат)"
+                      placeholder="Название (напр. Telegram, Чат)"
                       className="sm:w-1/3 text-xs py-2 px-3 rounded-lg bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400"
                     />
                     <input

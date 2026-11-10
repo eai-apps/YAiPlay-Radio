@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Station } from '../types/radio';
 
-export const FAVORITES_STORAGE_KEY = 'yaiplayradio_favorites_v2';
+export const FAVORITES_STORAGE_KEY = 'YAi_favorites_v2';
 // Ключи избранного из прошлых версий сайта (v0.8.x) — только для переноса данных
-const LEGACY_KEYS = ['p' + 'cradio_favorites_v1', 'yaiplayradio_radio_favorites', 'yaiplayradio_favorites_v1'];
-const CHANGE_EVENT = 'yaiplayradio_favorites_changed';
+const LEGACY_KEYS = ['p' + 'cradio_favorites_v1', 'YAi_radio_favorites', 'YAi_favorites_v1'];
+const CHANGE_EVENT = 'YAi_favorites_changed';
 
 function load(): Station[] {
   try {
@@ -29,10 +29,10 @@ function load(): Station[] {
 export function saveFavorites(list: Station[]) {
   try {
     localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(list));
-    localStorage.setItem('yaiplayradio_sync_local_updated', String(Date.now()));
+    localStorage.setItem('YAi_sync_local_updated', String(Date.now()));
   } catch {}
   window.dispatchEvent(new CustomEvent(CHANGE_EVENT));
-  window.dispatchEvent(new CustomEvent('yaiplayradio_local_change'));
+  window.dispatchEvent(new CustomEvent('YAi_local_change'));
 }
 
 export function useFavorites() {

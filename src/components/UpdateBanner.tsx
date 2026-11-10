@@ -18,8 +18,8 @@ export const UpdateBanner: React.FC = () => {
   useEffect(() => {
     if (!isNativeApp) return;
     const onReady = () => setReady(true);
-    window.addEventListener('yaiplayradio_update_ready', onReady);
-    if (!FEATURES.apkLinks) return () => window.removeEventListener('yaiplayradio_update_ready', onReady);
+    window.addEventListener('YAi_update_ready', onReady);
+    if (!FEATURES.apkLinks) return () => window.removeEventListener('YAi_update_ready', onReady);
     Promise.all([
       nativeVersion(),
       fetch('https://api.github.com/repos/eai-apps/YAiPlay-Radio/releases/tags/android-latest', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)),
@@ -28,12 +28,12 @@ export const UpdateBanner: React.FC = () => {
         const latest = String(rel?.body || '').match(/native:\s*([\d.]+)/)?.[1] || '';
         let dismissed = '';
         try {
-          dismissed = localStorage.getItem('yaiplayradio_apk_dismissed') || '';
+          dismissed = localStorage.getItem('YAi_apk_dismissed') || '';
         } catch {}
         if (mine && latest && num(latest) > num(mine) && latest !== dismissed) setApk(true);
       })
       .catch(() => {});
-    return () => window.removeEventListener('yaiplayradio_update_ready', onReady);
+    return () => window.removeEventListener('YAi_update_ready', onReady);
   }, []);
 
   if (apk) {
@@ -56,7 +56,7 @@ export const UpdateBanner: React.FC = () => {
               .then((rel) => {
                 const v = String(rel?.body || '').match(/native:\s*([\d.]+)/)?.[1];
                 try {
-                  if (v) localStorage.setItem('yaiplayradio_apk_dismissed', v);
+                  if (v) localStorage.setItem('YAi_apk_dismissed', v);
                 } catch {}
               })
               .catch(() => {});

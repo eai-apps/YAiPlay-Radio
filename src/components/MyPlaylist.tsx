@@ -7,7 +7,7 @@ import { StationLogo } from './StationLogo';
 import { openShare } from './ShareSheet';
 import { openAddToPlaylist } from './PlaylistModals';
 
-export const openPlaylist = () => window.dispatchEvent(new CustomEvent('yaiplayradio_open_playlist'));
+export const openPlaylist = () => window.dispatchEvent(new CustomEvent('YAi_open_playlist'));
 
 /**
  * «Мои плейлисты»: «Избранное» (станции с ♥) и свои плейлисты.
@@ -29,8 +29,8 @@ export const MyPlaylist: React.FC<{ onGoFavorites: () => void }> = ({ onGoFavori
       setOpen(true);
       setTimeout(() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
     };
-    window.addEventListener('yaiplayradio_open_playlist', h);
-    return () => window.removeEventListener('yaiplayradio_open_playlist', h);
+    window.addEventListener('YAi_open_playlist', h);
+    return () => window.removeEventListener('YAi_open_playlist', h);
   }, []);
 
   const current = sel === FAVORITES_ID ? null : playlists.find((p) => p.id === sel) || null;

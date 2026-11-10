@@ -14,9 +14,9 @@ export const setDeadStations = (ids: string[]) => (dead = new Set(ids));
 export const isGloballyDead = (id: string) => dead.has(id);
 
 // ---------- закрыты для этого слушателя (по стране / IP) ----------
-const GEO_KEY = 'yaiplayradio_geo_blocked_v1';
+const GEO_KEY = 'YAi_geo_blocked_v1';
 const GEO_TTL = 7 * 86400000;
-const GEO_EVENT = 'yaiplayradio_geo_blocked_changed';
+const GEO_EVENT = 'YAi_geo_blocked_changed';
 let geoCache: Record<string, number> | null = null;
 function geoMap(): Record<string, number> {
   if (geoCache) return geoCache;

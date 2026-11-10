@@ -156,7 +156,7 @@ export interface RadioAlarm {
 }
 
 export type ThemeId =
-  | 'yaiplayradio-original'
+  | 'YAi-original'
   | 'cyber-red'
   | 'neon-purple'
   | 'deep-ocean'
@@ -210,7 +210,7 @@ export interface YAiSettings {
   appTitle: string;
   appSubtitle: string;
   customLogoUrl: string; // Base64 or direct URL, empty if using vector YAi logo
-  telegramUrl: string; // @YAiPlayer
+  telegramUrl: string; // @YAi_radio
   customLinks?: CustomSocialLink[]; // Dynamic social/community links configured in CMS
   customWebcams?: WebcamCity[]; // Webcams added via Admin (content.json)
   customStations?: Station[]; // Stations added via Admin (content.json)

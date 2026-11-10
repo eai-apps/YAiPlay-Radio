@@ -34,7 +34,8 @@ export const InfoTelegramView: React.FC<InfoTelegramViewProps> = ({
     ? settings.customLinks
     : [
         { id: '1', title: 'Telegram Канал', url: telegramUrl || 'https://t.me/YAiPlayer' },
-              ];
+        { id: '2', title: 'Чат / Поддержка', url: 'https://t.me/YAi_support' },
+      ];
 
   const primaryLink = links[0] || {
     id: '1',

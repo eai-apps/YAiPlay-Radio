@@ -5,7 +5,7 @@ import { useSyncExternalStore } from 'react';
  * Для слабых телефонов и медленного интернета. Хранится на устройстве; если не выбран вручную —
  * включается сам при «Экономии трафика» или сети 2G.
  */
-const KEY = 'yaiplayradio_lite';
+const KEY = 'YAi_lite';
 const listeners = new Set<() => void>();
 
 function autoDefault(): boolean {

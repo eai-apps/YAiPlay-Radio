@@ -6,7 +6,7 @@
 import { isNativeApp, FEATURES } from '../utils/platform';
 
 const VERSION_URL = 'https://eai-apps.github.io/YAiPlay-Radio/app/version.json';
-const STATUS_KEY = 'yaiplayradio_update_status';
+const STATUS_KEY = 'YAi_update_status';
 
 function saveStatus(text: string) {
   try {
@@ -43,7 +43,7 @@ export async function initAppUpdater() {
     }
     await CapacitorUpdater.next({ id: bundle.id });
     saveStatus(`Скачано ${remote.version} — включится при следующем запуске`);
-    window.dispatchEvent(new CustomEvent('yaiplayradio_update_ready'));
+    window.dispatchEvent(new CustomEvent('YAi_update_ready'));
   } catch (e: any) {
     saveStatus(`Ошибка: ${e?.message || e}`);
     console.warn('Автообновление не удалось', e);

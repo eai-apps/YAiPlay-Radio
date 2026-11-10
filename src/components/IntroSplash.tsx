@@ -9,13 +9,13 @@ function shouldShow(): boolean {
     const standalone = window.matchMedia?.('(display-mode: standalone)').matches || (navigator as any).standalone;
     if (isNativeApp || standalone) {
       // В приложении — при каждом «холодном» запуске
-      if (sessionStorage.getItem('yaiplayradio_intro_done')) return false;
-      sessionStorage.setItem('yaiplayradio_intro_done', '1');
+      if (sessionStorage.getItem('YAi_intro_done')) return false;
+      sessionStorage.setItem('YAi_intro_done', '1');
       return true;
     }
     // На сайте — только при самом первом посещении
-    if (localStorage.getItem('yaiplayradio_intro_seen')) return false;
-    localStorage.setItem('yaiplayradio_intro_seen', '1');
+    if (localStorage.getItem('YAi_intro_seen')) return false;
+    localStorage.setItem('YAi_intro_seen', '1');
     return true;
   } catch {
     return false;
@@ -45,12 +45,12 @@ export const IntroSplash: React.FC = () => {
   return createPortal(
     <div
       onClick={() => setStage('leave')}
-      className={`yaiplayradio-intro fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden select-none ${stage === 'leave' ? 'is-leaving' : ''}`}
+      className={`YAi-intro fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden select-none ${stage === 'leave' ? 'is-leaving' : ''}`}
       aria-hidden
     >
       <style>{`
-        .yaiplayradio-intro{background:radial-gradient(circle at 50% 45%,#06281f 0%,#05110f 38%,#09090b 75%);animation:si-bg 2.5s ease-out both}
-        .yaiplayradio-intro.is-leaving{animation:si-out .55s ease-in forwards}
+        .YAi-intro{background:radial-gradient(circle at 50% 45%,#06281f 0%,#05110f 38%,#09090b 75%);animation:si-bg 2.5s ease-out both}
+        .YAi-intro.is-leaving{animation:si-out .55s ease-in forwards}
         @keyframes si-out{to{opacity:0;transform:scale(1.08);filter:blur(6px)}}
         @keyframes si-bg{from{background-size:60% 60%}to{background-size:100% 100%}}
         .si-stage{position:relative;width:min(56vw,260px);aspect-ratio:1}
@@ -73,7 +73,7 @@ export const IntroSplash: React.FC = () => {
         .si-eq i{width:5px;border-radius:3px;background:linear-gradient(#1fcfeb,#6041d8);animation:si-bar .7s ease-in-out infinite alternate}
         .si-eq i:nth-child(2){animation-delay:.15s}.si-eq i:nth-child(3){animation-delay:.3s}.si-eq i:nth-child(4){animation-delay:.1s}.si-eq i:nth-child(5){animation-delay:.25s}
         @keyframes si-bar{from{height:5px}to{height:26px}}
-        @media (prefers-reduced-motion: reduce){.yaiplayradio-intro *{animation-duration:.01s!important;animation-iteration-count:1!important}}
+        @media (prefers-reduced-motion: reduce){.YAi-intro *{animation-duration:.01s!important;animation-iteration-count:1!important}}
       `}</style>
 
       <div className="si-stage">

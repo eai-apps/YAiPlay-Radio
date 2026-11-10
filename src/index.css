@@ -10,16 +10,16 @@
   --accent-glow: rgba(96, 65, 216, 0.45);
   --accent-subtle: rgba(96, 65, 216, 0.14);
   --accent-border: rgba(96, 65, 216, 0.4);
-  --theme-gradient: linear-gradient(135deg, #6041d8 0%, #6041d8 48%, #1fcfeb 100%);
+  --theme-gradient: linear-gradient(135deg, #06b6d4 0%, #6041d8 50%, #1fcfeb 100%);
 }
 
-[data-theme="yaiplayradio-original"] {
+[data-theme="YAi-original"] {
   --accent: #6041d8;
   --accent-hover: #4b2db8;
   --accent-glow: rgba(96, 65, 216, 0.45);
   --accent-subtle: rgba(96, 65, 216, 0.14);
   --accent-border: rgba(96, 65, 216, 0.4);
-  --theme-gradient: linear-gradient(135deg, #6041d8 0%, #6041d8 48%, #1fcfeb 100%);
+  --theme-gradient: linear-gradient(135deg, #06b6d4 0%, #6041d8 50%, #1fcfeb 100%);
 }
 
 [data-theme="cyber-red"] {

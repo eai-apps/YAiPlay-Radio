@@ -11,7 +11,7 @@ import { SharedPlaylist, unpack } from '../services/share';
 import { fetchStationsByUuids } from '../services/radioApi';
 import { loadCatalog } from '../services/catalogService';
 
-const ADD_EVENT = 'yaiplayradio_add_to_playlist';
+const ADD_EVENT = 'YAi_add_to_playlist';
 export const openAddToPlaylist = (st: Station) => window.dispatchEvent(new CustomEvent(ADD_EVENT, { detail: st }));
 
 /** «В плейлист…»: отметить, в каких плейлистах станция, или создать новый */

@@ -5,7 +5,7 @@ import { Station } from '../types/radio';
 import { useAudio } from '../context/AudioPlayerContext';
 import { StationLogo } from './StationLogo';
 
-export const openRecord = () => window.dispatchEvent(new CustomEvent('yaiplayradio_open_record'));
+export const openRecord = () => window.dispatchEvent(new CustomEvent('YAi_open_record'));
 
 /** Radio Record — главный эксклюзив YAi: яркая витрина с каналами */
 export const RecordSpotlight: React.FC = () => {
@@ -17,8 +17,8 @@ export const RecordSpotlight: React.FC = () => {
   useEffect(() => {
     loadCatalog().then((c) => setList(c.exclusive?.find((g) => g.id === 'record')?.stations || []));
     const h = () => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    window.addEventListener('yaiplayradio_open_record', h);
-    return () => window.removeEventListener('yaiplayradio_open_record', h);
+    window.addEventListener('YAi_open_record', h);
+    return () => window.removeEventListener('YAi_open_record', h);
   }, []);
 
   if (!list.length) return null;

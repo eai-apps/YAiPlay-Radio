@@ -6,8 +6,8 @@ import { Station } from '../types/radio';
 
 export type QualityMode = 'high' | 'weak';
 export type Tier = 'low' | 'mid' | 'high';
-const KEY = 'yaiplayradio_quality';
-const EVENT = 'yaiplayradio_quality_changed';
+const KEY = 'YAi_quality';
+const EVENT = 'YAi_quality_changed';
 
 /** По умолчанию — всегда максимальное качество. «Слабый интернет» включает пользователь сам. */
 export function getQualityMode(): QualityMode {

@@ -1,5 +1,5 @@
 /**
- * Связь с мини-сервером yaiplayradio-api (Cloudflare Worker, папка worker/).
+ * Связь с мини-сервером yaiplay-radio-api (Cloudflare Worker, папка worker/).
  * Адрес задаётся в админке (вкладка «Сервер») и хранится в content.json → apiUrl.
  * Пока адреса нет — функции, которым нужен сервер, просто скрыты.
  */
@@ -42,9 +42,9 @@ export async function api<T = any>(path: string, opts: { method?: string; body?:
 }
 
 // ---- токены (хранятся только на этом устройстве) ----
-const ADMIN_TOKEN = 'yaiplayradio_admin_token';
-const USER_TOKEN = 'yaiplayradio_user_token';
-const USER_LOGIN = 'yaiplayradio_user_login';
+const ADMIN_TOKEN = 'YAi_admin_token';
+const USER_TOKEN = 'YAi_user_token';
+const USER_LOGIN = 'YAi_user_login';
 const read = (k: string) => {
   try {
     return localStorage.getItem(k);

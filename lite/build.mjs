@@ -1,0 +1,28 @@
+import { build } from 'vite';
+import { readFile, writeFile, copyFile, mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import { gzipSync } from 'node:zlib';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const out = path.join(root, 'dist-lite');
+const stamp = (process.env.GITHUB_SHA || process.env.BUILD_ID || 'dev').slice(0, 7);
+await build({ configFile: path.join(root, 'lite/vite.config.ts') });
+const catalog = JSON.parse(await readFile(path.join(root, 'public/catalog.json'), 'utf8'));
+const fields = ['stationuuid', 'name', 'url', 'url_resolved', 'homepage', 'tags', 'country', 'countrycode', 'state', 'codec', 'bitrate', 'isCustom', 'alt'];
+const compact = (station) => Object.fromEntries(fields.filter((key) => station[key] !== undefined).map((key) => [key, station[key]]));
+const groups = (items = []) => items.map((group) => ({ ...group, stations: group.stations.map(compact) }));
+const core = { generatedAt: catalog.generatedAt, sourceCommit: stamp, artists: {}, series: [], tv: [], deadLinks: [], dead: catalog.dead || [], exclusive: groups(catalog.exclusive), curated: groups(catalog.curated) };
+const json = JSON.stringify(core);
+await writeFile(path.join(out, 'core.json'), json);
+await copyFile(path.join(root, 'lite/worker.js'), path.join(out, '_worker.js'));
+await writeFile(path.join(out, 'sw.js'), (await readFile(path.join(root, 'lite/sw.js'), 'utf8')).replace('__BUILD__', stamp));
+await writeFile(path.join(out, '_routes.json'), JSON.stringify({ version: 1, include: ['/api/*', '/data/*', '/app/version.json', '/releases.json'], exclude: [] }));
+await writeFile(path.join(out, '_headers'), '/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n/core.json\n  Cache-Control: public, max-age=300\n/sw.js\n  Cache-Control: no-cache\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
+await copyFile(path.join(root, 'public/privacy.html'), path.join(out, 'privacy.html'));
+await copyFile(path.join(root, 'public/logo.png'), path.join(out, 'logo.png'));
+await writeFile(path.join(out, 'icon.svg'), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#17271d"/><text x="96" y="113" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="68" fill="#a4e7bd">2G</text></svg>');
+await mkdir(path.join(out, 'icons'), { recursive: true });
+for (const size of [192, 512]) await copyFile(path.join(root, `public/icons/icon-${size}.png`), path.join(out, `icons/icon-${size}.png`));
+await writeFile(path.join(out, 'manifest.webmanifest'), JSON.stringify({ id: '/', name: 'YAi Radio · 2G', short_name: 'YAi 2G', start_url: '/', scope: '/', display: 'standalone', theme_color: '#101513', background_color: '#101513', icons: [192, 512].map((size) => ({ src: `/icons/icon-${size}.png`, sizes: `${size}x${size}`, type: 'image/png' })) }));
+console.log(`2G core: ${Buffer.byteLength(json)} bytes, gzip ${gzipSync(json).length} bytes; ${core.exclusive.length} exclusive groups, ${core.curated.length} playlists.`);

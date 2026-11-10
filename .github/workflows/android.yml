@@ -1,0 +1,86 @@
+name: Android APK
+# Сборка APK для Android (телефон + Android TV).
+# Собирается сам после каждого изменения кода сайта, или вручную: Actions → «Android APK» → Run workflow.
+# Готовый файл появляется в Releases → «android-latest».
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Номер сборки (последнее изменение кода, без ежедневного каталога)
+        run: echo "BUILD_ID=$(git log -1 --format=%h --abbrev=7 -- src index.html vite.config.ts package-lock.json public/sw.js public/icons public/logo.png public/manifest.webmanifest public/privacy.html)" >> $GITHUB_ENV
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap add android
+      - name: Иконки и заставка
+        run: npx --yes @capacitor/assets@3 generate --android --iconBackgroundColor '#09090b' --iconBackgroundColorDark '#09090b' --splashBackgroundColor '#09090b' --splashBackgroundColorDark '#09090b'
+      - name: Проверить ключ подписи
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KSP: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$KS" ] || [ -z "$KSP" ] || [ -z "$ALIAS" ]; then
+            echo "::error::Перед запуском добавьте три секрета подписи Android в настройках репозитория. APK не будет собран без подписи."
+            exit 1
+          fi
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/YAi.jks"
+          echo "YAi_KEYSTORE=$RUNNER_TEMP/YAi.jks" >> $GITHUB_ENV
+          echo "Ключ подписи настроен"
+      - name: Поддержка Android TV и версия
+        env:
+          YAi_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          YAi_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: python3 scripts/android-tv-patch.py ${GITHUB_RUN_NUMBER}
+      - name: Виджет, будильник, Android Auto
+        run: python3 scripts/android-native-patch.py
+      - run: npx cap sync android
+      - name: Сборка APK
+        env:
+          YAi_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          YAi_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          cd android && chmod +x gradlew
+          if [ -n "$YAi_KEYSTORE" ]; then
+            ./gradlew assembleRelease --no-daemon
+            cp app/build/outputs/apk/release/app-release.apk ../YAiRadio.apk
+          else
+            ./gradlew assembleDebug --no-daemon
+            cp app/build/outputs/apk/debug/app-debug.apk ../YAiRadio.apk
+          fi
+      - run: cp YAiRadio.apk YAiRadio-TV.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: YAiRadio-apk
+          path: |
+            YAiRadio.apk
+            YAiRadio-TV.apk
+      - name: Выложить в Releases
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete android-latest -y --cleanup-tag || true
+          gh release create android-latest YAiRadio.apk YAiRadio-TV.apk --prerelease \
+            --title "YAi Radio для Android (тестовая сборка)" \
+            --notes "native: 1.0.${GITHUB_RUN_NUMBER} — тестовая сборка из ветки main. YAiRadio.apk — для телефонов и планшетов, YAiRadio-TV.apk — для Android TV (это одно и то же приложение, оно работает и там, и там)."

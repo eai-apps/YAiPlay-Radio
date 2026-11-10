@@ -100,7 +100,7 @@ export class NativeAudio extends EventTarget {
     super();
     P.addListener('player', (d) => this.onState(d.state, d.message || '')).catch(() => {});
     P.addListener('playerTitle', (d) => {
-      if (d?.title) window.dispatchEvent(new CustomEvent('yaiplayradio_native_title', { detail: d.title }));
+      if (d?.title) window.dispatchEvent(new CustomEvent('YAi_native_title', { detail: d.title }));
     }).catch(() => {});
   }
 
@@ -194,7 +194,7 @@ export interface SoundSettings {
   viz: boolean;
 }
 
-const SOUND_KEY = 'yaiplayradio_sound_v1';
+const SOUND_KEY = 'YAi_sound_v1';
 export const BUFFER_OPTIONS = [
   { ms: 1000, label: 'Быстрый старт', hint: '1 с — включается мгновенно' },
   { ms: 2500, label: 'Обычный', hint: '2,5 с — по умолчанию' },

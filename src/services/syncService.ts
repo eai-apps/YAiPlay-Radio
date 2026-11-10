@@ -6,9 +6,9 @@ import { api, hasApi, userSession } from './apiService';
 import { FAVORITES_STORAGE_KEY } from '../hooks/useFavorites';
 import { PLAYLISTS_KEY } from '../hooks/usePlaylists';
 
-const TRACKS_KEY = 'yaiplayradio_recognized_tracks_v1';
-export const LOCAL_UPDATED_KEY = 'yaiplayradio_sync_local_updated';
-const LAST_SYNC_KEY = 'yaiplayradio_sync_last';
+const TRACKS_KEY = 'YAi_recognized_tracks_v1';
+export const LOCAL_UPDATED_KEY = 'YAi_sync_local_updated';
+const LAST_SYNC_KEY = 'YAi_sync_last';
 
 const readArr = (k: string) => {
   try {
@@ -47,8 +47,8 @@ export async function syncNow(opts: { mergeFirst?: boolean } = {}): Promise<'pul
     localStorage.setItem(TRACKS_KEY, JSON.stringify(tracks));
     // плейлисты: только если сервер их уже хранит (старая версия сервера их не знает — локальные не трогаем)
     if (Array.isArray(pls)) localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(pls));
-    window.dispatchEvent(new CustomEvent('yaiplayradio_favorites_changed'));
-    window.dispatchEvent(new CustomEvent('yaiplayradio_playlists_changed'));
+    window.dispatchEvent(new CustomEvent('YAi_favorites_changed'));
+    window.dispatchEvent(new CustomEvent('YAi_playlists_changed'));
   };
   const push = async (fav: any[], tracks: any[], pls: any[] = readArr(PLAYLISTS_KEY)) => {
     const r = await api<{ updatedAt: number }>('/sync/data', { method: 'PUT', body: { favorites: fav, recognizedTracks: tracks, playlists: pls }, token });

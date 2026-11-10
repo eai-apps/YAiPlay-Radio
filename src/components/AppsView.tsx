@@ -9,7 +9,7 @@ const APK_PHONE = `${REPO}/releases/download/android-latest/YAiRadio.apk`;
 const APK_TV = APK_PHONE;
 const SITE = 'https://yaiplay-radio.pages.dev/';
 // RuStore: приложение одобрено модерацией (08.11.2026)
-const RUSTORE_APP = 'https://www.rustore.ru/catalog/app/com.yaiplayradio.radio.rustore';
+const RUSTORE_APP = 'https://www.rustore.ru/catalog/app/com.yaiplay.radio.rustore';
 const RUSTORE_GET = 'https://www.rustore.ru/download'; // сам магазин RuStore для телефона
 const RUSTORE_TV = 'https://www.rustore.ru/tv'; // RuStore для Android TV и приставок
 

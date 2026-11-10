@@ -158,7 +158,7 @@ export function playlistShareText(name: string, count: number, variant = 0): str
 }
 
 // ---------- отправка ----------
-export type ShareTarget = 'system' | 'telegram' | 'whatsapp' | 'vk' | 'viber' | 'copy';
+export type ShareTarget = 'system' | 'telegram' | 'whatsapp' | 'viber' | 'copy';
 
 export async function copyText(text: string): Promise<boolean> {
   try {
@@ -190,7 +190,7 @@ export const canSystemShare = () => hasNative() || typeof navigator.share === 'f
 export function shareTo(target: ShareTarget, text: string, url: string, title = 'YAi Radio'): Promise<boolean> | boolean {
   const full = `${text}\n${url}`;
   const open = (u: string) => {
-    // В Android-приложении новое окно не открывается — переходим по ссылке, приложение само откроет Telegram/WhatsApp/ВК
+    // В Android-приложении новое окно не открывается — переходим по ссылке, приложение само откроет Telegram/WhatsApp
     if (hasNative()) window.location.href = u;
     else window.open(u, '_blank', 'noopener');
     return true;
@@ -200,8 +200,6 @@ export function shareTo(target: ShareTarget, text: string, url: string, title = 
       return open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
     case 'whatsapp':
       return open(`https://wa.me/?text=${encodeURIComponent(full)}`);
-    case 'vk':
-      return open(`https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&comment=${encodeURIComponent(text)}`);
     case 'viber':
       return open(`viber://forward?text=${encodeURIComponent(full)}`);
     case 'copy':
@@ -225,5 +223,5 @@ export function openInAppLink(hash: string): string | null {
   const ua = navigator.userAgent || '';
   if (!/Android/i.test(ua) || hasNative()) return null;
   const fallback = encodeURIComponent(PUBLIC_SITE + hash);
-  return `intent://open?h=${encodeURIComponent(hash)}#Intent;scheme=yaiplayradio;package=com.yaiplayradio.radio;S.browser_fallback_url=${fallback};end`;
+  return `intent://open?h=${encodeURIComponent(hash)}#Intent;scheme=yaiplayradio;package=com.yaiplay.radio;S.browser_fallback_url=${fallback};end`;
 }

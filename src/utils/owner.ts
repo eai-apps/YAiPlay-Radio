@@ -7,7 +7,7 @@
  * Это не защита (в браузере её не бывает) — защита в том, что опубликовать
  * изменения можно только через ваш аккаунт GitHub. Админка лишь готовит файл content.json.
  */
-const OWNER_KEY = 'yaiplayradio_owner_mode';
+const OWNER_KEY = 'YAi_owner_mode';
 
 export function detectOwnerMode(): boolean {
   try {

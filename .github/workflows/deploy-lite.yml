@@ -1,0 +1,37 @@
+name: Публикация лёгкой версии 2G
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-lite-2g
+  cancel-in-progress: true
+
+jobs:
+  deploy-lite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: node --test lite/worker.test.mjs
+      - run: node lite/build.mjs
+      - name: Проверка размера стартовой загрузки
+        run: node lite/check-build.mjs
+      - name: Публикация только адреса 2g (основной сайт не затрагивается)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ vars.CF_PAGES_LITE_PROJECT || 'yaiplay-radio-lite' }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npx --yes wrangler@4 pages deploy dist-lite --project-name "$PROJECT" --branch 2g --commit-dirty=true

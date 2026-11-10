@@ -64,7 +64,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab, f
               <button
                 onClick={() => {
                   setMoreOpen(false);
-                  window.dispatchEvent(new CustomEvent('yaiplayradio_open_sync'));
+                  window.dispatchEvent(new CustomEvent('YAi_open_sync'));
                 }}
                 className="py-3 rounded-2xl bg-violet-500/15 border border-violet-500/40 text-violet-200 text-sm font-bold"
               >
@@ -73,7 +73,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab, f
               <button
                 onClick={() => {
                   setMoreOpen(false);
-                  window.dispatchEvent(new CustomEvent('yaiplayradio_open_support'));
+                  window.dispatchEvent(new CustomEvent('YAi_open_support'));
                 }}
                 className="py-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-200 text-sm font-bold"
               >

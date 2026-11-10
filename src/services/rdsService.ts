@@ -39,7 +39,7 @@ const JUNK_PLACEHOLDERS = [
   'unknown',
   'stream',
   'live',
-  'yaiplayradio',
+  'YAi',
   'radio',
   'non-stop',
   'various',

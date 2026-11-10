@@ -1,0 +1,51 @@
+# Только ручной запуск. По умолчанию формирует пост в логах и ничего не отправляет.
+name: YAi Radio — Telegram (dry-run)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Режим подготовки поста
+        type: choice
+        options: [station, day, news, webcam, release, ask, promo, feature, showcase]
+        default: station
+      dry_run:
+        description: Сухой прогон без отправки в Telegram
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: yaiplay-radio-telegram
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Библиотека изображений
+        run: npm install --no-save --no-package-lock sharp@0.34.4
+      - name: Подготовить пост
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL: ${{ secrets.TELEGRAM_CHANNEL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: node scripts/telegram-post.mjs "${{ inputs.mode }}"
+      - name: Сохранить состояние после реальной публикации
+        if: inputs.dry_run == false
+        run: |
+          if [ -z "$(git status --porcelain data/telegram-state.json)" ]; then exit 0; fi
+          git config user.name "YAi-Radio-bot"
+          git config user.email "YAi-Radio-bot@users.noreply.github.com"
+          git add data/telegram-state.json
+          git commit -m "Telegram: сохранить состояние радио"
+          git pull --rebase -q origin main
+          git push

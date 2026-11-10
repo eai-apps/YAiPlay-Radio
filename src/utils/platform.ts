@@ -13,7 +13,7 @@ export const isStoreBuild: boolean =
   isNativeApp && typeof navigator !== 'undefined' && /YAi-Store/.test(navigator.userAgent || '');
 
 /**
- * Отдельная сборка для RuStore (метка «YAi-RuStore» в User-Agent, пакет com.yaiplayradio.radio.rustore).
+ * Отдельная сборка для RuStore (метка «YAi-RuStore» в User-Agent, пакет com.yaiplay.radio.rustore).
  * В ней ТВ есть, но без российских и украинских каналов и без новостных/религиозных
  * (правила модерации RuStore и законы РФ о СМИ). Владелец может выключить ТВ только в RuStore — в админке.
  * Код в ней не обновляется «по воздуху» и нет ссылок на APK: обновления — только через RuStore.

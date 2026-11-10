@@ -1,0 +1,92 @@
+name: Android RuStore
+# Отдельная версия приложения для RuStore (пакет com.yaiplay.radio.rustore).
+# Отличия от APK с сайта: метка «YAi-RuStore» → ТВ без каналов РФ/Украины и без новостей,
+# нет ссылок на APK и нет автообновления кода (обновления — только через RuStore).
+# Запуск вручную: Actions → «Android RuStore» → Run workflow.
+# Готовый файл: Releases → «rustore-latest» → YAiRadio-RuStore.apk → загрузить в RuStore Консоль.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: android-rustore
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run build
+      - name: Метка RuStore в настройках приложения
+        run: |
+          python3 - <<'EOF'
+          import json
+          c = json.load(open('capacitor.config.json'))
+          c['appendUserAgent'] = 'YAi-RuStore'
+          json.dump(c, open('capacitor.config.json', 'w'), ensure_ascii=False, indent=2)
+          EOF
+      - run: npx cap add android
+      - name: Иконки и заставка
+        run: npx --yes @capacitor/assets@3 generate --android --iconBackgroundColor '#09090b' --iconBackgroundColorDark '#09090b' --splashBackgroundColor '#09090b' --splashBackgroundColorDark '#09090b'
+      - name: Ключ подписи
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KS" ]; then echo "::error::Нет ключа подписи в секретах — RuStore не примет неподписанный APK"; exit 1; fi
+          echo "$KS" | base64 -d > "$RUNNER_TEMP/YAi.jks"
+          echo "YAi_KEYSTORE=$RUNNER_TEMP/YAi.jks" >> $GITHUB_ENV
+      - name: Android TV, подпись
+        env:
+          YAi_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          YAi_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: python3 scripts/android-tv-patch.py ${GITHUB_RUN_NUMBER}
+      - name: Виджет, будильник, Android Auto
+        run: python3 scripts/android-native-patch.py
+      - name: Пакет и версия для RuStore
+        run: |
+          python3 - <<'EOF'
+          import json, re, os
+          ver = json.load(open('public/releases.json'))[0]['version']
+          code = 100 + int(os.environ['GITHUB_RUN_NUMBER'])
+          p = 'android/app/build.gradle'
+          g = open(p).read()
+          g = re.sub(r'applicationId "[^"]*"', 'applicationId "com.yaiplay.radio.rustore"', g)
+          g = re.sub(r'versionCode \d+', f'versionCode {code}', g)
+          g = re.sub(r'versionName "[^"]*"', f'versionName "{ver}"', g)
+          open(p, 'w').write(g)
+          open(os.environ['GITHUB_ENV'], 'a').write(f'RS_VERSION={ver}\nRS_CODE={code}\n')
+          print('RuStore: com.yaiplay.radio.rustore', ver, code)
+          EOF
+      - run: npx cap sync android
+      - name: Сборка APK
+        env:
+          YAi_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          YAi_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          cd android && chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+          cp app/build/outputs/apk/release/app-release.apk ../YAiRadio-RuStore.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: YAiPlayer-RuStore
+          path: YAiRadio-RuStore.apk
+      - name: Выложить в Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete rustore-latest -y --cleanup-tag || true
+          gh release create rustore-latest YAiRadio-RuStore.apk --prerelease \
+            --title "YAi Radio для RuStore ${RS_VERSION}" \
+            --notes "Файл для загрузки в RuStore Консоль (пакет com.yaiplay.radio.rustore, версия ${RS_VERSION}, код ${RS_CODE}). Не для скачивания пользователями."

@@ -151,12 +151,12 @@ function RadioApp() {
       timer = setTimeout(() => syncNow().catch(() => {}), 2000);
     };
     const onFocus = () => syncNow().catch(() => {});
-    window.addEventListener('yaiplayradio_local_change', onChange);
+    window.addEventListener('YAi_local_change', onChange);
     window.addEventListener('focus', onFocus);
     return () => {
       clearTimeout(t0);
       clearTimeout(timer);
-      window.removeEventListener('yaiplayradio_local_change', onChange);
+      window.removeEventListener('YAi_local_change', onChange);
       window.removeEventListener('focus', onFocus);
     };
   }, [settings.apiUrl]);
@@ -165,11 +165,11 @@ function RadioApp() {
   useEffect(() => {
     const open = () => setIsSupportOpen(true);
     const openSync = () => setIsSyncModalOpen(true);
-    window.addEventListener('yaiplayradio_open_support', open);
-    window.addEventListener('yaiplayradio_open_sync', openSync);
+    window.addEventListener('YAi_open_support', open);
+    window.addEventListener('YAi_open_sync', openSync);
     return () => {
-      window.removeEventListener('yaiplayradio_open_support', open);
-      window.removeEventListener('yaiplayradio_open_sync', openSync);
+      window.removeEventListener('YAi_open_support', open);
+      window.removeEventListener('YAi_open_sync', openSync);
     };
   }, []);
 
@@ -178,7 +178,7 @@ function RadioApp() {
     const onHash = () => {
       if (window.location.hash.toLowerCase().includes('admin') && !isOwnerMode) {
         try {
-          localStorage.setItem('yaiplayradio_owner_mode', '1');
+          localStorage.setItem('YAi_owner_mode', '1');
         } catch {}
         window.location.reload();
       }

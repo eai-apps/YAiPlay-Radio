@@ -1,0 +1,67 @@
+# Автоматическая публикация сайта на GitHub Pages при каждом изменении в ветке main
+name: Публикация на GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Номер сборки (последнее изменение кода, без ежедневного каталога)
+        run: echo "BUILD_ID=$(git log -1 --format=%h --abbrev=7 -- src index.html vite.config.ts package-lock.json public/sw.js public/icons public/logo.png public/manifest.webmanifest public/privacy.html)" >> $GITHUB_ENV
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Пакет обновления для приложения (приложение скачивает его само)
+        run: |
+          mkdir -p /tmp/bundle && cp -r dist/. /tmp/bundle && rm -rf /tmp/bundle/catalog.json /tmp/bundle/content.json /tmp/bundle/s /tmp/bundle/promo /tmp/bundle/rss.xml
+          (cd /tmp/bundle && zip -qr ../app-bundle.zip .)
+          mkdir -p dist/app && mv /tmp/app-bundle.zip "dist/app/bundle-$BUILD_ID.zip"
+          BUILT_AT=$(git log -1 --format=%cI -- src index.html vite.config.ts package-lock.json public/sw.js public/icons public/logo.png public/manifest.webmanifest public/privacy.html)
+          SUM=$(sha256sum "dist/app/bundle-$BUILD_ID.zip" | cut -d' ' -f1)
+          echo "{\"version\":\"$BUILD_ID\",\"builtAt\":\"$BUILT_AT\",\"checksum\":\"$SUM\",\"url\":\"https://eai-apps.github.io/YAiPlay-Radio/app/bundle-$BUILD_ID.zip\"}" > dist/app/version.json
+          cat dist/app/version.json
+      - name: Зеркало сайта на Cloudflare Pages (если настроены секреты)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ vars.CF_PAGES_PROJECT || 'yaiplay-radio' }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "Зеркало Cloudflare не настроено — пропускаем"; exit 0; fi
+          npx --yes wrangler@4 pages project create "$PROJECT" --production-branch main >/dev/null 2>&1 || true
+          npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true \
+            || echo "::warning::Зеркало Cloudflare Pages не обновилось — сайт на GitHub Pages опубликован нормально"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

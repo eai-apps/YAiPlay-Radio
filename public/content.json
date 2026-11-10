@@ -2,14 +2,8 @@
   "appTitle": "YAi Radio",
   "appSubtitle": "Радио со всего мира",
   "customLogoUrl": "./logo.png",
-  "telegramUrl": "https://t.me/YAiPlayer",
-  "customLinks": [
-    {
-      "id": "1",
-      "title": "Telegram Канал",
-      "url": "https://t.me/YAiPlayer"
-    }
-  ],
+  "telegramUrl": "",
+  "customLinks": [],
   "customWebcams": [],
   "customStations": [],
   "customTvChannels": [],

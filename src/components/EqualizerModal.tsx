@@ -14,7 +14,7 @@ export const EqualizerModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
   useEffect(() => {
     applySound(s);
-    window.dispatchEvent(new CustomEvent('yaiplayradio_sound_changed'));
+    window.dispatchEvent(new CustomEvent('YAi_sound_changed'));
   }, [s]);
 
   useEffect(() => {

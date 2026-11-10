@@ -1,0 +1,51 @@
+name: Поиск разрешений станций
+# Робот обходит сайты радиостанций и ищет, разрешают ли они свои потоки в сторонних приложениях.
+# Отчёт: docs/STREAM-PERMISSIONS.md (и data/stream-permissions.json). Ничего не блокирует сам.
+# Запуск вручную: Actions → «Поиск разрешений станций» → Run workflow. Сам — 1-го числа каждого месяца.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Сколько самых популярных станций проверить'
+        default: '3000'
+  schedule:
+    - cron: '17 3 1 * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: permissions-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Обход сайтов станций
+        env:
+          LIMIT: ${{ github.event.inputs.limit || '3000' }}
+        run: |
+          set -o pipefail
+          node scripts/permission-scan.mjs 2>&1 | tee /tmp/scan.log
+      - name: Сохранить отчёт
+        if: always()
+        run: |
+          set +e
+          tail -n 60 /tmp/scan.log > data/permission-scan.log
+          git config user.name "YAi-permissions-bot"
+          git config user.email "YAi-permissions-bot@users.noreply.github.com"
+          git add data/permission-scan.log data/stream-permissions.json docs/STREAM-PERMISSIONS.md
+          if git diff --cached --quiet; then echo "нечего сохранять"; exit 0; fi
+          out=$(git commit -q -m "Отчёт: что станции пишут о своих потоках" 2>&1) || echo "::error::commit: $(echo "$out" | tail -c 400 | tr '\n' ' ')"
+          for i in 1 2 3 4 5; do
+            out=$(git pull --rebase --autostash -q origin main 2>&1 && git push -q 2>&1) && { echo "сохранено"; exit 0; }
+            echo "::warning::push $i: $(echo "$out" | tail -c 400 | tr '\n' ' ')"
+            sleep 7
+          done
+          exit 1

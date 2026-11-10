@@ -9,14 +9,13 @@ export type ShareSubject =
   | { kind: 'station'; station: Station }
   | { kind: 'playlist'; name: string; stations: Station[] };
 
-const EVENT = 'yaiplayradio_share';
+const EVENT = 'YAi_share';
 /** Открыть окно «Поделиться» из любого места сайта */
 export const openShare = (s: ShareSubject) => window.dispatchEvent(new CustomEvent(EVENT, { detail: s }));
 
 const TARGETS: { id: ShareTarget; label: string; bg: string; icon: React.ReactNode }[] = [
   { id: 'telegram', label: 'Telegram', bg: 'bg-[#229ED9]', icon: <span className="text-xl">✈️</span> },
   { id: 'whatsapp', label: 'WhatsApp', bg: 'bg-[#25D366]', icon: <span className="text-xl">💬</span> },
-  { id: 'vk', label: 'ВКонтакте', bg: 'bg-[#0077FF]', icon: <span className="text-sm font-black text-white">VK</span> },
   { id: 'viber', label: 'Viber', bg: 'bg-[#7360F2]', icon: <span className="text-xl">📞</span> },
 ];
 

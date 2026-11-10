@@ -9,9 +9,9 @@ export const YAiGlobeSvg: React.FC<YAiGlobeSvgProps> = ({
   className = '',
   size = 56,
 }) => {
-  const gradId = 'yaiplayradioBrandGlobalGradient';
-  const glowGradId = 'yaiplayradioGlowGradient';
-  const clipId = 'yaiplayradioGlobeCircleClip';
+  const gradId = 'YAiBrandGlobalGradient';
+  const glowGradId = 'YAiGlowGradient';
+  const clipId = 'YAiGlobeCircleClip';
 
   return (
     <svg

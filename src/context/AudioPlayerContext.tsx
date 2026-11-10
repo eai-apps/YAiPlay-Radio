@@ -18,12 +18,12 @@ import { quarantineStation } from '../services/quarantineService';
 import { fetchLiveTrackTitle, parseAndValidateTrack, liveFallbackLabel, cleanTrackTitle } from '../services/rdsService';
 import { fetchAlbumArtFromItunes } from '../services/itunesService';
 
-const HISTORY_KEY = 'yaiplayradio_play_history_v1';
-const RECENT_KEY = 'yaiplayradio_recent_stations_v1';
-const RECOGNIZED_TRACKS_KEY = 'yaiplayradio_recognized_tracks_v1';
-const RECORDINGS_KEY = 'yaiplayradio_recordings_v1';
-const ALARM_KEY = 'yaiplayradio_alarm_settings_v1';
-const EQ_SETTINGS_KEY = 'yaiplayradio_eq_settings_v1';
+const HISTORY_KEY = 'YAi_play_history_v1';
+const RECENT_KEY = 'YAi_recent_stations_v1';
+const RECOGNIZED_TRACKS_KEY = 'YAi_recognized_tracks_v1';
+const RECORDINGS_KEY = 'YAi_recordings_v1';
+const ALARM_KEY = 'YAi_alarm_settings_v1';
+const EQ_SETTINGS_KEY = 'YAi_eq_settings_v1';
 
 interface AudioContextType {
   currentStation: Station | null;
@@ -105,7 +105,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [error, setError] = useState<string | null>(null);
   const [volume, setVolumeState] = useState<number>(() => {
     try {
-      const v = parseFloat(localStorage.getItem('yaiplayradio_volume') || '');
+      const v = parseFloat(localStorage.getItem('YAi_volume') || '');
       return Number.isFinite(v) && v >= 0 && v <= 1 ? v : 0.6;
     } catch {
       return 0.6;
@@ -115,7 +115,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     const t = setTimeout(() => {
       try {
-        localStorage.setItem('yaiplayradio_volume', String(volume));
+        localStorage.setItem('YAi_volume', String(volume));
       } catch {}
     }, 300);
     return () => clearTimeout(t);
@@ -844,8 +844,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return t;
       });
     };
-    window.addEventListener('yaiplayradio_native_title', onTitle);
-    return () => window.removeEventListener('yaiplayradio_native_title', onTitle);
+    window.addEventListener('YAi_native_title', onTitle);
+    return () => window.removeEventListener('YAi_native_title', onTitle);
   }, [registerRecognizedSong]);
 
   // Честный RDS: опрос реального названия трека каждые 15 секунд

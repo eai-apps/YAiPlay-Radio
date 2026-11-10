@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { isNativeApp } from '../utils/platform';
 
 export type ViewMode = 'grid' | 'list';
-const KEY = 'yaiplayradio_view_mode';
-const EVENT = 'yaiplayradio_view_mode_changed';
+const KEY = 'YAi_view_mode';
+const EVENT = 'YAi_view_mode_changed';
 
 let siteDefault: ViewMode = 'grid';
 /** Вид по умолчанию для всех посетителей (задаётся в админке) */

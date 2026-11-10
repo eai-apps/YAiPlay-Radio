@@ -28,7 +28,7 @@
       // Страховка от «белого экрана» (iPhone/Safari выгружает вкладку из памяти, а при возврате загрузка может зависнуть).
       // Если через 10 с интерфейс так и не появился — показываем кнопку и один раз перезагружаем сами.
       (function () {
-        var KEY = 'yaiplayradio_boot_reload';
+        var KEY = 'YAi_boot_reload';
         function empty() { var r = document.getElementById('root'); return !r || !r.firstChild; }
         function rescue() {
           if (!empty()) return;
@@ -47,12 +47,12 @@
       })();
     </script>
   </head>
-  <body class="bg-[#0e0924] text-neutral-100 font-['Manrope_Variable',sans-serif] antialiased select-none selection:bg-rose-500/30 selection:text-white overflow-x-hidden min-h-screen">
+  <body class="bg-[#0e0924] text-neutral-100 font-['Manrope_Variable',sans-serif] antialiased select-none selection:bg-cyan-500/30 selection:text-white overflow-x-hidden min-h-screen">
     <div id="root"></div>
     <div id="boot-fallback" style="position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:system-ui,sans-serif;text-align:center;padding:24px">
       <div style="font-size:18px;font-weight:700">YAi Radio загружается дольше обычного</div>
       <div style="font-size:14px;color:#a1a1aa">Проверьте интернет и нажмите кнопку</div>
-      <button onclick="location.reload()" style="padding:12px 22px;border:0;border-radius:14px;background:#1fcfeb;color:#0e0924;font-weight:800;font-size:15px">Перезагрузить</button>
+      <button onclick="location.reload()" style="padding:12px 22px;border:0;border-radius:14px;background:#6041d8;color:#0e0924;font-weight:800;font-size:15px">Перезагрузить</button>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

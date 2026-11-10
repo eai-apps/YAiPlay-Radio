@@ -2,7 +2,7 @@
 import { api, hasApi } from './apiService';
 import { guessUserCountry } from './radioApi';
 
-const KEY = 'yaiplayradio_geo_v2';
+const KEY = 'YAi_geo_v2';
 
 export async function getMyCountry(): Promise<string> {
   try {

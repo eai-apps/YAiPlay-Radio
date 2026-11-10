@@ -11,8 +11,8 @@ export interface Playlist {
   from?: string; // если плейлист пришёл по ссылке от друга
 }
 
-export const PLAYLISTS_KEY = 'yaiplayradio_playlists_v1';
-const EVENT = 'yaiplayradio_playlists_changed';
+export const PLAYLISTS_KEY = 'YAi_playlists_v1';
+const EVENT = 'YAi_playlists_changed';
 export const FAVORITES_ID = 'favorites';
 
 function load(): Playlist[] {
@@ -26,10 +26,10 @@ function load(): Playlist[] {
 export function savePlaylists(list: Playlist[]) {
   try {
     localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(list));
-    localStorage.setItem('yaiplayradio_sync_local_updated', String(Date.now()));
+    localStorage.setItem('YAi_sync_local_updated', String(Date.now()));
   } catch {}
   window.dispatchEvent(new CustomEvent(EVENT));
-  window.dispatchEvent(new CustomEvent('yaiplayradio_local_change'));
+  window.dispatchEvent(new CustomEvent('YAi_local_change'));
 }
 
 // Храним только нужное для воспроизведения

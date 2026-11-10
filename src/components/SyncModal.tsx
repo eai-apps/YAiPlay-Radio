@@ -9,7 +9,7 @@ import { api, hasApi, userSession } from '../services/apiService';
 import { syncNow, lastSyncAt } from '../services/syncService';
 import { LogIn, LogOut, UserPlus, RefreshCw, Loader2, Trash2 } from 'lucide-react';
 
-const RECOGNIZED_TRACKS_KEY = 'yaiplayradio_recognized_tracks_v1';
+const RECOGNIZED_TRACKS_KEY = 'YAi_recognized_tracks_v1';
 const IMPORT_HASH = 'fav=';
 
 /** Ссылка, открыв которую на другом устройстве, получишь то же избранное. */
@@ -40,7 +40,7 @@ export async function importFavoritesFromLink(customStations: Station[]): Promis
   // Сохраняем порядок из ссылки и не дублируем уже имеющиеся
   let current: Station[] = [];
   try {
-    current = JSON.parse(localStorage.getItem('yaiplayradio_favorites_v2') || '[]');
+    current = JSON.parse(localStorage.getItem('YAi_favorites_v2') || '[]');
   } catch {}
   const have = new Set(current.map((s) => s.stationuuid));
   const ordered = ids.map((id) => found.find((s) => s.stationuuid === id)).filter((s): s is Station => !!s && !have.has(s.stationuuid));
@@ -112,7 +112,7 @@ export const SyncModal: React.FC<SyncModalProps> = ({ onClose }) => {
   const exportJson = () => {
     download(
       JSON.stringify({ app: 'YAi Radio', type: 'user-backup', createdAt: new Date().toISOString(), favorites, recognizedTracks }, null, 2),
-      `yaiplayradio-moi-dannye-${new Date().toISOString().slice(0, 10)}.json`,
+      `YAi-moi-dannye-${new Date().toISOString().slice(0, 10)}.json`,
       'application/json'
     );
     flash('Файл сохранён');
@@ -125,7 +125,7 @@ export const SyncModal: React.FC<SyncModalProps> = ({ onClose }) => {
       m3u += `#EXTINF:-1 tvg-logo="${s.favicon || ''}" group-title="${s.country || 'Radio'}",${s.name.replace(/[\r\n]/g, '')}\n`;
       m3u += `${s.url_resolved || s.url}\n`;
     });
-    download(m3u, `yaiplayradio-izbrannoe.m3u`, 'audio/x-mpegurl;charset=utf-8');
+    download(m3u, `YAi-izbrannoe.m3u`, 'audio/x-mpegurl;charset=utf-8');
     flash('Плейлист M3U скачан — его можно открыть в VLC, AIMP и т.п.');
   };
 
