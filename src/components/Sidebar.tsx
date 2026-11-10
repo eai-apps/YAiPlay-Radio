@@ -335,7 +335,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Share2 className="w-4 h-4 text-cyan-400" />
             <span>{t.navSync}</span>
           </div>
-          <span className="text-[10px] font-mono text-zinc-400">SLY-SYNC</span>
+          <span className="text-[10px] font-mono text-zinc-400">YAI SYNC</span>
         </button>
 
         {/* Admin Panel — owner mode only */}
