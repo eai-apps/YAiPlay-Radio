@@ -42,7 +42,12 @@ jobs:
             git add public/catalog.json public/geo.json
             git commit -m "Каталог обновлён автоматически $(date -u +%Y-%m-%d)"
             # Если за время проверки в репозиторий что-то добавили — подтягиваем и пробуем снова
-            for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
+            pushed=false
+            for i in 1 2 3; do
+              if git pull --rebase -q origin main && git push; then pushed=true; break; fi
+              sleep 5
+            done
+            if [ "$pushed" != true ]; then echo "Не удалось сохранить каталог" >&2; exit 1; fi
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -50,3 +55,4 @@ jobs:
     needs: update
     if: needs.update.outputs.changed == 'true'
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit

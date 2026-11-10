@@ -54,6 +54,12 @@ npm run build
 
 ## Журнал работ
 
+### 2026-11-10 — Codex: подготовка этапа Cloudflare и workflows
+
+- Telegram workflow ограничен ручным dry-run: `DRY_RUN=true` задан в workflow, выбор реальной отправки и доступ к Telegram secrets убраны, запись состояния отключена. Фактическая отправка по-прежнему требует отдельного решения и изменения workflow.
+- В `catalog.yml` исправлена проверка результата push и передача secrets в вызываемый `deploy.yml`; Cloudflare Pages теперь не создаётся автоматически и ошибка её публикации не маскируется.
+- Локальный dry-run `feature` сформировал черновик без вызовов Telegram; `station` при отсутствии сетевого доступа не нашёл станцию. Настройка и проверка Cloudflare и GitHub Actions требуют продолжения.
+
 ### 2026-11-10 18:38 Europe/Berlin — Codex
 
 - Владелец попросил повторно получить доступ к исходному и целевому GitHub-репозиториям и продолжить по handoff; доступ `write` к `eai-apps/YAiPlay-Radio` подтверждён. Package ID `com.yaiplay.radio` подтверждён владельцем.

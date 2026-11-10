@@ -48,9 +48,7 @@ jobs:
           PROJECT: ${{ vars.CF_PAGES_PROJECT || 'yaiplay-radio' }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "Зеркало Cloudflare не настроено — пропускаем"; exit 0; fi
-          npx --yes wrangler@4 pages project create "$PROJECT" --production-branch main >/dev/null 2>&1 || true
-          npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true \
-            || echo "::warning::Зеркало Cloudflare Pages не обновилось — сайт на GitHub Pages опубликован нормально"
+          npx --yes wrangler@4 pages deploy dist --project-name "$PROJECT" --branch main --commit-dirty=true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
