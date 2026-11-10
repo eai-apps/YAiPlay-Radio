@@ -1,6 +1,6 @@
 name: Android APK
 # Сборка APK для Android (телефон + Android TV).
-# Только вручную: debug для проверки, release требует ключа владельца. Публикации в Releases нет.
+# Только вручную: debug для проверки, release подписывается ключом владельца.
 on:
   workflow_dispatch:
     inputs:
@@ -74,10 +74,22 @@ jobs:
             ./gradlew assembleDebug --no-daemon
             cp app/build/outputs/apk/debug/app-debug.apk ../YAiRadio.apk
           fi
-      - run: cp YAiRadio.apk YAiRadio-TV.apk
+      - name: Проверить подпись APK
+        if: inputs.build_type == 'release'
+        run: |
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs YAiRadio.apk
       - uses: actions/upload-artifact@v4
         with:
           name: YAiRadio-apk
-          path: |
-            YAiRadio.apk
-            YAiRadio-TV.apk
+          path: YAiRadio.apk
+      - name: Опубликовать универсальный APK
+        if: inputs.build_type == 'release' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view android-latest >/dev/null 2>&1; then
+            gh release create android-latest --target "$GITHUB_SHA" --title "YAiPlay Radio — Android" --notes "Универсальный APK для телефонов, планшетов и Android TV." --prerelease
+          fi
+          gh release upload android-latest YAiRadio.apk --clobber
