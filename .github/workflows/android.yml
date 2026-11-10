@@ -1,9 +1,14 @@
 name: Android APK
 # Сборка APK для Android (телефон + Android TV).
-# Собирается сам после каждого изменения кода сайта, или вручную: Actions → «Android APK» → Run workflow.
-# Готовый файл появляется в Releases → «android-latest».
+# Только вручную: debug для проверки, release требует ключа владельца. Публикации в Releases нет.
 on:
   workflow_dispatch:
+    inputs:
+      build_type:
+        description: Тип сборки
+        type: choice
+        options: [debug, release]
+        default: debug
 
 concurrency:
   group: android-apk-${{ github.ref }}
@@ -35,6 +40,7 @@ jobs:
       - name: Иконки и заставка
         run: npx --yes @capacitor/assets@3 generate --android --iconBackgroundColor '#09090b' --iconBackgroundColorDark '#09090b' --splashBackgroundColor '#09090b' --splashBackgroundColorDark '#09090b'
       - name: Проверить ключ подписи
+        if: inputs.build_type == 'release'
         env:
           KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KSP: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -61,7 +67,7 @@ jobs:
           YAi_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
         run: |
           cd android && chmod +x gradlew
-          if [ -n "$YAi_KEYSTORE" ]; then
+          if [ "${{ inputs.build_type }}" = "release" ]; then
             ./gradlew assembleRelease --no-daemon
             cp app/build/outputs/apk/release/app-release.apk ../YAiRadio.apk
           else
@@ -75,12 +81,3 @@ jobs:
           path: |
             YAiRadio.apk
             YAiRadio-TV.apk
-      - name: Выложить в Releases
-        if: github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release delete android-latest -y --cleanup-tag || true
-          gh release create android-latest YAiRadio.apk YAiRadio-TV.apk --prerelease \
-            --title "YAi Radio для Android (тестовая сборка)" \
-            --notes "native: 1.0.${GITHUB_RUN_NUMBER} — тестовая сборка из ветки main. YAiRadio.apk — для телефонов и планшетов, YAiRadio-TV.apk — для Android TV (это одно и то же приложение, оно работает и там, и там)."
