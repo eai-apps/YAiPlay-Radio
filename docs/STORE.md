@@ -1,4 +1,4 @@
-# YAi Radio — требования App Store и Google Play (чек-лист)
+# YAiPlay Radio — требования App Store и Google Play (чек-лист)
 
 Этот файл — памятка к публикации приложений. Отмечено, что уже сделано в коде.
 

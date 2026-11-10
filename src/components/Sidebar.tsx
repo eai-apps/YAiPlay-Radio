@@ -126,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className="text-base font-extrabold tracking-tight text-white truncate block">
-              {settings.appTitle || 'YAi Radio'}
+              {settings.appTitle || 'YAiPlay Radio'}
             </span>
           </div>
           <span className="text-[11px] font-medium text-violet-400 font-mono truncate block">

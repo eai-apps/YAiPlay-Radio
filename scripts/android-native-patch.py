@@ -23,7 +23,7 @@ if 'SCHEDULE_EXACT_ALARM' not in s:
     s = s.replace('<application', '<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />\n    <application', 1)
 block = '''
         <!-- Виджет на рабочий стол -->
-        <receiver android:name=".NowPlayingWidget" android:exported="true" android:label="YAi Radio">
+        <receiver android:name=".NowPlayingWidget" android:exported="true" android:label="YAiPlay Radio">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

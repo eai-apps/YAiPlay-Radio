@@ -1,4 +1,4 @@
-# Worker YAi Radio
+# Worker YAiPlay Radio
 
 Cloudflare Worker `yaiplay-radio-api` обеспечивает вход, синхронизацию, поддержку, метаданные потоков, проверку геоограничений и публикацию контента сайта. Для данных нужна отдельная KV namespace `yaiplay-radio-db`, привязка переменной `DB`. Worker не разворачивается при публикации сайта.
 

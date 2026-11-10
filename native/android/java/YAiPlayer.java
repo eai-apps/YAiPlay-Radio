@@ -62,7 +62,7 @@ public class YAiPlayer {
     private String lastState = "";
     private long pausedAt = 0;
     /** Название/станция/обложка для карточки в шторке и на экране блокировки (присылает приложение) */
-    private MediaMetadata meta = new MediaMetadata.Builder().setTitle("YAi Radio").build();
+    private MediaMetadata meta = new MediaMetadata.Builder().setTitle("YAiPlay Radio").build();
 
     private YAiPlayer(Context c) {
         ctx = c;
@@ -186,9 +186,9 @@ public class YAiPlayer {
             metaArtist = artist == null ? "" : artist;
             metaArt = artwork == null ? "" : artwork;
             MediaMetadata.Builder b = new MediaMetadata.Builder()
-                .setTitle(title == null || title.isEmpty() ? "YAi Radio" : title)
+                .setTitle(title == null || title.isEmpty() ? "YAiPlay Radio" : title)
                 .setArtist(artist)
-                .setAlbumTitle("YAi Radio")
+                .setAlbumTitle("YAiPlay Radio")
                 .setStation(artist);
             if (artwork != null && !artwork.isEmpty()) b.setArtworkUri(Uri.parse(artwork));
             meta = b.build();

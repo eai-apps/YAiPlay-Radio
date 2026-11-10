@@ -1,5 +1,5 @@
 /**
- * Автопостинг в Телеграм-канал YAi Radio.
+ * Автопостинг в Телеграм-канал YAiPlay Radio.
  *   node scripts/telegram-post.mjs <mode>
  *   mode: auto | day | station | news | release | ask | promo | setup
  * Тексты пишет нейросеть Google Gemini (бесплатный ключ); если она недоступна — шаблоны.
@@ -26,8 +26,8 @@ async function stores() {
 }
 const rustoreLive = async () => !!(await stores()).rustore;
 /** Строка для рекламных постов: наше приложение в RuStore + ссылка, где взять сам RuStore */
-const rustoreLine = () => `\n\n📥 <b>RuStore:</b> <a href="${RUSTORE_APP}">YAi Radio</a> · нет RuStore? <a href="${RUSTORE_GET}">скачать RuStore</a>`;
-const rustoreButtons = () => [[{ text: '📥 YAi Radio в RuStore', url: RUSTORE_APP }], [{ text: '⬇️ Нет RuStore? Скачать', url: RUSTORE_GET }]];
+const rustoreLine = () => `\n\n📥 <b>RuStore:</b> <a href="${RUSTORE_APP}">YAiPlay Radio</a> · нет RuStore? <a href="${RUSTORE_GET}">скачать RuStore</a>`;
+const rustoreButtons = () => [[{ text: '📥 YAiPlay Radio в RuStore', url: RUSTORE_APP }], [{ text: '⬇️ Нет RuStore? Скачать', url: RUSTORE_GET }]];
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHANNEL = process.env.TELEGRAM_CHANNEL || '@YAiPlayer';
 const DRY_RUN = process.env.DRY_RUN !== 'false';
@@ -93,7 +93,7 @@ async function tg(method, body) {
   if (!j.ok) throw new Error(`${method}: ${j.description}`);
   return j.result;
 }
-const listenButton = (url, text = '▶️ Слушать в YAi Radio') => ({ inline_keyboard: [[{ text, url }]] });
+const listenButton = (url, text = '▶️ Слушать в YAiPlay Radio') => ({ inline_keyboard: [[{ text, url }]] });
 
 // Подпись под каждым постом: канал, сайт, приложения, бот (ссылки спрятаны под названия)
 let BOT_USERNAME = '';
@@ -286,7 +286,7 @@ async function ai(system, user, maxTokens = 700) {
   return null;
 }
 const STYLE =
-  'Ты ведёшь Телеграм-канал YAi Radio — бесплатного сайта и приложения с радиостанциями со всего мира. ' +
+  'Ты ведёшь Телеграм-канал YAiPlay Radio — бесплатного сайта и приложения с радиостанциями со всего мира. ' +
   'Пиши по-русски, живо и дружелюбно, коротко, 1–2 уместных эмодзи. Без хештегов, без markdown, без ссылок. ' +
   'НИКОГДА не выдумывай факты: используй только то, что дано. Если фактов мало — говори о жанре и настроении в общих словах.';
 
@@ -452,7 +452,7 @@ async function postWebcam(state) {
         (await ai(
           STYLE,
           `Напиши короткий пост (2–3 предложения) для рубрики «Взгляд на мир»: приглашение посмотреть на это место через веб-камеру прямо сейчас. Можно одну-две общеизвестные черты места, без выдуманных подробностей.\nМесто: ${place}, ${country}\nНазвание камеры: ${cam.title}`
-        )) || `Загляните в ${place} (${country}) прямо сейчас — живая картинка с веб-камеры. А под музыку YAi Radio смотреть ещё приятнее!`;
+        )) || `Загляните в ${place} (${country}) прямо сейчас — живая картинка с веб-камеры. А под музыку YAiPlay Radio смотреть ещё приятнее!`;
       const caption =
         `📷 <b>Взгляд на мир: ${esc(place)}</b>\n🌍 ${esc(country)}${cam.live ? ' · 🔴 онлайн' : ''}\n\n${esc(body)}\n\n<i>Webcams provided by <a href="https://www.windy.com/">windy.com</a></i>`;
       await postPhotoOrText({
@@ -586,13 +586,13 @@ async function postRelease(state) {
   }
   const list = (title, arr, icon) => (arr?.length ? `\n<b>${title}</b>\n${arr.map((x) => `${icon} ${esc(x)}`).join('\n')}\n` : '');
   const caption =
-    `🚀 <b>YAi Radio обновлён до версии ${esc(r.version)}</b>\n${r.title ? `${esc(r.title)}\n` : ''}` +
+    `🚀 <b>YAiPlay Radio обновлён до версии ${esc(r.version)}</b>\n${r.title ? `${esc(r.title)}\n` : ''}` +
     list('Что нового', merged('added'), '✨') +
     list('Улучшено', merged('improved'), '⚡') +
     list('Исправлено', merged('fixed'), '🛠') +
     list('Убрано', merged('removed'), '🗑') +
     `\nСайт обновится сам, приложение — при следующем запуске.`;
-  await postPhotoOrText({ photo: BANNER, caption: await withFooter(caption), buttons: listenButton(SITE, '🚀 Открыть YAi Radio') });
+  await postPhotoOrText({ photo: BANNER, caption: await withFooter(caption), buttons: listenButton(SITE, '🚀 Открыть YAiPlay Radio') });
   state.releases.push(...fresh.map((x) => x.version));
   state.lastReleaseAt = Date.now();
   log('опубликован релиз', r.version);
@@ -600,9 +600,9 @@ async function postRelease(state) {
 
 // ---------- 4. Вопрос подписчикам ----------
 const ASKS = [
-  'Какие станции или жанры добавить в YAi Radio? 🎧 Напишите нам через кнопку «Написать в поддержку» на сайте — читаем всё!',
+  'Какие станции или жанры добавить в YAiPlay Radio? 🎧 Напишите нам через кнопку «Написать в поддержку» на сайте — читаем всё!',
   'Что слушаете сегодня? 📻 Поделитесь любимой станцией — лучшие попадут в рубрику «Станция дня».',
-  'Есть идея, как сделать YAi Radio удобнее? 💡 Кнопка «Написать в поддержку» на сайте и в приложении — ждём ваши предложения.',
+  'Есть идея, как сделать YAiPlay Radio удобнее? 💡 Кнопка «Написать в поддержку» на сайте и в приложении — ждём ваши предложения.',
   'Нашли станцию, которая не играет? 🛠 Сообщите через «Написать в поддержку» — починим или заменим.',
 ];
 async function postAsk(state) {
@@ -614,9 +614,9 @@ async function postAsk(state) {
 
 // ---------- 4б. Напоминание о приложениях ----------
 const PROMOS = [
-  '📱 <b>YAi Radio всегда под рукой</b>\n\n🤖 <b>Android:</b> скачайте приложение (APK) на сайте — раздел «Mobile Apps». Музыка играет даже при выключенном экране, обновления приходят сами.\n🍏 <b>iPhone и iPad:</b> откройте сайт в Safari → «Поделиться» → «На экран „Домой“» — и радио станет полноценным приложением.\n\n⏳ В Google Play и App Store — скоро. Как только выйдем, объявим здесь!',
-  '🎧 <b>Слушаете радио в браузере?</b>\n\nПоставьте YAi Radio как приложение — так удобнее:\n• Android — APK с нашего сайта (раздел «Mobile Apps»)\n• iPhone — Safari → «Поделиться» → «На экран „Домой“»\n\nСкоро — в Google Play и App Store. Следите за новостями канала!',
-  '⭐ <b>Знаете ли вы?</b>\n\nВ YAi Radio можно собрать <b>свой плейлист</b> — просто нажимайте ♥ у любимых станций. А Radio Record — 117 официальных каналов — уже в разделе «Эксклюзив».\n\n📱 Приложение для Android — на сайте, для iPhone — через «На экран „Домой“». Google Play и App Store — скоро!',
+  '📱 <b>YAiPlay Radio всегда под рукой</b>\n\n🤖 <b>Android:</b> скачайте приложение (APK) на сайте — раздел «Mobile Apps». Музыка играет даже при выключенном экране, обновления приходят сами.\n🍏 <b>iPhone и iPad:</b> откройте сайт в Safari → «Поделиться» → «На экран „Домой“» — и радио станет полноценным приложением.\n\n⏳ В Google Play и App Store — скоро. Как только выйдем, объявим здесь!',
+  '🎧 <b>Слушаете радио в браузере?</b>\n\nПоставьте YAiPlay Radio как приложение — так удобнее:\n• Android — APK с нашего сайта (раздел «Mobile Apps»)\n• iPhone — Safari → «Поделиться» → «На экран „Домой“»\n\nСкоро — в Google Play и App Store. Следите за новостями канала!',
+  '⭐ <b>Знаете ли вы?</b>\n\nВ YAiPlay Radio можно собрать <b>свой плейлист</b> — просто нажимайте ♥ у любимых станций. А Radio Record — 117 официальных каналов — уже в разделе «Эксклюзив».\n\n📱 Приложение для Android — на сайте, для iPhone — через «На экран „Домой“». Google Play и App Store — скоро!',
 ];
 async function postPromo(state) {
   const i = (state.promoIndex || 0) % PROMOS.length;
@@ -641,14 +641,14 @@ const FEATS = [
   { id: 'search', name: 'Поиск и фильтры', poster: 'all', link: '', btn: '🔍 Найти станцию', facts: 'Поиск по названию станции и фильтры рядом со списком: страна, жанр, название. Вид — плиткой или списком.' },
   { id: 'country', name: 'Радио вашей страны', poster: 'radiocam', link: '', btn: '📻 Моя страна', facts: 'Кнопка «Моя страна» сама определяет, где вы, и показывает местные станции. Более 50 000 радиостанций из почти всех стран мира.' },
   { id: 'android', name: 'Приложение для Android', poster: 'all', link: '#apps', btn: '🤖 Скачать для Android', rustore: true, facts: 'Приложение для Android (APK с нашего сайта, раздел «Mobile Apps»): радио играет при выключенном экране, управление с экрана блокировки, эквалайзер на 10 полос и мощный бас, обновления приходят сами. Работает и на Android TV.' },
-  { id: 'iphone', name: 'YAi на iPhone и iPad', poster: 'iphone', link: '#apps', btn: '🍏 Как установить на iPhone', facts: 'На iPhone и iPad ничего не нужно скачивать из App Store: открыть сайт в Safari → «Поделиться» → «На экран „Домой“» — и YAi Radio работает как приложение, бесплатно. На экране блокировки — обложка песни, которая сейчас играет.' },
-  { id: 'bass', name: 'Супер-бас и эквалайзер', poster: 'bass', link: '#apps', btn: '🎛 Скачать для Android', rustore: true, facts: 'В Android-приложении YAi Radio: эквалайзер на 10 полос, 10 готовых настроек («Мощный бас», «Танцевальная», «В машине», «Ночью тихо» и другие) и усиление басов до +12 дБ без перегруза. Звук меняется сразу, на любой станции.' },
+  { id: 'iphone', name: 'YAi на iPhone и iPad', poster: 'iphone', link: '#apps', btn: '🍏 Как установить на iPhone', facts: 'На iPhone и iPad ничего не нужно скачивать из App Store: открыть сайт в Safari → «Поделиться» → «На экран „Домой“» — и YAiPlay Radio работает как приложение, бесплатно. На экране блокировки — обложка песни, которая сейчас играет.' },
+  { id: 'bass', name: 'Супер-бас и эквалайзер', poster: 'bass', link: '#apps', btn: '🎛 Скачать для Android', rustore: true, facts: 'В Android-приложении YAiPlay Radio: эквалайзер на 10 полос, 10 готовых настроек («Мощный бас», «Танцевальная», «В машине», «Ночью тихо» и другие) и усиление басов до +12 дБ без перегруза. Звук меняется сразу, на любой станции.' },
   { id: 'viz', name: 'Визуализация музыки', poster: 'viz', link: '', btn: '🌈 Включить радио', facts: 'В плеере на обложке — живая визуализация музыки. В Android-приложении это настоящий спектр звука (столбики двигаются в такт песне), на сайте и iPhone — плавная анимация в такт эфиру.' },
   { id: 'tracks', name: 'Треки из эфира', poster: 'tracks', link: '', btn: '🎵 Открыть YAi', facts: 'Раздел «Треки из эфира» (Ещё → История) сам сохраняет песни, которые звучали в эфире, если станция передаёт название. Есть поиск по истории и кнопки: открыть песню в YouTube, Яндекс Музыке, Spotify или Apple Music.' },
   { id: 'car', name: 'В дороге без обрывов', poster: 'car', link: '#apps', btn: '🚗 Скачать для Android', rustore: true, facts: 'Режим «За рулём» с крупными кнопками и часами, поддержка Android Auto. В Android-приложении — защита от обрывов: запас эфира до 12 секунд и автоматическое переподключение, если связь пропала (тоннель, трасса, метро).' },
-  { id: 'rustore', name: 'YAi Radio в RuStore', poster: 'rustore', link: '', btn: '', need: 'rustore', facts: 'Приложение YAi Radio теперь есть в RuStore: установка и обновления в один тап, для телефонов и планшетов на Android. Если RuStore ещё нет — его можно скачать с официального сайта rustore.ru.' },
-  { id: 'bigscreen', name: 'Радио на Android TV', poster: 'bigscreen', link: '', btn: '', need: 'rustore', tv: true, facts: 'YAi Radio работает на Android TV и смарт-приставках: управление пультом, крупный интерфейс, тысячи радиостанций на большом экране. Устанавливается из RuStore для Android TV.' },
-  { id: 'telegram', name: 'Радио прямо в Telegram', poster: 'all', link: 'tg', btn: '💬 Открыть в Telegram', facts: 'Наш бот открывает YAi Radio прямо внутри Telegram — кнопка «🎧 Слушать» в чате с ботом. Ничего устанавливать не нужно.' },
+  { id: 'rustore', name: 'YAiPlay Radio в RuStore', poster: 'rustore', link: '', btn: '', need: 'rustore', facts: 'Приложение YAiPlay Radio теперь есть в RuStore: установка и обновления в один тап, для телефонов и планшетов на Android. Если RuStore ещё нет — его можно скачать с официального сайта rustore.ru.' },
+  { id: 'bigscreen', name: 'Радио на Android TV', poster: 'bigscreen', link: '', btn: '', need: 'rustore', tv: true, facts: 'YAiPlay Radio работает на Android TV и смарт-приставках: управление пультом, крупный интерфейс, тысячи радиостанций на большом экране. Устанавливается из RuStore для Android TV.' },
+  { id: 'telegram', name: 'Радио прямо в Telegram', poster: 'all', link: 'tg', btn: '💬 Открыть в Telegram', facts: 'Наш бот открывает YAiPlay Radio прямо внутри Telegram — кнопка «🎧 Слушать» в чате с ботом. Ничего устанавливать не нужно.' },
   { id: 'tools', name: 'Таймер сна, будильник и режим «За рулём»', poster: 'all', link: '', btn: '⏰ Попробовать', facts: 'В плеере есть таймер сна (радио само выключится), будильник с любимой станцией и режим «За рулём» с крупными кнопками.' },
   { id: 'quality', name: 'Слабый интернет — не проблема', poster: 'record', link: '', btn: '📶 Слушать', facts: 'Качество звука подстраивается под интернет: на слабой связи станция переключается на лёгкий поток и не прерывается. Можно выбрать режим «экономия трафика».' },
   { id: 'free', name: 'Бесплатно и легально', poster: 'radiocam', link: '', btn: '▶️ Слушать бесплатно', facts: 'Всё бесплатно, без рекламы от нас и без регистрации. Только официальные открытые потоки радиостанций.' },
@@ -661,7 +661,7 @@ const STYLES = [
   'Начни с вопроса к читателю (например, «Хотите…?» / «Бывало, что…?») и дай ответ.',
   'Формат «3 причины попробовать» — короткий список из трёх пунктов.',
   'Формат «Попробуйте прямо сейчас»: пошагово 2–3 шага.',
-  'Формат мини-истории: ситуация из жизни (утро, дорога, вечер, работа) и как тут помогает YAi Radio.',
+  'Формат мини-истории: ситуация из жизни (утро, дорога, вечер, работа) и как тут помогает YAiPlay Radio.',
   'Формат «Лайфхак для меломана».',
 ];
 const CTAS = [
@@ -688,7 +688,7 @@ async function postFeature(state) {
   const si = (state.featStyle || 0) % STYLES.length;
   const cta = CTAS[(state.featCta || 0) % CTAS.length];
   let text = await ai(
-    'Ты ведёшь Telegram-канал YAi Radio (бесплатное легальное радио со всего мира: сайт, Android, iPhone, Telegram). ' +
+    'Ты ведёшь Telegram-канал YAiPlay Radio (бесплатное легальное радио со всего мира: сайт, Android, iPhone, Telegram). ' +
       'Пиши по-русски, живо и дружелюбно, как будто общаешься с подписчиками, 350–650 символов, 2–4 уместных эмодзи. ' +
       'Первая строка — цепляющий заголовок в <b>…</b>. Разметка: только <b> и <i>, без Markdown, без ссылок и хэштегов. ' +
       'Пиши ТОЛЬКО о том, что дано в фактах, ничего не выдумывай. Никогда не упоминай телевидение, телеканалы, фильмы и сериалы (Android TV как устройство упоминать можно, только если оно есть в фактах). ' +
@@ -719,9 +719,9 @@ async function postFeature(state) {
 }
 
 const SHOWCASES = [
-  `🎧 <b>YAi Radio — весь мир музыки в одном месте</b>\n\nБесплатно, без регистрации, только официальные потоки:\n\n📻 <b>50 000+ радиостанций</b> со всего мира\n🌍 <b>Глобус радио</b> — крутите Землю и слушайте любой уголок мира\n🔥 <b>Radio Record</b> — 117 официальных каналов\n⭐ <b>Эксклюзив</b> — Radio Paradise, FIP, KEXP, NTS и другие\n🎵 <b>Жанры и настроения</b> — от джаза до транса\n📷 <b>Веб-камеры мира</b> в прямом эфире\n🎧 <b>Мой плейлист</b> из избранного\n🎛 <b>Супер-бас и эквалайзер</b> в Android-приложении\n⏰ Таймер сна, будильник, режим «За рулём»\n📱 Android, iPhone, iPad и прямо в Telegram\n\n👇 Перешлите друзьям — пусть тоже слушают бесплатно!`,
-  `🌍 <b>Радио со всего мира — в кармане</b>\n\nЧто умеет YAi Radio:\n\n• 50 000+ станций: ваша страна в один клик\n• 3D-глобус: нажали на город — играет его радио\n• Radio Record: 117 каналов танцевальной музыки\n• Эксклюзивные станции мира в высоком качестве\n• Веб-камеры городов, гор и пляжей\n• Плейлист из любимых станций, история, поиск\n• Таймер сна и будильник с любимой станцией\n• Играет при выключенном экране (Android)\n\n💚 Бесплатно, легально, без регистрации.\n📤 Поделитесь постом — это лучшая поддержка проекта!`,
-  `📻 <b>Одно приложение — тысячи эфиров</b>\n\nYAi Radio — это:\n\n✅ 50 000+ легальных радиостанций\n✅ Глобус радио и веб-камеры мира\n✅ Radio Record и эксклюзивы YAi\n✅ Жанры, настроения, умный поиск\n✅ Мой плейлист и «Продолжить слушать»\n✅ Таймер сна, будильник, режим «За рулём»\n✅ Сайт, Android, iPhone/iPad и Telegram\n\nВсё бесплатно и без регистрации.\n🔁 Отправьте этот пост другу или в свой канал!`,
+  `🎧 <b>YAiPlay Radio — весь мир музыки в одном месте</b>\n\nБесплатно, без регистрации, только официальные потоки:\n\n📻 <b>50 000+ радиостанций</b> со всего мира\n🌍 <b>Глобус радио</b> — крутите Землю и слушайте любой уголок мира\n🔥 <b>Radio Record</b> — 117 официальных каналов\n⭐ <b>Эксклюзив</b> — Radio Paradise, FIP, KEXP, NTS и другие\n🎵 <b>Жанры и настроения</b> — от джаза до транса\n📷 <b>Веб-камеры мира</b> в прямом эфире\n🎧 <b>Мой плейлист</b> из избранного\n🎛 <b>Супер-бас и эквалайзер</b> в Android-приложении\n⏰ Таймер сна, будильник, режим «За рулём»\n📱 Android, iPhone, iPad и прямо в Telegram\n\n👇 Перешлите друзьям — пусть тоже слушают бесплатно!`,
+  `🌍 <b>Радио со всего мира — в кармане</b>\n\nЧто умеет YAiPlay Radio:\n\n• 50 000+ станций: ваша страна в один клик\n• 3D-глобус: нажали на город — играет его радио\n• Radio Record: 117 каналов танцевальной музыки\n• Эксклюзивные станции мира в высоком качестве\n• Веб-камеры городов, гор и пляжей\n• Плейлист из любимых станций, история, поиск\n• Таймер сна и будильник с любимой станцией\n• Играет при выключенном экране (Android)\n\n💚 Бесплатно, легально, без регистрации.\n📤 Поделитесь постом — это лучшая поддержка проекта!`,
+  `📻 <b>Одно приложение — тысячи эфиров</b>\n\nYAiPlay Radio — это:\n\n✅ 50 000+ легальных радиостанций\n✅ Глобус радио и веб-камеры мира\n✅ Radio Record и эксклюзивы YAi\n✅ Жанры, настроения, умный поиск\n✅ Мой плейлист и «Продолжить слушать»\n✅ Таймер сна, будильник, режим «За рулём»\n✅ Сайт, Android, iPhone/iPad и Telegram\n\nВсё бесплатно и без регистрации.\n🔁 Отправьте этот пост другу или в свой канал!`,
 ];
 async function postShowcase(state) {
   await footer();
@@ -729,11 +729,11 @@ async function postShowcase(state) {
   const live = await rustoreLive();
   const text = SHOWCASES[i] + (live ? rustoreLine() : '');
   const img = await promoImg(['all', 'radiocam', 'all'][i] || 'all');
-  const share = `https://t.me/share/url?url=${encodeURIComponent(SITE)}&text=${encodeURIComponent('YAi Radio — 50 000+ радиостанций со всего мира бесплатно 🎧')}`;
+  const share = `https://t.me/share/url?url=${encodeURIComponent(SITE)}&text=${encodeURIComponent('YAiPlay Radio — 50 000+ радиостанций со всего мира бесплатно 🎧')}`;
   await postPhotoOrText({
     photo: img || BANNER,
     caption: await withFooter(text),
-    buttons: { inline_keyboard: [[{ text: '▶️ Слушать бесплатно', url: SITE }], ...(live ? [[{ text: '📥 YAi Radio в RuStore', url: RUSTORE_APP }]] : []), [{ text: '📱 Приложения', url: SITE + '#apps' }, { text: '📤 Поделиться', url: share }]] },
+    buttons: { inline_keyboard: [[{ text: '▶️ Слушать бесплатно', url: SITE }], ...(live ? [[{ text: '📥 YAiPlay Radio в RuStore', url: RUSTORE_APP }]] : []), [{ text: '📱 Приложения', url: SITE + '#apps' }, { text: '📤 Поделиться', url: share }]] },
   });
   state.showIndex = i + 1;
   log('опубликован большой рекламный пост');
@@ -742,9 +742,9 @@ async function postShowcase(state) {
 // ---------- 5. Настройка бота (кнопка «Слушать» в чате с ботом — мини-приложение) ----------
 async function setup() {
   await tg('setChatMenuButton', { menu_button: { type: 'web_app', text: '🎧 Слушать', web_app: { url: SITE } } });
-  await tg('setMyDescription', { description: 'YAi Radio — тысячи радиостанций со всего мира бесплатно. Нажмите «🎧 Слушать», чтобы открыть радио прямо в Telegram.' });
+  await tg('setMyDescription', { description: 'YAiPlay Radio — тысячи радиостанций со всего мира бесплатно. Нажмите «🎧 Слушать», чтобы открыть радио прямо в Telegram.' });
   await tg('setMyShortDescription', { short_description: 'Радио со всего мира — бесплатно, без рекламы 📻' });
-  await tg('setMyCommands', { commands: [{ command: 'start', description: 'Открыть YAi Radio' }] });
+  await tg('setMyCommands', { commands: [{ command: 'start', description: 'Открыть YAiPlay Radio' }] });
   log('бот настроен: кнопка «Слушать» открывает сайт как мини-приложение');
 }
 

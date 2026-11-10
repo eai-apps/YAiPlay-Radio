@@ -12,7 +12,7 @@
         android:id="@+id/w_logo"
         android:layout_width="46dp"
         android:layout_height="46dp"
-        android:contentDescription="YAi Radio"
+        android:contentDescription="YAiPlay Radio"
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="YAi Radio"
+            android:text="YAiPlay Radio"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold" />

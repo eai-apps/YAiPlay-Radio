@@ -9,7 +9,7 @@ interface StationFallbackIconProps {
 
 export const StationFallbackIcon: React.FC<StationFallbackIconProps> = ({
   className = '',
-  name = 'YAi Radio',
+  name = 'YAiPlay Radio',
   size = 'md',
 }) => {
   const sizeClasses = {

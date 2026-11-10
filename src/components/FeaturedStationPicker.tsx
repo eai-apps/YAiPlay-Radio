@@ -13,7 +13,7 @@ interface Props {
   onChange: (st: Station | null) => void;
 }
 
-/** Админка: выбор «Станции YAi Radio» — главной кнопки на сайте */
+/** Админка: выбор «Станции YAiPlay Radio» — главной кнопки на сайте */
 export const FeaturedStationPicker: React.FC<Props> = ({ value, customStations, onChange }) => {
   const { playStation } = useAudio();
   const [q, setQ] = useState('');
@@ -61,7 +61,7 @@ export const FeaturedStationPicker: React.FC<Props> = ({ value, customStations, 
     <div className="p-4 rounded-2xl bg-zinc-950/70 border border-violet-500/30 space-y-3">
       <div>
         <h4 className="text-sm font-bold text-white flex items-center gap-2">
-          <Radio className="w-4 h-4 text-violet-400" /> Станция «YAi Radio» (главная кнопка на сайте)
+          <Radio className="w-4 h-4 text-violet-400" /> Станция «YAiPlay Radio» (главная кнопка на сайте)
         </h4>
         <p className="text-[11px] text-zinc-400 mt-1">
           Найдите станцию в каталоге или среди своих станций и нажмите «Назначить». Кнопка на главной будет включать именно её.

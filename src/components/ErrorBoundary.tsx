@@ -21,7 +21,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('YAi Radio Uncaught Error Boundary:', error, errorInfo);
+    console.error('YAiPlay Radio Uncaught Error Boundary:', error, errorInfo);
   }
 
   private handleReset = () => {
@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
               <AlertTriangle className="w-7 h-7" />
             </div>
-            <h1 className="text-xl font-extrabold text-white">YAi Radio: Сбой интерфейса</h1>
+            <h1 className="text-xl font-extrabold text-white">YAiPlay Radio: Сбой интерфейса</h1>
             <p className="text-xs text-zinc-400">
               Произошла непредвиденная ошибка при отрисовке компонента. Ваши настройки и избранные станции сохранены в безопасности.
             </p>

@@ -1,7 +1,7 @@
 export * from '../src/services/apiService.ts';
 import { setApiBase as setOriginalBase, api as originalApi, ApiError } from '../src/services/apiService.ts';
 
-const CANONICAL = 'https://yaiplay-radio-api.<account-subdomain>.workers.dev';
+const CANONICAL = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
 const isCanonical = (url: string | undefined) => url?.trim().replace(/\/+$/, '') === CANONICAL;
 const proxyBase = () => `${location.origin}/api`;
 

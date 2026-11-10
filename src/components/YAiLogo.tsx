@@ -127,7 +127,7 @@ export const YAiLogo: React.FC<YAiLogoProps> = ({
           ? 'cursor-pointer hover:border-cyan-400 hover:scale-105 hover:shadow-[0_0_35px_rgba(31,206,235,0.6)]'
           : ''
       } ${sizeClasses} ${className}`}
-      title={allowUpload ? 'Нажмите, чтобы загрузить свой файл логотипа YAi' : 'YAi Radio'}
+      title={allowUpload ? 'Нажмите, чтобы загрузить свой файл логотипа YAi' : 'YAiPlay Radio'}
     >
       {/* Hidden file input for 1-click upload */}
       {allowUpload && (
@@ -153,7 +153,7 @@ export const YAiLogo: React.FC<YAiLogoProps> = ({
       {activeLogo ? (
         <img
           src={activeLogo}
-          alt="YAi Radio Logo"
+          alt="YAiPlay Radio Logo"
           className="w-full h-full object-cover rounded-full"
         />
       ) : (

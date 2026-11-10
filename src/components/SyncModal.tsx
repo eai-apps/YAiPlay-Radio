@@ -111,7 +111,7 @@ export const SyncModal: React.FC<SyncModalProps> = ({ onClose }) => {
 
   const exportJson = () => {
     download(
-      JSON.stringify({ app: 'YAi Radio', type: 'user-backup', createdAt: new Date().toISOString(), favorites, recognizedTracks }, null, 2),
+      JSON.stringify({ app: 'YAiPlay Radio', type: 'user-backup', createdAt: new Date().toISOString(), favorites, recognizedTracks }, null, 2),
       `YAi-moi-dannye-${new Date().toISOString().slice(0, 10)}.json`,
       'application/json'
     );
@@ -146,7 +146,7 @@ export const SyncModal: React.FC<SyncModalProps> = ({ onClose }) => {
         flash(`Готово: в избранном ${merged.length} станций. Перезагрузка…`);
         setTimeout(() => window.location.reload(), 1200);
       } catch {
-        flash('Ошибка: это не файл копии YAi Radio');
+        flash('Ошибка: это не файл копии YAiPlay Radio');
       }
     };
     reader.readAsText(file);

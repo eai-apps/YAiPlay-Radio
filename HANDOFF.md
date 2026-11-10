@@ -1,4 +1,4 @@
-# HANDOFF — YAi Radio
+# HANDOFF — YAiPlay Radio
 
 Последняя запись сверху. Дата/время: 10 ноября 2026, Europe/Berlin. Владелец — новичок; шаги для ручных действий описывать с самого начала и с ожидаемым результатом. Никогда не просить значения ключей, паролей или токенов.
 
@@ -6,7 +6,7 @@
 
 - Репозиторий: `eai-apps/YAiPlay-Radio`, ветка `main`.
 - По решению владельца все сохраняемые материалы и архивы проекта радио размещать в `G:\evvant\Projects\Projects\HANDOFF\Radio-Clone\YAiPlay-Radio`. Не хранить там секреты. Существующие файлы не перезаписывать без необходимости; использовать понятные имена и даты.
-- Бренд: **YAi Radio**, приложение Android: `com.yaiplay.radio`, схема ссылок: `yaiplayradio://`.
+- Бренд: **YAiPlay Radio**, приложение Android: `com.yaiplay.radio`, схема ссылок: `yaiplayradio://`.
 - Cloudflare Pages: `yaiplay-radio` → `https://yaiplay-radio.pages.dev/`; Worker: `yaiplay-radio-api`; новое KV: `yaiplay-radio-db`. Worker и KV должны быть отдельными ресурсами и привязаны только к радио.
 - GitHub Pages: `https://eai-apps.github.io/YAiPlay-Radio/` — служебный адрес и источник OTA/каталога.
 - Telegram: использовать существующий канал `@YAiPlayer` и существующего бота `@YAiPlayer_bot`; новых токенов не создавать. Workflow ручной, без расписания; `DRY_RUN=true` по умолчанию; реальные сообщения — только после отдельного «да» владельца. Уведомления без звука.
@@ -54,6 +54,12 @@ npm run build
 ---
 
 ## Журнал работ
+
+### 2026-11-10 — Codex: название YAiPlay Radio
+
+- Владелец уточнил правильное название: **YAiPlay Radio**. В текстах сайта, PWA, Worker, подготовленных Telegram-материалах и исходниках приложения заменено прежнее имя; адреса и идентификаторы сохранены. Для будущих чатов дополнен исходный `G:\evvant\Projects\Projects\HANDOFF\Radio-Clone\TASK-RADIO-CLONE.md`; все сохраняемые материалы размещать в его подпапке `YAiPlay-Radio`.
+- Основной сайт и отдельный Pages preview `2g` опубликованы вручную из архивов с новым именем. Оба интерфейса открылись; `https://2g.yaiplay-radio.pages.dev/api/health` вернул `ok: true`, `kv: true`, а `/data/content.json` получил настройки с основного сайта. Сборка 2G: 160792 байт gzip на старте; тесты прокси 7/7, реальная сеть 2G, телефон и личный вход не проверены. Надписи внутри растровых изображений не проверены. Реальных постов Telegram и сборок Android не запускать без отдельного решения.
+- `.github/workflows/deploy-lite.yml` направлен в Pages-проект `yaiplay-radio` на ветку `2g`; для автоматического деплоя нужны Cloudflare secrets, запуск workflow пока не проверен. Архивы `yaiplay-main-2026-11-10.zip` и `yaiplay-2g-2026-11-10.zip` сохранены в указанной папке.
 
 ### 2026-11-10 — Codex: публикация Pages и папка материалов
 

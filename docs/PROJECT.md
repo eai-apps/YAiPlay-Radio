@@ -1,6 +1,6 @@
-# YAi Radio — паспорт проекта
+# YAiPlay Radio — паспорт проекта
 
-YAi Radio — сайт/PWA и Android-приложение с каталогом открытых радиостанций. Основной сайт: `https://yaiplay-radio.pages.dev/`; служебный GitHub Pages: `https://eai-apps.github.io/YAiPlay-Radio/`. Worker: `yaiplay-radio-api`; KV: `yaiplay-radio-db`; публичный API адрес вписать в `public/content.json` только после создания Worker.
+YAiPlay Radio — сайт/PWA и Android-приложение с каталогом открытых радиостанций. Основной сайт: `https://yaiplay-radio.pages.dev/`; служебный GitHub Pages: `https://eai-apps.github.io/YAiPlay-Radio/`. Worker: `yaiplay-radio-api`; KV: `yaiplay-radio-db`; публичный API адрес вписать в `public/content.json` только после создания Worker.
 
 ## Функции
 

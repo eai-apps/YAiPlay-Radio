@@ -45,7 +45,7 @@ public class AlarmService extends Service {
         String url = intent != null ? intent.getStringExtra("url") : null;
         String name = intent != null ? intent.getStringExtra("name") : null;
         int fade = intent != null ? intent.getIntExtra("fade", 20) : 20;
-        if (name == null || name.isEmpty()) name = "YAi Radio";
+        if (name == null || name.isEmpty()) name = "YAiPlay Radio";
 
         Notification n = buildNotification(name);
         if (Build.VERSION.SDK_INT >= 29) startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);

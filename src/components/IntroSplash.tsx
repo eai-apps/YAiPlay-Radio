@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { isNativeApp } from '../utils/platform';
 
-const TITLE = 'YAi Radio';
+const TITLE = 'YAiPlay Radio';
 
 function shouldShow(): boolean {
   try {

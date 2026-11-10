@@ -71,7 +71,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-black text-white tracking-tight">
-                  {settings.appTitle || 'YAi Radio'}
+                  {settings.appTitle || 'YAiPlay Radio'}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                   BETA EDITION
@@ -96,7 +96,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
           <div>
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2">
               <Award className="w-4 h-4 text-cyan-400" />
-              <span>Преимущества платформы YAi Radio</span>
+              <span>Преимущества платформы YAiPlay Radio</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex items-start gap-3">

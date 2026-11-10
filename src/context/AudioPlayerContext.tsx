@@ -1146,7 +1146,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       minute: mm,
       days: newAlarm.days || [],
       url: newAlarm.stationUrl || '',
-      name: newAlarm.stationName || 'YAi Radio',
+      name: newAlarm.stationName || 'YAiPlay Radio',
       fadeSec: newAlarm.fadeDurationSec || 20,
     });
   }, []);
@@ -1249,7 +1249,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   nativeRef.current = { togglePlayPause, playStation, recent: recentStations, alarm };
   useEffect(() => {
     if (!hasNative()) return;
-    nativeNowPlaying(currentStation?.name || 'YAi Radio', currentStation?.country || '', isPlaying);
+    nativeNowPlaying(currentStation?.name || 'YAiPlay Radio', currentStation?.country || '', isPlaying);
   }, [currentStation?.stationuuid, isPlaying]);
   useEffect(() => {
     if (!hasNative()) return;
@@ -1359,7 +1359,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const meta = {
       title: hasTrack ? currentTrackTitle : currentStation.name,
       artist: hasTrack ? currentStation.name : `${currentStation.country || 'Радио'} · ${tags}`,
-      album: 'YAi Radio',
+      album: 'YAiPlay Radio',
       artwork: [
         lockArt ||
         (currentStation.favicon && /^https:\/\//.test(currentStation.favicon)

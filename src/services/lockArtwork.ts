@@ -166,9 +166,9 @@ export async function stationCard(st: Station): Promise<string> {
   const top = lines.length === 1 ? 370 : 352;
   lines.forEach((l, i) => ctx.fillText(l, S / 2, top + i * (size + 6)));
 
-  // «YAi Radio · LIVE»
+  // «YAiPlay Radio · LIVE»
   ctx.font = `700 24px 'Manrope Variable', system-ui, sans-serif`;
-  const brand = 'YAi Radio';
+  const brand = 'YAiPlay Radio';
   const bw = ctx.measureText(brand).width;
   const live = 'LIVE';
   ctx.font = `800 18px 'Manrope Variable', system-ui, sans-serif`;

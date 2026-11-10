@@ -115,7 +115,7 @@ export const AppsView: React.FC = () => {
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-violet-500/15 text-violet-200 border border-violet-500/30 mb-3">
               <Smartphone className="w-3.5 h-3.5" /> Mobile Apps
             </span>
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">YAi Radio в кармане</h1>
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">YAiPlay Radio в кармане</h1>
             <p className="text-sm text-zinc-300 mt-2 max-w-xl">
               Радио со всего мира на телефоне, планшете и телевизоре. Бесплатно, без рекламы и регистрации. Избранное переносится через «Вход и синхронизация».
             </p>
@@ -145,7 +145,7 @@ export const AppsView: React.FC = () => {
             href={APK_PHONE}
             className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-violet-500 hover:bg-violet-400 text-zinc-950 font-extrabold text-sm shadow-lg shadow-violet-500/30 active:scale-[0.98]"
           >
-            <Download className="w-5 h-5" /> Скачать YAi Radio для Android
+            <Download className="w-5 h-5" /> Скачать YAiPlay Radio для Android
           </a>
           <a
             href={RUSTORE_APP}
@@ -201,14 +201,14 @@ export const AppsView: React.FC = () => {
           <ol className="space-y-2 text-xs text-zinc-400 list-decimal pl-5">
             <li>Установите на телевизор приложение-загрузчик (например, «Downloader») из Google Play.</li>
             <li>Откройте в нём ссылку на APK из этой кнопки и установите.</li>
-            <li>YAi Radio появится в списке приложений, управление — пультом.</li>
+            <li>YAiPlay Radio появится в списке приложений, управление — пультом.</li>
           </ol>
           <p className="text-[11px] text-zinc-400">
             Или установите из магазина:{' '}
             <a href={RUSTORE_TV} target="_blank" rel="noopener noreferrer" className="text-violet-300 underline">
               RuStore для Android TV
             </a>
-            {' '}→ найдите «YAi Radio».
+            {' '}→ найдите «YAiPlay Radio».
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <Soon store="Google Play для ТВ" />
@@ -226,10 +226,10 @@ export const AppsView: React.FC = () => {
           </div>
         </div>
         <ol className="space-y-2 text-xs text-zinc-300 list-decimal pl-5">
-          <li>Установите приложение YAi Radio для Android (кнопка выше) и добавьте станции в избранное ♥.</li>
+          <li>Установите приложение YAiPlay Radio для Android (кнопка выше) и добавьте станции в избранное ♥.</li>
           <li>Пока мы не в Google Play, Android Auto нужно разрешить «неизвестные источники»: откройте <b>Android Auto → Настройки</b>, нажмите 10 раз на строку <b>«Версия»</b> — включится режим разработчика.</li>
           <li>Меню <b>⋮ → «Для разработчиков»</b> → включите <b>«Неизвестные источники»</b>.</li>
-          <li>Подключите телефон к машине — YAi Radio появится среди музыкальных приложений.</li>
+          <li>Подключите телефон к машине — YAiPlay Radio появится среди музыкальных приложений.</li>
         </ol>
       </section>
 
@@ -262,7 +262,7 @@ export const AppsView: React.FC = () => {
             Прокрутите и выберите <b className="text-white">«На экран „Домой“»</b>, затем «Добавить».
           </Step>
           <Step n={4} icon={<Check className="w-4 h-4" />}>
-            Запускайте YAi Radio с иконки: на весь экран, без адресной строки, со звуком на экране блокировки.
+            Запускайте YAiPlay Radio с иконки: на весь экран, без адресной строки, со звуком на экране блокировки.
           </Step>
         </ol>
       </section>
