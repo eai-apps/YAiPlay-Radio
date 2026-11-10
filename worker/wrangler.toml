@@ -2,7 +2,6 @@ name = "yaiplay-radio-api"
 main = "index.js"
 compatibility_date = "2026-11-10"
 
-# После создания namespace `yaiplay-radio-db` добавьте её ID и включите этот binding для Wrangler CLI.
-# [[kv_namespaces]]
-# binding = "DB"
-# id = "<новый KV namespace ID>"
+[[kv_namespaces]]
+binding = "DB"
+id = "ea55e04cb3934d28a55bc686efd8dc11"

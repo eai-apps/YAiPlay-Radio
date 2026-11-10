@@ -54,6 +54,12 @@ npm run build
 
 ## Журнал работ
 
+### 2026-11-10 — Codex: Cloudflare радио
+
+- В аккаунте yai.media.player созданы отдельные Worker `yaiplay-radio-api`, KV `yaiplay-radio-db` и Pages `yaiplay-radio`. KV подключён к Worker как `DB`; идентификатор записан в `worker/wrangler.toml`.
+- Worker развёрнут из `worker/index.js`; `https://yaiplay-radio-api.yai-media-player.workers.dev/health` вернул `ok: true`, `kv: true`. Секреты Worker пока не настроены. `public/content.json` указывает на проверенный Worker.
+- Pages создан для Direct Upload; загрузку сайта, GitHub Pages, настройки публикации и фактические запуски Actions ещё нужно проверить. Telegram остаётся только dry-run, без cron и отправки.
+
 ### 2026-11-10 — Codex: подготовка этапа Cloudflare и workflows
 
 - Telegram workflow ограничен ручным dry-run: `DRY_RUN=true` задан в workflow, выбор реальной отправки и доступ к Telegram secrets убраны, запись состояния отключена. Фактическая отправка по-прежнему требует отдельного решения и изменения workflow.

@@ -21,7 +21,7 @@
     "homepage": "https://plus.rm.fm/"
   },
   "contactEmail": "",
-  "apiUrl": "",
+  "apiUrl": "https://yaiplay-radio-api.yai-media-player.workers.dev",
   "hiddenSections": [],
   "hiddenCountries": {
     "radio": [],
