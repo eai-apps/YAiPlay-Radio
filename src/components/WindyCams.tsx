@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { LiteImg } from './LiteImg';
 import { X, ExternalLink, Loader2, MapPin } from 'lucide-react';
-import { api, hasApi } from '../services/apiService';
+import { api } from '../services/apiService';
 import { getMyCountry } from '../services/geoService';
 import { useYAiSettings } from '../context/YAiSettingsContext';
 import { hiddenCountrySet } from '../utils/visibility';
@@ -45,7 +45,7 @@ export const WindyCams: React.FC = () => {
   const { settings } = useYAiSettings();
   const { isPlaying, togglePlayPause } = useAudio();
   const hidden = hiddenCountrySet(settings, 'webcams');
-  const [enabled, setEnabled] = useState<boolean | null>(hasApi() ? null : false);
+  const [enabled, setEnabled] = useState<boolean | null>(null);
   const [country, setCountry] = useState('');
   const [category, setCategory] = useState('');
   const [city, setCity] = useState('');
@@ -55,10 +55,15 @@ export const WindyCams: React.FC = () => {
   const [open, setOpen] = useState<Cam | null>(null);
 
   useEffect(() => {
-    if (enabled === false) return;
-    getMyCountry().then((cc) => setCountry(cc && !hidden.has(cc) ? cc : 'DE'));
+    if (!settings.apiUrl) return;
+    let active = true;
+    setEnabled(null);
+    getMyCountry().then((cc) => {
+      if (active) setCountry(cc && !hidden.has(cc) ? cc : 'DE');
+    });
+    return () => { active = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [settings.apiUrl]);
 
   const load = async (offset: number) => {
     if (!country) return;
@@ -93,7 +98,7 @@ export const WindyCams: React.FC = () => {
     setCity('');
     load(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country, category]);
+  }, [country, category, settings.apiUrl]);
 
   const cities = useMemo(() => {
     const m = new Map<string, number>();
@@ -101,7 +106,7 @@ export const WindyCams: React.FC = () => {
     return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ru'));
   }, [cams]);
 
-  if (enabled === false) return null;
+  if (!settings.apiUrl || enabled === false) return null;
   const shown = cams.filter((c) => !hidden.has(c.countryCode) && (!city || c.city === city));
   const countries = COUNTRY_CODES.filter((c) => !hidden.has(c)).sort((a, b) => (ruNames?.of(a) || a).localeCompare(ruNames?.of(b) || b, 'ru'));
 
