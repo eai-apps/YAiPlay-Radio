@@ -2,29 +2,27 @@
   "appTitle": "YAiPlay Radio",
   "appSubtitle": "Радио со всего мира",
   "customLogoUrl": "./logo.png",
-  "telegramUrl": "",
-  "customLinks": [],
+  "telegramUrl": "https://t.me/YAiPlayer",
+  "customLinks": [
+    {
+      "id": "1",
+      "title": "Telegram Канал",
+      "url": "https://t.me/YAiPlayer"
+    },
+    {
+      "id": "2",
+      "title": "Поддержка",
+      "url": "https://t.me/YAiPlayer?direct"
+    }
+  ],
   "customWebcams": [],
   "customStations": [],
   "customTvChannels": [],
-  "featuredStation": {
-    "stationuuid": "ce3e9d01-3614-45f2-ae25-93f944005eaa",
-    "name": "0R - 90s || 90s Pop, 90s Hits, Eurodance, Hip Hop, R&B, Grunge, Alternative, Techno, Trance, Dance, Chill, Boyband, Girlband, Pop Rock, Nostalgic",
-    "url": "https://0nlineradio.radioho.st/0r-90s?ref=radio-browser26",
-    "url_resolved": "https://0nlineradio.radioho.st/0r-90s?ref=radio-browser26",
-    "favicon": "https://i.ibb.co/S4y9mSR9/90s.png",
-    "tags": "1990s,1990s hits,1990s pop music,90's,90er,90er hitmix,90s,dance,eurodance,oldies,pop,top hits",
-    "country": "Germany",
-    "countrycode": "DE",
-    "bitrate": 192,
-    "codec": "MP3",
-    "homepage": "https://plus.rm.fm/"
-  },
+  "featuredStation": null,
   "contactEmail": "",
   "apiUrl": "https://yaiplay-radio-api.yai-media-player.workers.dev",
   "hiddenSections": [
-    "tv@rustore",
-    "tv"
+    "tv@rustore"
   ],
   "hiddenCountries": {
     "radio": [],
@@ -38,6 +36,6 @@
   "legalContact": "",
   "heroTitle": "YAiPlay Radio",
   "heroSubtitle": "Радио со всего мира",
-  "versionChangelog": "",
-  "dmcaPolicy": "YAiPlay Radio — интернет-тюнер и каталог публичных радиопотоков. Приложение не хранит и не ретранслирует аудио: потоки воспроизводятся напрямую с серверов вещателей. Настройки хранятся только на вашем устройстве."
+  "versionChangelog": "Версия 0.8.6: Умный фильтр RDS и Shazam (сохранение только реальных проверенных песен с исполнителем), каталог «Исполнители & Группы (A–Z)» и «Саундтреки OST 24/7», точный выбор стран без сбоев (до 200 станций на страну, кнопка Закрыть и Esc), быстрая регистрация без Email (Логин + Пароль + QR-код), строгий PIN админки, 50+ проверенных веб-камер мира без черных окон.",
+  "dmcaPolicy": "YAiPlay Radio — программный интернет-тюнер и каталог публичных радиопотоков и открытых веб-камер. Приложение не хранит, не ретранслирует и не изменяет аудио- и видеоматериалы: все потоки воспроизводятся напрямую с серверов вещателей, каталог станций — открытая база Radio Browser.\n\nВаши настройки (избранное, тема, язык) хранятся только на вашем устройстве.\n\nЕсли вы правообладатель или представитель вещателя и хотите изменить или удалить поток, напишите нам через официальный Telegram-канал."
 }
