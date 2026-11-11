@@ -93,3 +93,6 @@ jobs:
             gh release create android-latest --target "$GITHUB_SHA" --title "YAiPlay Radio — Android" --notes "Универсальный APK для телефонов, планшетов и Android TV." --prerelease
           fi
           gh release upload android-latest YAiRadio.apk --clobber
+          gh release edit android-latest --notes "Универсальный APK для телефонов, планшетов и Android TV.
+
+          native: 1.0.${GITHUB_RUN_NUMBER}"
