@@ -83,6 +83,7 @@ export default {
       }
 
       if (p === '/sync/register' && request.method === 'POST') {
+        if (!env.TOKEN_SECRET) return json({ error: 'Синхронизация временно не настроена' }, 503);
         if (!(await rateLimit(env, `rl:reg:${ip}`, 5, 3600))) return json({ error: 'Слишком много регистраций. Подождите час.' }, 429);
         const { login, password } = await readJson(request);
         const l = cleanLogin(login);
@@ -90,10 +91,12 @@ export default {
         if (String(password || '').length < 6) return json({ error: 'Пароль: минимум 6 символов' }, 400);
         if (await env.DB.get('user:' + l)) return json({ error: 'Такой логин уже занят' }, 409);
         const salt = randomHex(16);
+        const token = await sign(env, { role: 'user', login: l, exp: now() + 365 * DAY });
         await env.DB.put('user:' + l, JSON.stringify({ salt, hash: await pbkdf2(password, salt), at: Date.now() }));
-        return json({ token: await sign(env, { role: 'user', login: l, exp: now() + 365 * DAY }), login: l });
+        return json({ token, login: l });
       }
       if (p === '/sync/login' && request.method === 'POST') {
+        if (!env.TOKEN_SECRET) return json({ error: 'Синхронизация временно не настроена' }, 503);
         if (!(await rateLimit(env, `rl:ulogin:${ip}`, 20, 3600))) return json({ error: 'Слишком много попыток. Подождите час.' }, 429);
         const { login, password } = await readJson(request);
         const l = cleanLogin(login);
