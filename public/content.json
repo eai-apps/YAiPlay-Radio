@@ -22,7 +22,9 @@
   },
   "contactEmail": "",
   "apiUrl": "https://yaiplay-radio-api.yai-media-player.workers.dev",
-  "hiddenSections": [],
+  "hiddenSections": [
+    "tv@rustore"
+  ],
   "hiddenCountries": {
     "radio": [],
     "tv": [
