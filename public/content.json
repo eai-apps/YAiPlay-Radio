@@ -23,7 +23,8 @@
   "contactEmail": "",
   "apiUrl": "https://yaiplay-radio-api.yai-media-player.workers.dev",
   "hiddenSections": [
-    "tv@rustore"
+    "tv@rustore",
+    "tv"
   ],
   "hiddenCountries": {
     "radio": [],
