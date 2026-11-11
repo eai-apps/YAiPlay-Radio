@@ -18,7 +18,19 @@
   "customWebcams": [],
   "customStations": [],
   "customTvChannels": [],
-  "featuredStation": null,
+  "featuredStation": {
+    "stationuuid": "4136b20f-f645-4609-8ceb-84bff54c50f6",
+    "name": "Radio ROKS (Moldova) - Rock Ballads",
+    "url": "https://radio6.dixi.md/listen/rock_ballads/rockballads128.aac",
+    "url_resolved": "https://radio6.dixi.md/listen/rock_ballads/rockballads128.aac",
+    "favicon": "https://radioroks.md/front-assets/favicons/favicon-96x96.png",
+    "tags": "rock ballads",
+    "country": "The Republic Of Moldova",
+    "countrycode": "MD",
+    "bitrate": 128,
+    "codec": "AAC",
+    "homepage": "https://radioroks.md/"
+  },
   "contactEmail": "",
   "apiUrl": "https://yaiplay-radio-api.yai-media-player.workers.dev",
   "hiddenSections": [
