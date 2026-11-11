@@ -21,7 +21,6 @@ await writeFile(path.join(out, '_routes.json'), JSON.stringify({ version: 1, inc
 await writeFile(path.join(out, '_headers'), '/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n/core.json\n  Cache-Control: public, max-age=300\n/sw.js\n  Cache-Control: no-cache\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
 await copyFile(path.join(root, 'public/privacy.html'), path.join(out, 'privacy.html'));
 await copyFile(path.join(root, 'public/logo.png'), path.join(out, 'logo.png'));
-await writeFile(path.join(out, 'icon.svg'), '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#17271d"/><text x="96" y="113" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="68" fill="#a4e7bd">2G</text></svg>');
 await mkdir(path.join(out, 'icons'), { recursive: true });
 for (const size of [192, 512]) await copyFile(path.join(root, `public/icons/icon-${size}.png`), path.join(out, `icons/icon-${size}.png`));
 await writeFile(path.join(out, 'manifest.webmanifest'), JSON.stringify({ id: '/', name: 'YAiPlay Radio · 2G', short_name: 'YAi 2G', start_url: '/', scope: '/', display: 'standalone', theme_color: '#101513', background_color: '#101513', icons: [192, 512].map((size) => ({ src: `/icons/icon-${size}.png`, sizes: `${size}x${size}`, type: 'image/png' })) }));
