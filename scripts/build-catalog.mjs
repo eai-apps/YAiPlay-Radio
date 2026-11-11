@@ -99,16 +99,38 @@ async function audioAlive(url) {
   }
 }
 
-/** Видео-поток (HLS) жив И разрешён для показа на сайте (CORS) */
+/** Видео-поток (HLS) жив И разрешён для показа на сайте (CORS).
+ *  Один общий таймаут на заголовки И на чтение тела: раньше таймер снимался после заголовков, а `r.text()`
+ *  мог ждать вечно, и один зависший сервер навсегда занимал «рабочего» (из-за этого каталог не собирался). */
 async function hlsPlayableInBrowser(url) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 12000);
   try {
-    const r = await fetchWithTimeout(url, { headers: { Origin: 'https://eai-apps.github.io' } }, 9000);
-    if (!r.ok) return false;
+    const r = await fetch(url, { signal: ctrl.signal, headers: { 'User-Agent': UA, Origin: 'https://eai-apps.github.io' } });
+    if (!r.ok) {
+      try { await r.body?.cancel(); } catch {}
+      return false;
+    }
     const cors = r.headers.get('access-control-allow-origin');
-    const text = (await r.text()).slice(0, 200);
-    return text.startsWith('#EXTM3U') && (cors === '*' || cors === 'https://eai-apps.github.io');
+    if (!(cors === '*' || cors === 'https://eai-apps.github.io')) {
+      try { await r.body?.cancel(); } catch {}
+      return false;
+    }
+    // Достаточно первых байтов: проверяем только заголовок плейлиста
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let text = '';
+    while (text.length < 200) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += dec.decode(value, { stream: true });
+    }
+    try { await reader.cancel(); } catch {}
+    return text.startsWith('#EXTM3U');
   } catch {
     return false;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -364,8 +386,14 @@ async function buildTv() {
   }
   stats.tvCandidates = cand.length;
   log(`ТВ: кандидатов ${cand.length}, проверяем…`);
-  const ok = await pool(cand, 30, (c) => hlsPlayableInBrowser(c.stream));
-  const tv = cand.filter((_, i) => ok[i]).sort((a, b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name));
+  // Бюджет времени: проверка ТВ не должна съесть всё время задачи. Что не успели проверить, остаётся как в прошлом каталоге.
+  const tvDeadline = Date.now() + 25 * 60 * 1000;
+  const prevTvIds = new Set((prev.tv || []).map((t) => t.id));
+  const ok = await pool(cand, 30, (c) => (Date.now() > tvDeadline ? undefined : hlsPlayableInBrowser(c.stream)));
+  const skipped = ok.filter((v) => v === undefined).length;
+  if (skipped) log(`ТВ: не успели проверить ${skipped}, оставляю их статус из прошлого каталога`);
+  stats.tvSkipped = skipped;
+  const tv = cand.filter((c, i) => (ok[i] === undefined ? prevTvIds.has(c.id) : ok[i])).sort((a, b) => a.country.localeCompare(b.country) || a.name.localeCompare(b.name));
   log(`ТВ: работают на сайте ${tv.length}`);
   return tv;
 }
