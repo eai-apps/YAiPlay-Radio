@@ -8,9 +8,9 @@ function shouldShow(): boolean {
   try {
     const standalone = window.matchMedia?.('(display-mode: standalone)').matches || (navigator as any).standalone;
     if (isNativeApp || standalone) {
-      // В приложении — только при первом запуске (раньше при каждом: 3 с ожидания на каждом открытии)
-      if (localStorage.getItem('YAi_intro_app_seen')) return false;
-      localStorage.setItem('YAi_intro_app_seen', '1');
+      // В приложении — при каждом «холодном» запуске (заставка с анимацией возвращена по просьбе владельца)
+      if (sessionStorage.getItem('YAi_intro_done')) return false;
+      sessionStorage.setItem('YAi_intro_done', '1');
       return true;
     }
     // На сайте — только при самом первом посещении
@@ -29,7 +29,7 @@ export const IntroSplash: React.FC = () => {
   useEffect(() => {
     if (stage !== 'show') return;
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const t1 = setTimeout(() => setStage('leave'), reduce ? 500 : 1500);
+    const t1 = setTimeout(() => setStage('leave'), reduce ? 600 : 2300);
     return () => clearTimeout(t1);
   }, [stage]);
 
