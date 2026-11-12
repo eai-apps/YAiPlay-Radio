@@ -9,7 +9,9 @@
  *   GET  /admin/messages      сообщения поддержки (только админ)
  *   DELETE /admin/messages/:id
  *   GET  /webcams             веб-камеры Windy (ключ WINDY_API_KEY хранится только здесь)
- *   POST /admin/publish       опубликовать content.json в GitHub одной кнопкой (если задан GITHUB_TOKEN)
+ *   GET  /content             опубликованный контент сайта из KV — один и тот же на GitHub Pages и Cloudflare Pages
+ *   GET|PUT /admin/draft      черновик админки (общий для всех зеркал сайта и устройств владельца)
+ *   POST /admin/publish       опубликовать: сразу в KV (все зеркала видят мгновенно) и копией в GitHub (если задан GITHUB_TOKEN)
  *   POST /sync/register       регистрация (логин + пароль) для синхронизации избранного
  *   POST /sync/login          вход
  *   GET|PUT /sync/data        избранное и треки пользователя
@@ -47,7 +49,7 @@ export default {
     const url = new URL(request.url);
     const p = url.pathname.replace(/\/+$/, '') || '/';
     try {
-      if (p === '/' || p === '/health') return json({ ok: true, service: 'yaiplay-radio-api', kv: !!env.DB, publish: !!env.GITHUB_TOKEN, telegram: !!env.TELEGRAM_BOT_TOKEN, windy: !!env.WINDY_API_KEY, share: true, playlists: true, probe: true, version: '2026-11-01' });
+      if (p === '/' || p === '/health') return json({ ok: true, service: 'yaiplay-radio-api', kv: !!env.DB, publish: !!env.GITHUB_TOKEN, telegram: !!env.TELEGRAM_BOT_TOKEN, windy: !!env.WINDY_API_KEY, share: true, playlists: true, probe: true, version: '2026-11-12', content: true });
       if (p === '/s') return sharePage(url);
       if (p === '/meta') return await handleMeta(url, json, ctx);
       if (p === '/webcams') return await handleWebcams(url, env, json, ctx);
@@ -56,6 +58,9 @@ export default {
 
       if (!env.DB) return json({ error: 'KV не подключено (привязка DB)' }, 500);
       const ip = request.headers.get('CF-Connecting-IP') || '0';
+
+      // Опубликованный контент: один источник для github.io и pages.dev, без ожидания пересборки зеркал.
+      if (p === '/content' && request.method === 'GET') return json((await env.DB.get('site:content', 'json')) || {}, 200, { 'Cache-Control': 'no-store' });
 
       if (p === '/support' && request.method === 'POST') return await handleSupport(request, env, ip, json, ctx);
 
@@ -80,6 +85,17 @@ export default {
           return json({ ok: true });
         }
         if (p === '/admin/publish' && request.method === 'POST') return await handlePublish(request, env, json);
+        if (p === '/admin/draft' && request.method === 'GET') return json((await env.DB.get('site:draft', 'json')) || {}, 200, { 'Cache-Control': 'no-store' });
+        if (p === '/admin/draft' && request.method === 'PUT') {
+          const body = await request.text();
+          if (body.length > 900000) return json({ error: 'Черновик слишком большой' }, 413);
+          const { draft, updatedAt } = JSON.parse(body || '{}');
+          if (!draft || typeof draft !== 'object') return json({ error: 'Нет черновика' }, 400);
+          const at = Number(updatedAt) || Date.now();
+          if (Object.keys(draft).length) await env.DB.put('site:draft', JSON.stringify({ draft, updatedAt: at }));
+          else await env.DB.put('site:draft', JSON.stringify({ draft: {}, updatedAt: at }));
+          return json({ ok: true, updatedAt: at });
+        }
       }
 
       if (p === '/sync/register' && request.method === 'POST') {
@@ -163,11 +179,16 @@ async function handleSupport(request, env, ip, json, ctx) {
 
 // ---------- Публикация content.json в GitHub ----------
 async function handlePublish(request, env, json) {
-  if (!env.GITHUB_TOKEN) return json({ error: 'GITHUB_TOKEN не задан — публикуйте вручную через GitHub' }, 400);
   const body = await request.text();
   if (body.length > 900000) return json({ error: 'Файл слишком большой' }, 413);
   const { content } = JSON.parse(body);
   if (!content || typeof content !== 'object') return json({ error: 'Нет содержимого' }, 400);
+  // Сначала KV: оба зеркала (github.io и pages.dev) читают /content и видят правку сразу.
+  const updatedAt = Date.now();
+  await env.DB.put('site:content', JSON.stringify({ content, updatedAt }));
+  await env.DB.put('site:draft', JSON.stringify({ draft: {}, updatedAt }));
+  // Копия в GitHub (public/content.json) — для истории и для тех, кто ещё не видит сервер.
+  if (!env.GITHUB_TOKEN) return json({ ok: true, github: false, updatedAt });
   const api = `https://api.github.com/repos/${GITHUB_REPO}/contents/public/content.json`;
   const headers = { Authorization: `Bearer ${env.GITHUB_TOKEN}`, 'User-Agent': 'yaiplay-radio-api', Accept: 'application/vnd.github+json' };
   const cur = await fetch(api, { headers });
@@ -178,8 +199,8 @@ async function handlePublish(request, env, json) {
     headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: 'Контент сайта обновлён из админки', content: b64(text), sha }),
   });
-  if (!res.ok) return json({ error: `GitHub ответил ${res.status}` }, 502);
-  return json({ ok: true });
+  if (!res.ok) return json({ ok: true, github: false, githubStatus: res.status, updatedAt });
+  return json({ ok: true, github: true, updatedAt });
 }
 
 // ---------- Проверка потока: станция не играет у человека — она мёртвая или закрыта для его страны? ----------
