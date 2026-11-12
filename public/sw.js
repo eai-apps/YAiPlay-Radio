@@ -1,6 +1,6 @@
 // YAiPlay Radio — service worker: быстрый запуск и работа оболочки без сети.
 // Радиопотоки, каталог станций и внешние сервисы НЕ кэшируются.
-const CACHE = 'YAi-shell-v4';
+const CACHE = 'YAi-shell-v5';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'index.html', 'logo.png', 'manifest.webmanifest'])));
@@ -37,6 +37,23 @@ self.addEventListener('fetch', (e) => {
           return res;
         })
         .catch(() => caches.match(req).then((r) => r || fetch(req)))
+    );
+    return;
+  }
+  // Запуск приложения (страница): сразу копия из кэша, а свежая версия качается в фоне и будет при
+  // следующем запуске. Раньше страница ждала сеть до 3,5 с — на iPhone это и был долгий белый экран.
+  const appPage = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html');
+  if (req.mode === 'navigate' && appPage) {
+    const fresh = fetchWithTimeout(req, { cache: 'no-cache' }, 8000)
+      .then((res) => {
+        if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('index.html', copy)); }
+        return res;
+      });
+    e.respondWith(
+      caches.match('index.html').then((cached) => {
+        if (cached) { e.waitUntil(fresh.catch(() => {})); return cached; }
+        return fresh.catch(() => caches.match(req).then((r) => r || fetch(req)));
+      })
     );
     return;
   }
