@@ -2,7 +2,7 @@ import { DATA_BASE } from '../utils/platform';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { YAiSettings, ThemeId } from '../types/radio';
 import { isOwnerMode } from '../utils/owner';
-import { setApiBase } from '../services/apiService';
+import { setApiBase, api, adminToken } from '../services/apiService';
 import { setHiddenRadioCountries } from '../services/radioApi';
 import { setAllowedStreamHosts } from '../constants/streamPolicy';
 import { setDefaultViewMode } from '../hooks/useViewMode';
@@ -11,6 +11,8 @@ import { setDefaultViewMode } from '../hooks/useViewMode';
 export const SETTINGS_KEY = 'YAi_user_prefs_v3';
 /** Черновик владельца: правки из Админ-панели до публикации content.json. */
 export const ADMIN_DRAFT_KEY = 'YAi_admin_draft_v1';
+/** Когда черновик менялся в последний раз (для сверки с сервером). */
+export const ADMIN_DRAFT_AT_KEY = 'YAi_admin_draft_at_v1';
 
 /** Поля контента сайта. Источник — файл public/content.json (одинаков для всех посетителей). */
 export const SITE_FIELDS = [
@@ -189,9 +191,18 @@ export const YAiSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     let cancelled = false;
     fetch(`${DATA_BASE}content.json?v=${Date.now()}`, { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : {}))
-      .then((json) => {
+      .then(async (json) => {
         if (cancelled) return;
-        const pub = sanitizeSiteContent(json);
+        let pub = sanitizeSiteContent(json);
+        // Опубликованное из админки лежит на сервере (KV): так github.io и pages.dev показывают одно и то же сразу,
+        // не дожидаясь пересборки зеркал. Файл — запасной вариант, если сервер недоступен.
+        if (pub.apiUrl) {
+          try {
+            const kv: any = await api('/content', { base: pub.apiUrl });
+            if (kv && kv.content && typeof kv.content === 'object') pub = sanitizeSiteContent({ ...json, ...kv.content });
+          } catch {}
+        }
+        if (cancelled) return;
         setPublished(pub);
         // Из черновика убираем то, что уже опубликовано (совпадает с сайтом)
         setDraft((d) => {
@@ -232,7 +243,27 @@ export const YAiSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     } catch {}
   }, [userPrefs]);
 
-  // Черновик владельца
+  // Черновик владельца: на этом устройстве и на сервере, чтобы правка в админке на pages.dev была и на github.io
+  // (и на другом устройстве). Берётся более свежий из двух.
+  const [draftSynced, setDraftSynced] = useState(false);
+  const apiForDraft = published.apiUrl || '';
+  useEffect(() => {
+    if (!isOwnerMode || !apiForDraft || !adminToken.get()) { setDraftSynced(true); return; }
+    let cancelled = false;
+    api('/admin/draft', { base: apiForDraft, token: adminToken.get() })
+      .then((r: any) => {
+        if (cancelled || !r || typeof r.draft !== 'object') return;
+        const localAt = Number(localStorage.getItem(ADMIN_DRAFT_AT_KEY)) || 0;
+        if ((Number(r.updatedAt) || 0) > localAt) {
+          setDraft(sanitizeSiteContent(r.draft));
+          try { localStorage.setItem(ADMIN_DRAFT_AT_KEY, String(r.updatedAt)); } catch {}
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setDraftSynced(true); });
+    return () => { cancelled = true; };
+  }, [apiForDraft]);
+
   useEffect(() => {
     if (!isOwnerMode) return;
     try {
@@ -241,7 +272,15 @@ export const YAiSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     } catch (e) {
       console.warn('Черновик слишком большой для хранилища браузера', e);
     }
-  }, [draft]);
+    // На сервер — через секунду после последней правки, и только после первой сверки с сервером.
+    if (!draftSynced || !apiForDraft || !adminToken.get()) return;
+    const t = setTimeout(() => {
+      const at = Date.now();
+      try { localStorage.setItem(ADMIN_DRAFT_AT_KEY, String(at)); } catch {}
+      api('/admin/draft', { method: 'PUT', base: apiForDraft, token: adminToken.get(), body: { draft, updatedAt: at } }).catch(() => {});
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [draft, draftSynced, apiForDraft]);
 
   const updateSettings = useCallback((updates: Partial<YAiSettings>) => {
     const user = pick<YAiSettings>(updates, USER_FIELDS as unknown as string[]);

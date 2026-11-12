@@ -539,7 +539,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   try {
                     await api('/admin/publish', { body: { content: buildSiteContent(settings) }, token: adminToken.get() });
                     markPublished();
-                    setPublishState('✓ Опубликовано. Через 1–2 минуты сайт обновится у всех.');
+                    setPublishState('✓ Опубликовано. Сайт и его зеркало (github.io и pages.dev) показывают это сразу — достаточно обновить страницу.');
                   } catch (e: any) {
                     setPublishState(`Не получилось: ${e?.message || 'ошибка'}. Можно опубликовать вручную через content.json.`);
                   }
