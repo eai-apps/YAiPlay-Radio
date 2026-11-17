@@ -30,12 +30,15 @@ jobs:
         with:
           node-version: 22
       - name: Библиотеки картинок
-        run: npm install --no-save --no-package-lock sharp@0.34.4 puppeteer-core@23 qrcode@1
+        run: |
+          npm install --no-save --no-package-lock sharp@0.34.4 puppeteer-core@23 qrcode@1
+          out=$(npx -y @puppeteer/browsers install chrome-headless-shell@stable --path "$HOME/.chs" | tail -1)
+          echo "CHROME_PATH=${out#* }" >> "$GITHUB_ENV"
+          echo "Chrome: ${out#* }"
       - name: Подготовить черновики
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DRY_RUN: "true"
-          CHROME_PATH: /usr/bin/google-chrome
         run: |
           echo "Gemini ключ: $([ -n "$GEMINI_API_KEY" ] && echo есть || echo нет)"
           if [ "${{ inputs.mode }}" = "day3" ]; then

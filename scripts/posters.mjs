@@ -71,7 +71,9 @@ async function getBrowser() {
   const { default: puppeteer } = await import('puppeteer-core');
   browser = await puppeteer.launch({
     executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome',
-    args: ['--no-sandbox', '--disable-dev-shm-usage', '--font-render-hinting=none'],
+    headless: 'shell',
+    timeout: 60000,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--font-render-hinting=none'],
   });
   return browser;
 }
