@@ -375,7 +375,7 @@ async function postStation(state, isDay = false) {
 // ---------- 1б. Веб-камера (Windy через наш сервер) ----------
 const API = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
 // Дороги, трассы, парковки и стройки — не «взгляд на мир», такие камеры не берём
-const BORING = /highway|freeway|interstate|\bI-\d|\broad\b|traffic|parking|motorway|autobahn|autostrada|\bDOT\b|\broute\b|street|construction|baustelle|шоссе|трасс|дорог|парковк/i;
+const BORING = /highway|freeway|interstate|\bI-\d|\broad\b|traffic|parking|motorway|autobahn|autostrada|\bDOT\b|\broute\b|street|construction|baustelle|шоссе|трасс|дорог|парковк|\b(US|SR|CR|SH|I|HWY|Hwy|Rte)[- ]?\d+|\bMM\b|\b511\b|\b(Ln|Rd|Ave|Blvd|Pkwy|Dr)\b/i;
 const CAM_COUNTRIES = ['IT', 'ES', 'FR', 'DE', 'AT', 'CH', 'NO', 'IS', 'GR', 'PT', 'HR', 'NL', 'CZ', 'US', 'CA', 'JP', 'AU', 'NZ', 'GB', 'IE', 'SE', 'FI', 'PL', 'SI', 'MT', 'CY', 'TR', 'TH', 'MX', 'BR'];
 
 async function makeCamCard(imgBuf, title, subtitle) {
@@ -402,7 +402,9 @@ async function postWebcam(state) {
   const localHour = (cc) => (new Date().getUTCHours() + (OFF[cc] ?? 1) + 24) % 24;
   const order = CAM_COUNTRIES.map((_, i) => CAM_COUNTRIES[(start + i) % CAM_COUNTRIES.length]);
   const day = order.filter((c) => localHour(c) >= 8 && localHour(c) <= 17);
-  const list = [...day, ...order.filter((c) => !day.includes(c))].slice(0, 10);
+  // в США почти все камеры — дорожные, поэтому США в конце
+  const usLast = (a) => [...a.filter((c) => c !== 'US'), ...a.filter((c) => c === 'US')];
+  const list = [...usLast(day), ...order.filter((c) => !day.includes(c))].slice(0, 10);
   for (let i = 0; i < list.length; i++) {
     const cc = list[i];
     if (hidden.has(cc)) continue;
