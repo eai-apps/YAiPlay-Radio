@@ -8,6 +8,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as Posters from './posters.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STATE_FILE = path.join(ROOT, 'data', 'telegram-state.json');
@@ -127,9 +128,36 @@ async function withFooter(text, limit = CAPTION_MAX) {
   return t + f;
 }
 
+// Черновики для владельца: картинка + текст + кнопки в папке drafts/ (workflow выкладывает её как архив)
+const DRAFTS = path.join(ROOT, 'drafts');
+async function saveDraft({ photo, caption, buttons }) {
+  try {
+    await fs.mkdir(DRAFTS, { recursive: true });
+    const name = `${new Date().toISOString().slice(0, 10)}-${process.argv[2] || 'auto'}`;
+    let img = '';
+    if (Buffer.isBuffer(photo)) {
+      await fs.writeFile(path.join(DRAFTS, name + '.png'), photo);
+      img = name + '.png';
+    } else if (photo) img = photo;
+    const kb = (buttons?.inline_keyboard || []).flat().map((b) => `<a class="btn" href="${b.url}">${esc(b.text)}</a>`).join('');
+    await fs.writeFile(
+      path.join(DRAFTS, name + '.html'),
+      `<!doctype html><meta charset="utf-8"><body style="background:#0e1621;color:#fff;font:16px system-ui;max-width:560px;margin:20px auto">` +
+        `<style>.btn{display:block;margin:6px 0;padding:10px;border-radius:10px;background:#2b5278;color:#fff;text-align:center;text-decoration:none}a{color:#6ab3f3}</style>` +
+        (img ? `<img src="${img}" style="width:100%;border-radius:12px">` : '') +
+        `<div style="white-space:pre-wrap;background:#182533;padding:14px;border-radius:12px;margin-top:6px">${caption}</div>${kb}</body>`
+    );
+    await fs.writeFile(path.join(DRAFTS, name + '.json'), JSON.stringify({ caption, buttons }, null, 1));
+    log('черновик сохранён:', name);
+  } catch (e) {
+    log('черновик не сохранился:', e.message);
+  }
+}
+
 async function postPhotoOrText({ photo, caption, buttons, preview = false, silent = false }) {
   if (DRY_RUN) {
     log('[DRY_RUN] Черновик Telegram-поста:', JSON.stringify({ channel: CHANNEL, caption, hasPhoto: !!photo, buttons, silent: SILENT || silent }));
+    await saveDraft({ photo, caption, buttons });
     return { message_id: 0 };
   }
   // photo: Buffer (наша карточка), URL или null
@@ -187,7 +215,7 @@ async function stationLogo(url) {
     const img = sharp(buf, { failOn: 'none' });
     const meta = await img.metadata();
     if (!meta.width || meta.width < 64 || meta.height < 64) return null;
-    const flat = await sharp(buf).resize(380, 380, { fit: 'contain', background: { r: 24, g: 24, b: 27, alpha: 1 } }).flatten({ background: '#18181b' }).png().toBuffer();
+    const flat = await sharp(buf).resize(380, 380, { fit: 'contain', background: { r: 20, g: 18, b: 46, alpha: 1 } }).flatten({ background: '#14122e' }).png().toBuffer();
     const st = await sharp(flat).stats();
     const spread = st.channels.slice(0, 3).reduce((a, c) => a + c.stdev, 0) / 3;
     if (spread < 12) return null; // почти однотонная — значит пустая/белая
@@ -197,47 +225,11 @@ async function stationLogo(url) {
   }
 }
 
-async function makeCard({ label, title, subtitle, logoUrl }) {
-  if (!sharp) return null;
+async function makeCard({ label, title, subtitle, logoUrl, tags = [] }) {
   try {
-    const globe = await sharp(path.join(ROOT, 'public', 'logo-globe.png')).resize(380, 380).png().toBuffer();
-    const logo = (await stationLogo(logoUrl)) || globe;
-    // Название: 1–2 строки, шрифт подбираем под длину (ширина поля ~640px)
-    const words = String(title).split(/\s+/);
-    const lines = [];
-    const maxChars = title.length <= 20 ? 20 : 24;
-    for (const w of words) {
-      const last = lines[lines.length - 1];
-      if (last && (last + ' ' + w).length <= maxChars) lines[lines.length - 1] = last + ' ' + w;
-      else lines.push(w);
-    }
-    if (lines.length > 2) lines.splice(1, lines.length - 1, (lines.slice(1).join(' ').slice(0, maxChars - 1) + '…'));
-    const fs1 = lines.length === 1 && title.length <= 20 ? 56 : 44;
-    const titleSvg = lines
-      .map((l, i) => `<text x="580" y="${lines.length === 1 ? 330 : 312 + i * 52}" font-family="DejaVu Sans, sans-serif" font-size="${fs1}" font-weight="bold" fill="#ffffff">${xmlEsc(l.length > maxChars + 2 ? l.slice(0, maxChars) + '…' : l)}</text>`)
-      .join('');
-    const subY = lines.length === 1 ? 395 : 420;
-    const svg = `<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="g1" cx="25%" cy="50%" r="55%"><stop offset="0" stop-color="#065f46" stop-opacity=".9"/><stop offset="1" stop-color="#09090b" stop-opacity="0"/></radialGradient>
-        <radialGradient id="g2" cx="90%" cy="0%" r="60%"><stop offset="0" stop-color="#0e7490" stop-opacity=".7"/><stop offset="1" stop-color="#09090b" stop-opacity="0"/></radialGradient>
-        <linearGradient id="acc" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#6041d8"/><stop offset="1" stop-color="#1fcfeb"/></linearGradient>
-      </defs>
-      <rect width="1280" height="720" fill="#09090b"/><rect width="1280" height="720" fill="url(#g1)"/><rect width="1280" height="720" fill="url(#g2)"/>
-      <rect x="96" y="150" width="420" height="420" rx="48" fill="#18181b" stroke="url(#acc)" stroke-width="4"/>
-      <text x="580" y="240" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="bold" fill="#1fcfeb">${xmlEsc(label)}</text>
-      ${titleSvg}
-      <text x="580" y="${subY}" font-family="DejaVu Sans, sans-serif" font-size="30" fill="#a1a1aa">${xmlEsc(subtitle || '')}</text>
-      <rect x="580" y="465" width="420" height="6" rx="3" fill="url(#acc)"/>
-      <text x="580" y="530" font-family="DejaVu Sans, sans-serif" font-size="34" font-weight="bold" fill="#ffffff">YAi <tspan fill="#1fcfeb">Radio</tspan></text>
-      <text x="580" y="575" font-family="DejaVu Sans, sans-serif" font-size="24" fill="#71717a">Радио со всего мира · бесплатно</text>
-    </svg>`;
-    return await sharp(Buffer.from(svg))
-      .composite([{ input: logo, left: 116, top: 170 }])
-      .png()
-      .toBuffer();
+    return await Posters.stationCard({ label, title, subtitle, tags, logoBuf: await stationLogo(logoUrl) });
   } catch (e) {
-    log('карточка не собралась:', e.message);
+    log('карточка станции не собралась:', e.message);
     return null;
   }
 }
@@ -297,7 +289,7 @@ const ROTATION = ['DE', 'FR', 'IT', 'ES', 'GB', 'US', 'BR', 'JP', 'NL', 'PL', 'U
 /** Поток играет на нашем сайте? (проверяем с адресом сайта — станции, запрещающие чужие сайты, отсеются) */
 async function streamOk(url) {
   try {
-    const r = await fetchT(url, { headers: { 'Icy-MetaData': '0', Referer: 'https://eai-apps.github.io/', Origin: 'https://eai-apps.github.io' } }, 10000);
+    const r = await fetchT(url, { headers: { 'Icy-MetaData': '0', Referer: 'https://yaiplay-radio.pages.dev/', Origin: 'https://yaiplay-radio.pages.dev' } }, 10000);
     const type = (r.headers.get('content-type') || '').toLowerCase();
     try {
       await r.body?.cancel();
@@ -363,14 +355,14 @@ async function postStation(state, isDay = false) {
     .filter(Boolean)
     .join('\n');
   const body =
-    (await ai(STYLE, `Напиши пост «${isDay ? 'Станция дня' : 'Интересная станция'}» (3–4 предложения): чем она может понравиться и под какое настроение подходит. ${isDay ? 'Это утренний пост — можно пожелать хорошего дня.' : ''}\nФакты:\n${facts}`)) ||
+    (await ai(STYLE, `Напиши пост «${isDay ? 'Станция дня' : 'Интересная станция'}» (3–4 предложения): чем она может понравиться и под какое настроение подходит. ${isDay ? 'Пост выходит днём — можно пожелать хорошего дня.' : ''}\nФакты:\n${facts}`)) ||
     `${st.name} — ${country ? `радио из страны ${country}` : 'радио со всего мира'}${tags ? `, в эфире: ${tags}` : ''}. Включайте и слушайте бесплатно, без рекламы и регистрации.`;
   const caption =
     `${isDay ? '🌅 <b>Станция дня' : '📻 <b>Интересная станция'}: ${esc(st.name)}</b>\n` +
     `${country ? `🌍 ${esc(country)}` : ''}${st.bitrate ? ` · 🎧 ${st.bitrate} kbps` : ''}${st.group ? ' · ⭐ Эксклюзив YAi' : ''}\n\n` +
     `${esc(body)}`;
   const photo =
-    (await makeCard({ label: isDay ? 'СТАНЦИЯ ДНЯ' : 'ИНТЕРЕСНАЯ СТАНЦИЯ', title: st.name, subtitle: [country, st.bitrate ? `${st.bitrate} kbps` : '', st.group ? 'Эксклюзив YAi' : ''].filter(Boolean).join(' · '), logoUrl: st.favicon })) ||
+    (await makeCard({ label: isDay ? 'СТАНЦИЯ ДНЯ' : 'ИНТЕРЕСНАЯ СТАНЦИЯ', title: st.name, subtitle: [country, st.bitrate ? `${st.bitrate} kbps` : '', st.group ? 'Эксклюзив YAi' : ''].filter(Boolean).join(' · '), logoUrl: st.favicon, tags: String(st.tags || '').split(',').map((t) => t.trim()).filter((t) => t && t.length < 18).slice(0, 4) })) ||
     BANNER;
   await postPhotoOrText({ photo, caption: await withFooter(caption), buttons: listenButton(`${SITE}#station=${st.stationuuid}`), silent: !isDay });
   state.stations.push(st.stationuuid);
@@ -378,24 +370,12 @@ async function postStation(state, isDay = false) {
 }
 
 // ---------- 1б. Веб-камера (Windy через наш сервер) ----------
-const API = 'https://yaiplay-radio-api.<account-subdomain>.workers.dev';
+const API = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
 const CAM_COUNTRIES = ['IT', 'ES', 'FR', 'DE', 'AT', 'CH', 'NO', 'IS', 'GR', 'PT', 'HR', 'NL', 'CZ', 'US', 'CA', 'JP', 'AU', 'NZ', 'GB', 'IE', 'SE', 'FI', 'PL', 'SI', 'MT', 'CY', 'TR', 'TH', 'MX', 'BR'];
 
 async function makeCamCard(imgBuf, title, subtitle) {
-  if (!sharp) return null;
   try {
-    const bg = await sharp(imgBuf).resize(1280, 720, { fit: 'cover' }).modulate({ brightness: 0.9 }).png().toBuffer();
-    const svg = `<svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></linearGradient></defs>
-      <rect width="1280" height="720" fill="url(#sh)"/>
-      <rect x="48" y="44" width="260" height="52" rx="26" fill="#e11d48"/>
-      <text x="178" y="79" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="24" font-weight="bold" fill="#fff">● ВЕБ-КАМЕРА</text>
-      <text x="56" y="600" font-family="DejaVu Sans, sans-serif" font-size="56" font-weight="bold" fill="#fff">${xmlEsc(title.length > 34 ? title.slice(0, 33) + '…' : title)}</text>
-      <text x="56" y="652" font-family="DejaVu Sans, sans-serif" font-size="30" fill="#d4d4d8">${xmlEsc(subtitle)}</text>
-      <text x="1232" y="680" text-anchor="end" font-family="DejaVu Sans, sans-serif" font-size="26" font-weight="bold" fill="#fff">YAi <tspan fill="#1fcfeb">Radio</tspan></text>
-      <text x="1232" y="706" text-anchor="end" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#a1a1aa">Webcams provided by windy.com</text>
-    </svg>`;
-    return await sharp(bg).composite([{ input: Buffer.from(svg) }]).png().toBuffer();
+    return await Posters.camCard({ imgBuf, title, subtitle, live: /эфир/.test(subtitle) });
   } catch (e) {
     log('карточка камеры не собралась:', e.message);
     return null;
@@ -631,28 +611,24 @@ async function postPromo(state) {
 // ---------- 4в. Возможности сайта: «а вы знаете?» (каждые 3–4 часа) и большой рекламный пост (раз в день) ----------
 // ВАЖНО: телевидение в рекламе не упоминаем никогда. Только то, что реально есть на сайте и в приложении.
 const PROMO_DIR = path.join(ROOT, 'public', 'promo');
+// План «А вы знали?» на 2 недели: по одной возможности в день, по порядку (state.featIndex).
+// Только то, что реально работает на сайте. Android-функции (эквалайзер, «За рулём», будильник, запись, синхронизация)
+// сюда добавлять только после проверки владельцем на устройстве.
 const FEATS = [
-  { id: 'globe', name: 'Глобус радио', poster: 'globe', link: '#globe', btn: '🌍 Открыть глобус', facts: 'Раздел «Глобус радио»: вращаешь 3D-Землю, нажимаешь на любую точку — и слушаешь радио этого места. Тысячи станций по всему миру, зелёные точки — города с эфиром.' },
-  { id: 'webcams', name: 'Веб-камеры мира', poster: 'webcams', link: '#webcams', btn: '📷 Смотреть камеры', facts: 'Раздел «Веб-камеры»: живые камеры городов, гор и пляжей мира. Выбор по стране и городу списком. Можно включить радио и смотреть камеру одновременно.' },
-  { id: 'record', name: 'Radio Record — эксклюзив', poster: 'record', link: '', btn: '🔥 Слушать Radio Record', facts: '117 официальных каналов Radio Record собраны в одном месте: танцевальная музыка, хиты, клубные сеты. Качество само подстраивается под интернет.' },
-  { id: 'exclusive', name: 'Эксклюзив YAi', poster: 'all', link: '', btn: '⭐ Слушать эксклюзив', facts: 'Подборка «Эксклюзив YAi»: Radio Paradise, FIP (Радио Франции), KEXP, NTS, Nightride и другие известные станции мира — официальные потоки в высоком качестве.' },
-  { id: 'genres', name: 'Жанры и настроения', poster: 'all', link: '', btn: '🎵 Выбрать жанр', facts: 'Десятки жанров (рок, джаз, электроника, диско, транс, кантри, фолк, K-pop, детское, новогоднее и др.) и подборки под настроение. Станции без тегов находятся по названию.' },
-  { id: 'playlist', name: 'Мой плейлист', poster: 'all', link: '', btn: '🎧 Собрать плейлист', facts: 'Нажимаешь ♥ у любимых станций — и они собираются в «Мой плейлист» на главной. Можно войти и синхронизировать избранное между телефоном и компьютером.' },
-  { id: 'search', name: 'Поиск и фильтры', poster: 'all', link: '', btn: '🔍 Найти станцию', facts: 'Поиск по названию станции и фильтры рядом со списком: страна, жанр, название. Вид — плиткой или списком.' },
-  { id: 'country', name: 'Радио вашей страны', poster: 'radiocam', link: '', btn: '📻 Моя страна', facts: 'Кнопка «Моя страна» сама определяет, где вы, и показывает местные станции. Более 50 000 радиостанций из почти всех стран мира.' },
-  { id: 'android', name: 'Приложение для Android', poster: 'all', link: '#apps', btn: '🤖 Скачать для Android', rustore: true, facts: 'Приложение для Android (APK с нашего сайта, раздел «Mobile Apps»): радио играет при выключенном экране, управление с экрана блокировки, эквалайзер на 10 полос и мощный бас, обновления приходят сами. Работает и на Android TV.' },
-  { id: 'iphone', name: 'YAi на iPhone и iPad', poster: 'iphone', link: '#apps', btn: '🍏 Как установить на iPhone', facts: 'На iPhone и iPad ничего не нужно скачивать из App Store: открыть сайт в Safari → «Поделиться» → «На экран „Домой“» — и YAiPlay Radio работает как приложение, бесплатно. На экране блокировки — обложка песни, которая сейчас играет.' },
-  { id: 'bass', name: 'Супер-бас и эквалайзер', poster: 'bass', link: '#apps', btn: '🎛 Скачать для Android', rustore: true, facts: 'В Android-приложении YAiPlay Radio: эквалайзер на 10 полос, 10 готовых настроек («Мощный бас», «Танцевальная», «В машине», «Ночью тихо» и другие) и усиление басов до +12 дБ без перегруза. Звук меняется сразу, на любой станции.' },
-  { id: 'viz', name: 'Визуализация музыки', poster: 'viz', link: '', btn: '🌈 Включить радио', facts: 'В плеере на обложке — живая визуализация музыки. В Android-приложении это настоящий спектр звука (столбики двигаются в такт песне), на сайте и iPhone — плавная анимация в такт эфиру.' },
-  { id: 'tracks', name: 'Треки из эфира', poster: 'tracks', link: '', btn: '🎵 Открыть YAi', facts: 'Раздел «Треки из эфира» (Ещё → История) сам сохраняет песни, которые звучали в эфире, если станция передаёт название. Есть поиск по истории и кнопки: открыть песню в YouTube, Яндекс Музыке, Spotify или Apple Music.' },
-  { id: 'car', name: 'В дороге без обрывов', poster: 'car', link: '#apps', btn: '🚗 Скачать для Android', rustore: true, facts: 'Режим «За рулём» с крупными кнопками и часами, поддержка Android Auto. В Android-приложении — защита от обрывов: запас эфира до 12 секунд и автоматическое переподключение, если связь пропала (тоннель, трасса, метро).' },
-  { id: 'rustore', name: 'YAiPlay Radio в RuStore', poster: 'rustore', link: '', btn: '', need: 'rustore', facts: 'Приложение YAiPlay Radio теперь есть в RuStore: установка и обновления в один тап, для телефонов и планшетов на Android. Если RuStore ещё нет — его можно скачать с официального сайта rustore.ru.' },
-  { id: 'bigscreen', name: 'Радио на Android TV', poster: 'bigscreen', link: '', btn: '', need: 'rustore', tv: true, facts: 'YAiPlay Radio работает на Android TV и смарт-приставках: управление пультом, крупный интерфейс, тысячи радиостанций на большом экране. Устанавливается из RuStore для Android TV.' },
-  { id: 'telegram', name: 'Радио прямо в Telegram', poster: 'all', link: 'tg', btn: '💬 Открыть в Telegram', facts: 'Наш бот открывает YAiPlay Radio прямо внутри Telegram — кнопка «🎧 Слушать» в чате с ботом. Ничего устанавливать не нужно.' },
-  { id: 'tools', name: 'Таймер сна, будильник и режим «За рулём»', poster: 'all', link: '', btn: '⏰ Попробовать', facts: 'В плеере есть таймер сна (радио само выключится), будильник с любимой станцией и режим «За рулём» с крупными кнопками.' },
-  { id: 'quality', name: 'Слабый интернет — не проблема', poster: 'record', link: '', btn: '📶 Слушать', facts: 'Качество звука подстраивается под интернет: на слабой связи станция переключается на лёгкий поток и не прерывается. Можно выбрать режим «экономия трафика».' },
-  { id: 'free', name: 'Бесплатно и легально', poster: 'radiocam', link: '', btn: '▶️ Слушать бесплатно', facts: 'Всё бесплатно, без рекламы от нас и без регистрации. Только официальные открытые потоки радиостанций.' },
-  { id: 'history', name: 'Продолжить слушать', poster: 'all', link: '', btn: '🕘 Открыть', facts: 'На главной есть «Продолжить слушать» — последние станции в один клик, и раздел «История».' },
+  { id: 'globe', name: 'Глобус радио', poster: 'yai-globe', link: '#globe', btn: '🌍 Открыть глобус', facts: 'Раздел «Глобус радио»: вращаешь Землю, нажимаешь на светящуюся точку — и играет радио этого города. На глобусе больше 2 600 городов.' },
+  { id: 'webcams', name: 'Веб-камеры мира', poster: 'yai-webcams', link: '#webcams', btn: '📷 Смотреть камеры', facts: 'Раздел «Веб-камеры»: живые камеры городов, гор и пляжей мира, выбор по стране и городу. Можно включить радио и смотреть камеру одновременно.' },
+  { id: 'record', name: 'Radio Record — эксклюзив', poster: 'yai-record', link: '', btn: '🔥 Слушать Radio Record', facts: 'На главной — кнопка «Radio Record · эксклюзив YAi»: официальные каналы Radio Record в одном месте — танцевальная музыка, хиты, клубные сеты.' },
+  { id: 'moods', name: 'Настроение', poster: 'yai-moods', link: '', btn: '✨ Выбрать настроение', facts: 'Раздел «Настроение»: радио под настроение и занятие — для работы и фокуса, бега и тренировок, йоги и медитации, отдыха, глубокого сна. И «Подборки YAi» на главной — готовые плейлисты, станции в них проверяются.' },
+  { id: 'playlist', name: 'Мои плейлисты', poster: 'yai-playlist', link: '', btn: '❤️ Собрать плейлист', facts: 'Нажимаешь ♥ у станции — и она в «Избранном». А в «Моих плейлистах» можно собрать свои списки станций под любое настроение.' },
+  { id: 'country', name: 'Радио вашей страны', poster: 'yai-country', link: '', btn: '📍 Моя страна', facts: 'Кнопка «Моя страна» сама показывает станции вашей страны. Можно выбрать и любую другую страну мира из списка.' },
+  { id: 'lucky', name: 'Мне повезёт', poster: 'yai-lucky', link: '', btn: '🎲 Мне повезёт', facts: 'Кнопка «Мне повезёт» на главной включает случайную станцию — так легко найти новое радио, о котором вы не знали. Рядом — «В тренде»: что слушают сейчас.' },
+  { id: 'genres', name: 'Жанры', poster: 'yai-genres', link: '', btn: '🎵 Выбрать жанр', facts: 'Раздел «Жанры»: рок, джаз, электроника, поп, классика, шансон, ретро и многое другое — выбираешь жанр и слушаешь станции со всего мира.' },
+  { id: 'history', name: 'История эфиров', poster: 'yai-history', link: '', btn: '🕘 Открыть историю', facts: 'Раздел «История эфиров» сам запоминает станции, которые вы слушали, и песни из эфира, если станция передаёт название. Понравилась песня — легко найти её потом.' },
+  { id: 'sleep', name: 'Таймер сна', poster: 'yai-sleep', link: '', btn: '🌙 Включить радио', facts: 'Кнопка «Сон» в плеере: выбираете время — и радио плавно затихнет и выключится само. Удобно засыпать под музыку.' },
+  { id: 'search', name: 'Поиск станций', poster: 'yai-search', link: '', btn: '🔍 Найти станцию', facts: 'Поиск по названию станции, городу или жанру прямо вверху экрана. Тысячи станций со всего мира — находите свою за секунды.' },
+  { id: 'groups', name: 'Группы A–Z', poster: 'yai-groups', link: '', btn: '📻 Открыть группы', facts: 'Раздел «Группы (A–Z)»: известные радиосети собраны вместе — все каналы одной станции в одном месте, по алфавиту.' },
+  { id: 'lite', name: 'Лёгкий режим и 2G', poster: 'yai-lite', link: '', btn: '📶 Слушать', facts: 'Слабый интернет или старый телефон? В меню есть «Лёгкий режим» и отдельная 2G-версия сайта — она грузится быстро даже на очень медленной связи.' },
+  { id: 'free', name: 'Бесплатно и без регистрации', poster: 'yai-free', link: '', btn: '▶️ Слушать бесплатно', facts: 'YAiPlay Radio — бесплатно, без рекламы от нас и без регистрации. Только официальные открытые потоки радиостанций со всего мира.' },
 ];
 const STYLES = [
   'Начни с «А вы знаете, что…» и удиви одним фактом.',
@@ -683,12 +659,13 @@ async function postFeature(state) {
   const recent = state.featRecent || [];
   const live = await rustoreLive();
   const avail = FEATS.filter((f) => f.need !== 'rustore' || live);
-  const pool = avail.filter((f) => !recent.includes(f.id));
-  const f = (pool.length ? pool : avail)[Math.floor(Math.random() * (pool.length || avail.length))];
+  // по плану: каждый день следующая возможность, через 2 недели круг повторяется
+  const f = avail[(state.featIndex || 0) % avail.length];
+  state.featIndex = (state.featIndex || 0) + 1;
   const si = (state.featStyle || 0) % STYLES.length;
   const cta = CTAS[(state.featCta || 0) % CTAS.length];
   let text = await ai(
-    'Ты ведёшь Telegram-канал YAiPlay Radio (бесплатное легальное радио со всего мира: сайт, Android, iPhone, Telegram). ' +
+    'Ты ведёшь Telegram-канал YAiPlay Radio (бесплатное легальное радио со всего мира: сайт и приложение). ' +
       'Пиши по-русски, живо и дружелюбно, как будто общаешься с подписчиками, 350–650 символов, 2–4 уместных эмодзи. ' +
       'Первая строка — цепляющий заголовок в <b>…</b>. Разметка: только <b> и <i>, без Markdown, без ссылок и хэштегов. ' +
       'Пиши ТОЛЬКО о том, что дано в фактах, ничего не выдумывай. Никогда не упоминай телевидение, телеканалы, фильмы и сериалы (Android TV как устройство упоминать можно, только если оно есть в фактах). ' +
@@ -705,7 +682,7 @@ async function postFeature(state) {
   if (withStore) text += rustoreLine(!!f.tv);
   const link = f.need === 'rustore' ? RUSTORE_APP : featLink(f);
   const img = await promoImg(f.poster);
-  const kb = f.need === 'rustore' ? rustoreButtons(!!f.tv) : [[{ text: f.btn, url: link }], ...(withStore ? rustoreButtons() : [[{ text: '📱 Приложения', url: SITE + '#apps' }]])];
+  const kb = f.need === 'rustore' ? rustoreButtons(!!f.tv) : [[{ text: f.btn, url: link }], ...(withStore ? rustoreButtons() : [])];
   await postPhotoOrText({
     photo: img || BANNER,
     caption: await withFooter(text),
@@ -753,12 +730,12 @@ async function setup() {
 // Один пост в час, с 07 до 22 по Берлину (зимой UTC+1, летом UTC+2) — 16 постов в день:
 // станции ×5 (с «станцией дня»), новости ×3, «фишки» с постерами ×4, веб-камеры ×3, большой рекламный пост ×1.
 // В воскресенье вечером вместо станции — вопрос подписчикам.
-const HOURLY = { 11: 'day', 19: 'news' };
+// 3 поста в день, время по Берлину (летом и зимой одинаково):
+// 10:07 — «А вы знали?» (возможность по плану), 14:07 — станция дня, 19:07 — веб-камера дня.
+const BERLIN = { 10: 'feature', 14: 'day', 19: 'webcam' };
 function autoMode() {
-  const now = new Date();
-  const h = now.getUTCHours();
-  if (now.getUTCDay() === 0 && h === 18) return 'ask';
-  return HOURLY[h] || 'none';
+  const h = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', hour: '2-digit', hour12: false }).format(new Date()));
+  return BERLIN[h] || 'none';
 }
 
 const mode = (process.argv[2] || 'auto') === 'auto' ? autoMode() : process.argv[2];
@@ -785,6 +762,7 @@ try {
   else if (mode === 'setup') await setup();
   else log('неизвестный режим', mode);
 } finally {
+  await Posters.closeBrowser();
   state.aiError = AI_ERROR || undefined;
   if (!DRY_RUN) await saveState(state);
   else log('[DRY_RUN] Состояние публикаций не изменено.');

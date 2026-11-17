@@ -1,14 +1,17 @@
-# Только ручной запуск. По умолчанию формирует пост в логах и ничего не отправляет.
+# YAiPlay Radio — посты в Телеграм. Сейчас ТОЛЬКО черновики (DRY_RUN=true): ничего не отправляется.
+# Черновики (картинка + текст + кнопки) — в архиве «drafts» на странице запуска.
+# Расписание (10:07 «А вы знали?», 14:07 станция дня, 19:07 веб-камера по Берлину) включается
+# только после «да» владельца: раскомментировать schedule и поставить DRY_RUN: "false".
 name: YAi Radio — Telegram (dry-run)
 
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Режим подготовки поста
+        description: Что подготовить
         type: choice
-        options: [station, day, news, webcam, release, ask, promo, feature, showcase]
-        default: station
+        options: [day3, feature, day, webcam, station, news, release, promo, showcase]
+        default: day3
 
 permissions:
   contents: read
@@ -20,16 +23,28 @@ concurrency:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Библиотека изображений
-        run: npm install --no-save --no-package-lock sharp@0.34.4
-      - name: Подготовить пост
+      - name: Библиотеки картинок
+        run: npm install --no-save --no-package-lock sharp@0.34.4 puppeteer-core@23 qrcode@1
+      - name: Подготовить черновики
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DRY_RUN: "true"
-        run: node scripts/telegram-post.mjs "${{ inputs.mode }}"
+          CHROME_PATH: /usr/bin/google-chrome
+        run: |
+          echo "Gemini ключ: $([ -n "$GEMINI_API_KEY" ] && echo есть || echo нет)"
+          if [ "${{ inputs.mode }}" = "day3" ]; then
+            for m in feature day webcam; do node scripts/telegram-post.mjs "$m"; done
+          else
+            node scripts/telegram-post.mjs "${{ inputs.mode }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: drafts
+          path: drafts/
+          if-no-files-found: warn
