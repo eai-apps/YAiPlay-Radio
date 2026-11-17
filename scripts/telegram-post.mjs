@@ -242,7 +242,17 @@ async function ai(system, user, maxTokens = 700) {
     AI_ERROR = 'нет секрета GEMINI_API_KEY';
     return null;
   }
-  for (const model of ['gemini-flash-latest', 'gemini-2.5-flash']) {
+  // Модели Google меняются: берём актуальный список «flash»-моделей у самого Google, запасной — известные имена
+  let models = ['gemini-flash-latest', 'gemini-flash-lite-latest'];
+  try {
+    const lr = await fetchT(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=100`, { headers: { 'x-goog-api-key': key } }, 15000);
+    const lj = await lr.json();
+    const found = (lj.models || [])
+      .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent') && /flash/.test(m.name) && !/image|tts|audio|live|exp|preview/.test(m.name))
+      .map((m) => m.name.replace(/^models\//, ''));
+    models = [...new Set([...models.filter((m) => found.includes(m)), ...found.slice(0, 3), ...models])].slice(0, 4);
+  } catch {}
+  for (const model of models) {
     try {
       const r = await fetchT(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
@@ -255,7 +265,7 @@ async function ai(system, user, maxTokens = 700) {
             generationConfig: { temperature: 0.8, maxOutputTokens: maxTokens + 1500 },
           }),
         },
-        60000
+        90000
       );
       const raw = await r.text();
       let j = null;
