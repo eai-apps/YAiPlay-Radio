@@ -12,10 +12,14 @@ interface YAiNativePlugin {
   stopAlarm(): Promise<void>;
   openExactAlarmSettings(): Promise<void>;
   share(o: { title: string; text: string }): Promise<void>;
+  relayFetch(o: { url: string; method: string; headers: Record<string, string>; body?: string }): Promise<{ status: number; body: string; contentType: string }>;
   addListener(event: 'remote' | 'launchAction', cb: (d: { action?: string }) => void): Promise<{ remove: () => void }>;
 }
 
 const Native = registerPlugin<YAiNativePlugin>('YAiNative');
+
+/** Только для relayFetch.ts: запрос через наши ретрансляторы (нативно, с закреплёнными сертификатами). */
+export const nativeRelayFetch = (o: { url: string; method: string; headers: Record<string, string>; body?: string }) => Native.relayFetch(o);
 
 export const hasNative = (): boolean => {
   try {

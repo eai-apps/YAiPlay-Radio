@@ -111,6 +111,27 @@ public class YAiNativePlugin extends Plugin {
         p.notifyListeners("remote", o);
     }
 
+    /** Запрос через наши ретрансляторы, когда Cloudflare заблокирован (см. YAiRelay и src/services/relayFetch.ts). */
+    @PluginMethod
+    public void relayFetch(PluginCall call) {
+        final String url = call.getString("url");
+        final String method = call.getString("method", "GET");
+        final JSObject headers = call.getObject("headers", new JSObject());
+        final String body = call.getString("body");
+        new Thread(() -> {
+            try {
+                YAiRelay.Answer a = YAiRelay.fetch(url, method, headers, body);
+                JSObject o = new JSObject();
+                o.put("status", a.status);
+                o.put("body", a.body);
+                o.put("contentType", a.contentType == null ? "" : a.contentType);
+                call.resolve(o);
+            } catch (Exception e) {
+                call.reject("relay failed: " + e.getMessage());
+            }
+        }, "yai-relay").start();
+    }
+
     @PluginMethod
     public void getLaunchAction(PluginCall call) {
         JSObject o = new JSObject();

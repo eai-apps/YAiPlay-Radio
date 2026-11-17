@@ -1,5 +1,6 @@
 import { initAppUpdater } from './services/appUpdater';
 import { initLiteMode } from './utils/liteMode';
+import { installRelayFetch } from './services/relayFetch';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 // Шрифты встроены в сайт (без запросов к Google — важно для GDPR)
@@ -8,6 +9,7 @@ import '@fontsource/jetbrains-mono/500.css';
 import '@fontsource/jetbrains-mono/600.css';
 import './index.css';
 
+installRelayFetch();
 initLiteMode();
 createRoot(document.getElementById('root')!).render(<App />);
 // Статичная заставка из index.html — убираем, как только приложение нарисовало первый кадр
