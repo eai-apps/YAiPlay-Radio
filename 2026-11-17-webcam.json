@@ -1,0 +1,19 @@
+{
+ "caption": "📷 <b>Взгляд на мир: Innisfil</b>\n🌍 Канада · 🔴 онлайн\n\nЗагляните в Innisfil (Канада) прямо сейчас — живая картинка с веб-камеры. А под музыку YAiPlay Radio смотреть ещё приятнее!\n\n<i>Webcams provided by <a href=\"https://www.windy.com/\">windy.com</a></i>\n\n➖➖➖\n📢 Подписывайтесь: <a href=\"https://t.me/YAiPlayer\">Telegram @YAiPlayer</a>\n🎧 Слушать: <a href=\"https://yaiplay-radio.pages.dev/\">в браузере</a> · <a href=\"https://yaiplay-radio.pages.dev/#apps\">Android</a> · <a href=\"https://yaiplay-radio.pages.dev/#apps\">iPhone/iPad</a>",
+ "buttons": {
+  "inline_keyboard": [
+   [
+    {
+     "text": "📷 Смотреть камеру",
+     "url": "https://windy.com/webcams/1793876473"
+    }
+   ],
+   [
+    {
+     "text": "🌍 Все камеры в YAiPlay Radio",
+     "url": "https://yaiplay-radio.pages.dev/#webcams"
+    }
+   ]
+  ]
+ }
+}
