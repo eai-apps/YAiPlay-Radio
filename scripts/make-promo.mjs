@@ -22,6 +22,7 @@ const globeVisual = async () => `
 const phoneRight = async (file) => P.phone(await img(file), 'right:-40px;top:200px;width:440px;height:952px;transform:rotate(-4deg)');
 
 const POSTERS = {
+  'yai-tip': async () => ({ kicker: 'ФИШКА ДНЯ', title: 'А вы', accent: 'знали?', titleSize: 118, sub: 'Что ещё умеет YAiPlay Radio — каждый день новая возможность', subWidth: 520, visual: await globeVisual(), cta: 'Слушать бесплатно', note: 'Радио со всего мира' }),
   'yai-globe': async () => ({ kicker: 'А ВЫ ЗНАЛИ?', title: 'Глобус', accent: 'радио', sub: 'Крутите Землю и нажимайте на точку — заиграет радио этого города', subWidth: 520, visual: await globeVisual(), cta: 'Открыть глобус', note: '2 600+ городов на карте', qrUrl: URL + '#globe' }),
 };
 

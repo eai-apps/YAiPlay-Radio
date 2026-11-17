@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import * as Posters from './posters.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const STATE_FILE = path.join(ROOT, 'data', 'telegram-state.json');
+const STATE_FILE = process.env.STATE_FILE || path.join(ROOT, 'data', 'telegram-state.json');
 // Адрес сайта в постах, кнопках и рекламе (зеркало Cloudflare; старый eai-apps.github.io/YAiPlay-Radio тоже работает)
 const SITE = 'https://yaiplay-radio.pages.dev/';
 const BANNER = SITE + 'telegram-card.png';
@@ -702,7 +702,7 @@ async function postFeature(state) {
   const withStore = live && (f.need === 'rustore' || f.rustore);
   if (withStore) text += rustoreLine(!!f.tv);
   const link = f.need === 'rustore' ? RUSTORE_APP : featLink(f);
-  const img = await promoImg(f.poster);
+  const img = (await promoImg(f.poster)) || (await promoImg('yai-tip')); // свой постер или общий «А вы знали?»
   const kb = f.need === 'rustore' ? rustoreButtons(!!f.tv) : [[{ text: f.btn, url: link }], ...(withStore ? rustoreButtons() : [])];
   await postPhotoOrText({
     photo: img || BANNER,
