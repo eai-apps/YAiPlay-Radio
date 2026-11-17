@@ -426,7 +426,6 @@ async function postWebcam(state) {
       try {
         const st = await sharp(img).stats();
         if (st.channels.slice(0, 3).reduce((a, c) => a + c.stdev, 0) / 3 < 15) continue; // однотонная — камера «спит»
-        if ((await sharp(img).metadata()).width < 600) continue; // мелкая картинка — будет мыльной
         if (st.channels.slice(0, 3).reduce((a, c) => a + c.mean, 0) / 3 < 75) continue; // там сейчас ночь — темно, ищем светлую картинку
       } catch {
         continue;
