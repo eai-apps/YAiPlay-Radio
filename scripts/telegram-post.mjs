@@ -108,8 +108,7 @@ async function footer() {
   return (
     `\n\n➖➖➖\n` +
     `📢 Подписывайтесь: <a href="https://t.me/${ch}">Telegram @${ch}</a>\n` +
-    `🎧 Слушать: <a href="${SITE}">в браузере</a> · <a href="${SITE}#apps">Android</a> · <a href="${SITE}#apps">iPhone/iPad</a>` +
-    (BOT_USERNAME ? ` · <a href="https://t.me/${BOT_USERNAME}?startapp">в Telegram</a>` : '')
+    `🎧 Слушать: <a href="${SITE}">в браузере</a> · <a href="${SITE}#apps">Android</a> · <a href="${SITE}#apps">iPhone/iPad</a>`
   );
 }
 const CAPTION_MAX = 1024;
@@ -362,7 +361,7 @@ async function postStation(state, isDay = false) {
       `${st.name} — станция, которую стоит добавить в избранное ❤️${tags ? ` В эфире: ${tags}.` : ''} Слушайте в браузере или в приложении YAiPlay Radio.`,
     ][state.stations.length % 3];
   const caption =
-    `${isDay ? '🌅 <b>Станция дня' : '📻 <b>Интересная станция'}: ${esc(st.name)}</b>\n` +
+    `${isDay ? '☀️ <b>Станция дня' : '📻 <b>Интересная станция'}: ${esc(st.name)}</b>\n` +
     `${country ? `🌍 ${esc(country)}` : ''}${st.bitrate ? ` · 🎧 ${st.bitrate} kbps` : ''}${st.group ? ' · ⭐ Эксклюзив YAi' : ''}\n\n` +
     `${esc(body)}`;
   const photo =
@@ -396,8 +395,14 @@ async function postWebcam(state) {
   state.cams = state.cams || [];
   const posted = new Set(state.cams);
   const start = (state.camIndex || 0) % CAM_COUNTRIES.length;
-  for (let i = 0; i < 6; i++) {
-    const cc = CAM_COUNTRIES[(start + i) % CAM_COUNTRIES.length];
+  // Сначала страны, где сейчас светло (местное время 8–17): вечером по Берлину это Америка, утром — Азия и Австралия
+  const OFF = { US: -6, CA: -5, MX: -6, BR: -3, JP: 9, AU: 10, NZ: 12, TH: 7, TR: 3, IS: 0, PT: 0, GB: 0, IE: 0, GR: 2, FI: 2, CY: 2 };
+  const localHour = (cc) => (new Date().getUTCHours() + (OFF[cc] ?? 1) + 24) % 24;
+  const order = CAM_COUNTRIES.map((_, i) => CAM_COUNTRIES[(start + i) % CAM_COUNTRIES.length]);
+  const day = order.filter((c) => localHour(c) >= 8 && localHour(c) <= 17);
+  const list = [...day, ...order.filter((c) => !day.includes(c))].slice(0, 10);
+  for (let i = 0; i < list.length; i++) {
+    const cc = list[i];
     if (hidden.has(cc)) continue;
     let cams = [];
     try {
@@ -419,6 +424,7 @@ async function postWebcam(state) {
       try {
         const st = await sharp(img).stats();
         if (st.channels.slice(0, 3).reduce((a, c) => a + c.stdev, 0) / 3 < 15) continue; // однотонная — камера «спит»
+        if (st.channels.slice(0, 3).reduce((a, c) => a + c.mean, 0) / 3 < 75) continue; // там сейчас ночь — темно, ищем светлую картинку
       } catch {
         continue;
       }
@@ -442,12 +448,12 @@ async function postWebcam(state) {
       await postPhotoOrText({
         photo: card || BANNER,
         caption: await withFooter(caption),
-        buttons: { inline_keyboard: [[{ text: '📷 Смотреть камеру', url: cam.page }], [{ text: '🌍 Все камеры на YAi', url: SITE + '#webcams' }]] },
+        buttons: { inline_keyboard: [[{ text: '📷 Смотреть камеру', url: cam.page }], [{ text: '🌍 Все камеры в YAiPlay Radio', url: SITE + '#webcams' }]] },
         silent: true,
       });
       state.cams.push(cam.id);
       state.cams = state.cams.slice(-500);
-      state.camIndex = (start + i + 1) % CAM_COUNTRIES.length;
+      state.camIndex = (CAM_COUNTRIES.indexOf(cc) + 1) % CAM_COUNTRIES.length;
       log('опубликована камера:', place, country);
       return;
     }
