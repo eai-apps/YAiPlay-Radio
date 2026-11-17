@@ -374,6 +374,8 @@ async function postStation(state, isDay = false) {
 
 // ---------- 1б. Веб-камера (Windy через наш сервер) ----------
 const API = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
+// Дороги, трассы, парковки и стройки — не «взгляд на мир», такие камеры не берём
+const BORING = /highway|freeway|interstate|\bI-\d|\broad\b|traffic|parking|motorway|autobahn|autostrada|\bDOT\b|\broute\b|street|construction|baustelle|шоссе|трасс|дорог|парковк/i;
 const CAM_COUNTRIES = ['IT', 'ES', 'FR', 'DE', 'AT', 'CH', 'NO', 'IS', 'GR', 'PT', 'HR', 'NL', 'CZ', 'US', 'CA', 'JP', 'AU', 'NZ', 'GB', 'IE', 'SE', 'FI', 'PL', 'SI', 'MT', 'CY', 'TR', 'TH', 'MX', 'BR'];
 
 async function makeCamCard(imgBuf, title, subtitle) {
@@ -407,7 +409,7 @@ async function postWebcam(state) {
     let cams = [];
     try {
       const j = await (await fetchT(`${API}/webcams?country=${cc}&lang=ru&offset=${Math.floor(Math.random() * 3) * 50}`, {}, 20000)).json();
-      cams = (j.webcams || []).filter((c) => c.image && !posted.has(c.id));
+      cams = (j.webcams || []).filter((c) => c.image && !posted.has(c.id) && !BORING.test(`${c.title} ${c.city || ''}`));
     } catch (e) {
       log('камеры недоступны:', e.message);
       continue;
@@ -424,6 +426,7 @@ async function postWebcam(state) {
       try {
         const st = await sharp(img).stats();
         if (st.channels.slice(0, 3).reduce((a, c) => a + c.stdev, 0) / 3 < 15) continue; // однотонная — камера «спит»
+        if ((await sharp(img).metadata()).width < 600) continue; // мелкая картинка — будет мыльной
         if (st.channels.slice(0, 3).reduce((a, c) => a + c.mean, 0) / 3 < 75) continue; // там сейчас ночь — темно, ищем светлую картинку
       } catch {
         continue;
