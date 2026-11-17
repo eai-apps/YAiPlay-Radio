@@ -376,6 +376,7 @@ async function postStation(state, isDay = false) {
 const API = 'https://yaiplay-radio-api.yai-media-player.workers.dev';
 // Дороги, трассы, парковки и стройки — не «взгляд на мир», такие камеры не берём
 const BORING = /highway|freeway|interstate|\bI-\d|\broad\b|traffic|parking|motorway|autobahn|autostrada|\bDOT\b|\broute\b|street|construction|baustelle|шоссе|трасс|дорог|парковк|\b(US|SR|CR|SH|I|HWY|Hwy|Rte)[- ]?\d+|\bMM\b|\b511\b|\b(Ln|Rd|Ave|Blvd|Pkwy|Dr)\b/i;
+const CAM_CATS = ['beach', 'city', 'mountain', 'lake', 'coast', 'landscape'];
 const CAM_COUNTRIES = ['IT', 'ES', 'FR', 'DE', 'AT', 'CH', 'NO', 'IS', 'GR', 'PT', 'HR', 'NL', 'CZ', 'US', 'CA', 'JP', 'AU', 'NZ', 'GB', 'IE', 'SE', 'FI', 'PL', 'SI', 'MT', 'CY', 'TR', 'TH', 'MX', 'BR'];
 
 async function makeCamCard(imgBuf, title, subtitle) {
@@ -410,8 +411,11 @@ async function postWebcam(state) {
     if (hidden.has(cc)) continue;
     let cams = [];
     try {
-      const j = await (await fetchT(`${API}/webcams?country=${cc}&lang=ru&offset=${Math.floor(Math.random() * 3) * 50}`, {}, 20000)).json();
-      cams = (j.webcams || []).filter((c) => c.image && !posted.has(c.id) && !BORING.test(`${c.title} ${c.city || ''}`));
+      // красивые виды: пляж, город, горы, озеро, побережье — по очереди; дорожные камеры (traffic) не берём
+      const cat = CAM_CATS[((state.camCat || 0) + i) % CAM_CATS.length];
+      const ok = (c) => c.image && !posted.has(c.id) && !BORING.test(`${c.title} ${c.city || ''}`) && !(c.categories || []).includes('traffic');
+      const j = await (await fetchT(`${API}/webcams?country=${cc}&lang=ru&category=${cat}`, {}, 20000)).json();
+      cams = (j.webcams || []).filter(ok);
     } catch (e) {
       log('камеры недоступны:', e.message);
       continue;
@@ -458,6 +462,7 @@ async function postWebcam(state) {
       state.cams.push(cam.id);
       state.cams = state.cams.slice(-500);
       state.camIndex = (CAM_COUNTRIES.indexOf(cc) + 1) % CAM_COUNTRIES.length;
+      state.camCat = (state.camCat || 0) + 1;
       log('опубликована камера:', place, country);
       return;
     }
