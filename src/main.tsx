@@ -10,6 +10,9 @@ import './index.css';
 
 initLiteMode();
 createRoot(document.getElementById('root')!).render(<App />);
+// Статичная заставка из index.html — убираем, как только приложение нарисовало первый кадр
+// (дальше идёт анимированная заставка приложения, тот же тёмный фон — без мигания).
+requestAnimationFrame(() => requestAnimationFrame(() => document.getElementById('boot-splash')?.remove()));
 
 // Service worker — только в собранной версии на https (не мешает разработке на localhost)
 if ('serviceWorker' in navigator && import.meta.env.PROD && location.protocol === 'https:' && !(window as any).Capacitor) {

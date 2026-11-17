@@ -1,9 +1,16 @@
 // YAiPlay Radio — service worker: быстрый запуск и работа оболочки без сети.
 // Радиопотоки, каталог станций и внешние сервисы НЕ кэшируются.
-const CACHE = 'YAi-shell-v6';
+const CACHE = 'YAi-shell-v7';
+// Заполняется при сборке (scripts/sw-precache.mjs): страница, главный JS/CSS, шрифт, логотип.
+const PRECACHE = ['./', 'index.html', 'logo.png', 'manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'index.html', 'logo.png', 'manifest.webmanifest'])));
+  // Всё нужное для первого экрана — в кэш заранее, свежие копии (не из HTTP-кэша браузера).
+  e.waitUntil(
+    caches.open(CACHE).then((c) =>
+      Promise.all(PRECACHE.map((u) => fetch(u, { cache: 'reload' }).then((r) => (r.ok ? c.put(u, r) : null)).catch(() => null)))
+    )
+  );
   self.skipWaiting();
 });
 

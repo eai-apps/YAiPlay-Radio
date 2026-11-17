@@ -24,6 +24,7 @@
     <meta name="apple-mobile-web-app-title" content="YAiPlay Radio" />
     <!-- iPhone: тёмная заставка с логотипом при запуске с экрана «Домой» вместо белого экрана -->
     <link rel="apple-touch-startup-image" href="splash/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="splash/splash-1260x2736.png" media="(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
     <link rel="apple-touch-startup-image" href="splash/splash-1206x2622.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
     <link rel="apple-touch-startup-image" href="splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
     <link rel="apple-touch-startup-image" href="splash/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
@@ -61,6 +62,10 @@
     </script>
   </head>
   <body class="bg-[#0e0924] text-neutral-100 font-['Manrope_Variable',sans-serif] antialiased select-none selection:bg-cyan-500/30 selection:text-white overflow-x-hidden min-h-screen">
+    <!-- Сразу при открытии: тёмный экран с логотипом, пока грузится приложение (вместо пустого/белого). Убирается в main.tsx. -->
+    <div id="boot-splash" style="position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:#0e0924">
+      <img src="logo.png" alt="" width="132" height="132" style="width:132px;height:132px;border-radius:30px" />
+    </div>
     <div id="root"></div>
     <div id="boot-fallback" style="position:fixed;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:system-ui,sans-serif;text-align:center;padding:24px">
       <div style="font-size:18px;font-weight:700">YAiPlay Radio загружается дольше обычного</div>
