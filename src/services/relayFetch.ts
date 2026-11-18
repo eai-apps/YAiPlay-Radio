@@ -41,8 +41,43 @@ function installMirrorFetch(): boolean {
   return true;
 }
 
+/**
+ * Сайт открыт с Cloudflare, а данные не грузятся, и часовой пояс российский — значит, Cloudflare заблокирован:
+ * один раз за сеанс переходим на наше зеркало (там всё идёт без Cloudflare).
+ */
+const RU_MIRROR = 'https://yaiplay-radio.duckdns.org:8444';
+const RU_TZ = /^(Europe\/(Moscow|Kaliningrad|Samara|Volgograd|Kirov|Astrakhan|Saratov|Ulyanovsk|Simferopol)|Asia\/(Yekaterinburg|Omsk|Novosibirsk|Barnaul|Tomsk|Novokuznetsk|Krasnoyarsk|Irkutsk|Chita|Yakutsk|Khandyga|Vladivostok|Ust-Nera|Magadan|Sakhalin|Srednekolymsk|Kamchatka|Anadyr))$/;
+function installRuRedirectOnFailure(): void {
+  if (!/\.pages\.dev$/.test(location.hostname)) return;
+  let tz = '';
+  try {
+    tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  } catch {
+    return;
+  }
+  if (!RU_TZ.test(tz)) return;
+  const orig = window.fetch.bind(window);
+  window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    try {
+      return await orig(input, init);
+    } catch (e) {
+      try {
+        const host = new URL(input instanceof Request ? input.url : String(input), location.href).host;
+        if (RELAY_HOSTS.has(host) && navigator.onLine !== false && !sessionStorage.getItem('ruMirrorTried')) {
+          sessionStorage.setItem('ruMirrorTried', '1');
+          location.replace(RU_MIRROR + location.pathname + location.search + location.hash);
+        }
+      } catch {
+        /* ничего */
+      }
+      throw e;
+    }
+  };
+}
+
 export function installRelayFetch(): void {
   if (installMirrorFetch()) return;
+  if (!hasNative()) installRuRedirectOnFailure();
   if (!hasNative() || (window as unknown as { __yaiRelay?: boolean }).__yaiRelay) return;
   (window as unknown as { __yaiRelay?: boolean }).__yaiRelay = true;
   const orig = window.fetch.bind(window);
