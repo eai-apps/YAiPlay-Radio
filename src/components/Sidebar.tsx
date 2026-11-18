@@ -1,5 +1,5 @@
 import { FEATURES, isNativeApp } from '../utils/platform';
-import { LITE_URL } from './BottomNav';
+import { LITE_URL, RU_MIRROR_URL } from './BottomNav';
 import { useLiteMode } from '../utils/liteMode';
 import React from 'react';
 import { MainTab, YAiSettings, Language } from '../types/radio';
@@ -237,6 +237,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <a href={LITE_URL} title="Лёгкая версия: без анимации и картинок, для медленного интернета" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
             <span className="w-5 text-center">📶</span>
             <span>2G-версия для слабого интернета</span>
+          </a>
+        )}
+        {!isNativeApp && (
+          <a href={RU_MIRROR_URL} title="Не открывается в России? Зеркало сайта без Cloudflare" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors">
+            <span className="w-5 text-center">🇷🇺</span>
+            <span>Не открывается в России? Зеркало</span>
           </a>
         )}
       </nav>
