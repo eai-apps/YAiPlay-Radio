@@ -17,7 +17,32 @@ function headersOf(input: RequestInfo | URL, init?: RequestInit): Record<string,
   return out;
 }
 
+/**
+ * Зеркало сайта для России (свой адрес *.duckdns.org на нашем сервере, владелец 18.11): сайт открыт с зеркала,
+ * поэтому запросы к нашим сервисам на Cloudflare идут на то же зеркало по своим путям.
+ */
+const MIRROR_PATHS: Record<string, string> = { 'yaiplay-radio.pages.dev': '', 'yaiplay-radio-api.yai-media-player.workers.dev': '/radio-api', 'de1.api.radio-browser.info': '/radio-rb' };
+function installMirrorFetch(): boolean {
+  if (!/\.duckdns\.org$/.test(location.hostname)) return false;
+  const orig = window.fetch.bind(window);
+  window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    try {
+      const u = new URL(input instanceof Request ? input.url : String(input), location.href);
+      const prefix = MIRROR_PATHS[u.host];
+      if (prefix !== undefined) {
+        const target = location.origin + prefix + u.pathname + u.search;
+        return orig(input instanceof Request ? new Request(target, input) : target, init);
+      }
+    } catch {
+      /* обычный запрос */
+    }
+    return orig(input, init);
+  };
+  return true;
+}
+
 export function installRelayFetch(): void {
+  if (installMirrorFetch()) return;
   if (!hasNative() || (window as unknown as { __yaiRelay?: boolean }).__yaiRelay) return;
   (window as unknown as { __yaiRelay?: boolean }).__yaiRelay = true;
   const orig = window.fetch.bind(window);
