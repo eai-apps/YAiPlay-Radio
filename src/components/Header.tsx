@@ -220,6 +220,18 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Вход</span>
             </button>
 
+            {/* Ссылка на наш IPTV-плеер (владелец 21.11): иконка + надпись, без анимации */}
+            <a
+              href="https://yaiplayer.pages.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="YAiPlayer — IPTV-плеер для Android TV и смартфонов"
+              className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 hover:border-violet-500/40 text-xs font-semibold text-zinc-200 hover:text-white transition-colors shrink-0"
+            >
+              <img src="./yaiplayer-logo.png" alt="" width={24} height={24} className="w-6 h-6 rounded-lg" />
+              <span>YAiPlayer</span>
+            </a>
+
             {/* Admin button — owner mode only */}
             {onOpenAdmin && (
             <button
